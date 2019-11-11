@@ -68,6 +68,7 @@
     }
     
     var processArticle = (e) => {
+        turnBackNormal(e)
         var wHeight = window.innerHeight;
         var screenWidth = window.innerWidth;
         window.snomiao_article=e
@@ -90,21 +91,24 @@
         display: flex;
         flex-flow: column;
         flex-wrap: wrap;
+        align-content: flex-start;
+
         overflow-x: auto;
         overflow-y: hidden;
-        z-index:1;
-        box-shadow: 0 0 1px blue;
-        background: white;
-        color: black;
 
+        z-index:1;
+        
+        box-shadow: 0 0 1px blue;
+        background: rgba(255,255,255,0.5);
+        color: black;
 
         text-align: justify;
         text-indent: 0;
     `);
         [...e.children].map(c => {
             c.setAttribute("style", `
-                margin: 0 0 0 0;
-                padding: 0 1em 1em 0;
+                margin: 0 -1em 0 0;
+                padding: 0 2em 1em 0;
                 max-width: 70em;
                 min-width: 30em;
                 width: min-content;
@@ -112,6 +116,8 @@
                 height:auto;
                 overflow-x: auto;
                 overflow-y: auto;
+                background: rgba(255,255,255,0.5);
+
             `)
         })
         // var e2 = document.create(e.tagName)
@@ -140,9 +146,10 @@
         return { e, isArticle, rate, sub }
     }
     var setArticle = ({ e, isArticle, sub }) => {
+        sub.map(setArticle);
+        if(e == document.body) return;
         isArticle && console.log(e, "isArticle");
         isArticle && processArticle(e);
-        sub.map(setArticle);
     }
     var main = () => {
         console.log("LAUNCH：SNOREAD");
