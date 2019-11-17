@@ -11,17 +11,17 @@
 (function () {
     'use strict';
 
-    var updateStyle = () => {
-        var eStyle = document.querySelector("div.snomiao-article-style")
-        if(!eStyle){
-            eStyle = document.createElement("div");
-            eStyle.classList.add("snomiao-article-style");
-            eStyle.style.display = "none";
-            document.body.appendChild(eStyle)
+    var 更新样式 = () => {
+        var 样式盒 = document.querySelector("div.snomiao-article-style")
+        if (!样式盒) {
+            样式盒 = document.createElement("div");
+            样式盒.classList.add("snomiao-article-style");
+            样式盒.style.display = "none";
+            document.body.appendChild(样式盒)
         }
         var windowHeight = window.innerHeight;
         var windowWidth = window.innerWidth;
-        eStyle.innerHTML = `
+        样式盒.innerHTML = `
             <style>
             .snomiao-article{
                 position: relative;
@@ -51,7 +51,7 @@
                 margin: 0 -1em 0 0;
                 padding: 0 2em 1em 0;
                 /* max-width: 70em; */
-                min-width: 30em;
+                min-width: 32rem;
                 width: min-content;
                 max-height: ${windowHeight * 0.9}px;
                 height:auto;
@@ -63,8 +63,8 @@
         `;
     }
 
-    var listenScroll = e => {
-        [...e.children].map(listenScroll)
+    var 监听滚动 = e => {
+        [...e.children].map(监听滚动)
         if (e.flag_listenScroll) return;
         e.flag_listenScroll = 1;
 
@@ -86,74 +86,80 @@
                 event.stopPropagation();
                 return false;
             }
-            [...e.children].map(listenScroll)
+            [...e.children].map(监听滚动)
         }
         e.addEventListener("mousewheel", handleScroll, { capture: false, passive: false })     // Chrome/Edge
         e.addEventListener("DOMMouseScroll", handleScroll, { capture: false, passive: false }) // FF
     }
-    var turnBackNormal = e => {
+    var 恢复文章 = e => {
         e.setAttribute("style", ``);
         // [...e.children].map(e => e.setAttribute("style", ``))
         e.classList.remove("snomiao-article")
     }
-    var listenClick = e => {
+    var 监听点击 = e => {
         if (e.flag_handleClickToggleSnoReadMode) return;
         // click to update this article and scroll to it
         e.addEventListener("click", function (event) {
-            listenScroll(e);
+            监听滚动(e);
             e.scrollIntoViewIfNeeded()
             e.classList.contains("snomiao-article")
-                && processArticle(e)
+                && 进入雪阅模式(e)
         }, false);
         // dblclick to turn back
         e.addEventListener("dblclick", function (event) {
             // console.log(e, e.classList.contains("snomiao-article"))
             e.classList.contains("snomiao-article")
-                && (turnBackNormal(e) || true)
-                || processArticle(e)
+                && (恢复文章(e) || true)
+                || 进入雪阅模式(e)
             // e.scrollLeft += e.clientWidth + 100
             event.preventDefault();
         }, true);
         e.flag_handleClickToggleSnoReadMode = 1
     }
 
-    var processArticle = (e) => {
-        turnBackNormal(e)
+    var 进入雪阅模式 = (e) => {
+        恢复文章(e)
         window.snomiao_article = e
-        listenScroll(e)
-        listenClick(e)
+        监听滚动(e)
+        监听点击(e)
         var { left, top } = e.getBoundingClientRect()
         e.classList.add("snomiao-article")
         e.setAttribute("style", `left: calc(1em + ${-left}px)`);
-        updateStyle()
+        更新样式()
     }
-    // processArticle(window.article)
+    // 进入雪阅模式(window.article)
 
     // 
-    var prepareGetArticles = () => [...document.querySelectorAll(".snomiao-article")].map(turnBackNormal)
-    var getArticles = (e, level = 0) => {
-        var children = [...e.children]
+    var 恢复所有文章 = () => [...document.querySelectorAll(".snomiao-article")].map(恢复文章)
+    var 取文章树 = (元素, level = 0) => {
         var windowHeight = window.innerHeight
-        var large = children.filter(e => e && e.offsetHeight && e.offsetHeight > windowHeight)
-        var parentHeight = e.offsetHeight;
-        var large2 = large.filter(e => e.offsetHeight / parentHeight > 0.5)
-        var sub = large2.map(e => getArticles(e, level + 1))
-        var isArticle = !large2.length
-        var rate = e.offsetHeight / e.parentElement.offsetHeight
-        return { e, isArticle, rate, sub }
+        var 元素高 = 元素.offsetHeight;
+        var 主要的子元素 = (
+            [...元素.children]
+            // 高于屏幕
+            .filter(e => e && e.offsetHeight && e.offsetHeight > windowHeight)
+            // 且占比超过 50%
+            .filter(e => e.offsetHeight / 元素高 > 0.5)
+            // 且质量中心在 屏幕中心的 50% 内
+            .filter(e => e.offsetLeft + e.offsetWidth /2 > 0.5)
+            )
+        var 是文章 = !主要的子元素.length
+        var 子树 = 主要的子元素.map(e => 取文章树(e, level + 1))
+        var 占比 = 元素.offsetHeight / 元素.parentElement.offsetHeight
+        return { e: 元素, 是文章, 占比, 子树 }
     }
-    var setArticle = ({ e, isArticle, sub }) => {
-        sub.map(setArticle);
+    var 转换文章 = ({ e, 是文章, 子树 }) => {
+        子树.map(转换文章);
         if (e == document.body) return;
-        isArticle && console.log(e, "isArticle");
-        isArticle && processArticle(e);
+        是文章 && console.log(e, "是文章");
+        是文章 && !(e.flag_进入过雪阅模式) && 进入雪阅模式(e) && (e.flag_进入过雪阅模式 = true);
     }
     var main = () => {
         console.log("LAUNCH：SNOREAD");
-        prepareGetArticles()
-        var articleTree = getArticles(document.body)
+        恢复所有文章()
+        var articleTree = 取文章树(document.body)
         window.debugArticleTree = articleTree
-        setArticle(articleTree)
+        转换文章(articleTree)
     }
     // setInterval(main, 3000)
     document.addEventListener("load", main)
