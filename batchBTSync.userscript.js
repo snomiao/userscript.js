@@ -5,14 +5,19 @@
 // @description  在添加Key左边增加一个按钮，功能为批量添加Key
 // @author       snomiao@gmail.com
 // @match        http://localhost:8888/gui/
+// @match        http://127.0.0.1:8888/gui/
 // @grant        none
 // ==/UserScript==
 
 (function() {
     'use strict';
+    'esversion: 6';
 
     var 睡 = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+    var 转WIN路径为WSL路径 = (path) => path.replace(
+        /^([A-Z]):(.*)/,
+        (a, disk, path) => "/mnt/" + disk.toLowerCase() + "/" + path.split("\\").filter(e => e).join("/")
+    )
     var 异步选择元素 = async(p, sel) => {
         let e
         while (!(e = p.querySelector(sel)))
@@ -49,7 +54,7 @@
     var parseLine = (line) => {
         var m = line.match(/^(\S*?(\b[A|B][0-9A-Z]{32}\b))$/)
         m = m || line.match(/^(\S*?)\s+#?(\b[A|B][0-9A-Z]{32}\b)$/)
-        return m && { path: m[1], key: m[2] } || null
+        return m && { path: 转WIN路径为WSL路径(m[1]), key: m[2] } || null
     }
 
     var addLine = async(line) => {
@@ -188,5 +193,4 @@
         批量添加按钮.addEventListener("click", openBatchAddKey)
     }
     addBatchAddButton()
-
 })();
