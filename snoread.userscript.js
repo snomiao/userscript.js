@@ -22,45 +22,45 @@
         var windowHeight = window.innerHeight;
         var windowWidth = window.innerWidth;
         样式盒.innerHTML = `
-            <style>
-            .snomiao-article{
-                position: relative;
-                top: 0;
-                max-height: ${windowHeight * 0.9}px;
-                box-sizing: border-box;
-                width: calc(${windowWidth}px - 2em);
-            
-                display: flex;
-                flex-flow: column;
-                flex-wrap: wrap;
-                align-content: flex-start;
-            
-                overflow-x: auto;
-                overflow-y: hidden;
-            
-                z-index:1;
-                
-                box-shadow: 0 0 1px blue;
-                background: rgba(255,255,255,0.5);
-                color: black;
-            
-                text-align: justify;
-                text-indent: 0;
-            }
-            .snomiao-article>*{
-                margin: 0 -1em 0 0;
-                padding: 0 2em 1em 0;
-                /* max-width: 70em; */
-                min-width: 32rem;
-                width: min-content;
-                max-height: ${windowHeight * 0.9}px;
-                height:auto;
-                overflow-x: auto;
-                overflow-y: auto;
-                background: rgba(255,255,255,0.5);
-            }
-            </style>
-        `;
+<style>
+.snomiao-article{
+    position: relative;
+    top: 0;
+    max-height: ${windowHeight * 0.9}px;
+    box-sizing: border-box;
+    width: calc(${windowWidth}px - 2em);
+
+    display: flex;
+    flex-flow: column;
+    flex-wrap: wrap;
+    align-content: flex-start;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    z-index:1;
+    
+    box-shadow: 0 0 1px blue;
+    background: rgba(255,255,255,0.5);
+    color: black;
+
+    text-align: justify;
+    text-indent: 0;
+    padding: 1em;
+}
+.snomiao-article>*{
+    margin: 0 -1em 0 0;
+    padding: 0 2em 1em 0;
+    /* max-width: 70em; */
+    min-width: 32rem;
+    width: min-content;
+    max-height: ${windowHeight * 0.9}px;
+    height:auto;
+    overflow-x: auto;
+    overflow-y: auto;
+    background: rgba(255,255,255,0.5);
+}
+</style>`;
     }
 
     var 监听滚动 = e => {
