@@ -32,7 +32,7 @@
     top: 0;
     max-height: ${窗口高 * 0.9}px;
     box-sizing: border-box;
-    width: calc(${窗口宽}px - 3em);
+    width: calc(${窗口宽}px - 3em) !important;
 
     display: flex;
     flex-flow: column;
