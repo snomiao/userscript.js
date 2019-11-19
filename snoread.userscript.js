@@ -19,14 +19,18 @@
             样式盒.style.display = "none";
             document.body.appendChild(样式盒)
         }
-        var windowHeight = window.innerHeight;
+        var 窗口高 = window.innerHeight;
         var windowWidth = window.innerWidth;
         样式盒.innerHTML = `
 <style>
+.snomiao-article::-webkit-scrollbar { width: 0 !important }
+.snomiao-article{ -ms-overflow-style: none; }
+.snomiao-article{ overflow: -moz-scrollbars-none; }
+
 .snomiao-article{
     position: relative;
     top: 0;
-    max-height: ${windowHeight * 0.9}px;
+    max-height: ${窗口高 * 0.9}px;
     box-sizing: border-box;
     width: calc(${windowWidth}px - 2em);
 
@@ -40,7 +44,7 @@
 
     z-index:1;
     
-    box-shadow: 0 0 1px blue;
+    box-shadow: 0 0 0.1rem black inset;
     background: rgba(255,255,255,0.5);
     color: black;
 
@@ -54,7 +58,7 @@
     /* max-width: 70em; */
     min-width: 32rem;
     width: min-content;
-    max-height: ${windowHeight * 0.9}px;
+    max-height: ${窗口高 * 0.9}px;
     height:auto;
     overflow-x: auto;
     overflow-y: auto;
@@ -132,18 +136,20 @@
     // 
     var 恢复所有文章 = () => [...document.querySelectorAll(".snomiao-article")].map(恢复文章)
     var 取文章树 = (元素, level = 0) => {
-        var windowHeight = window.innerHeight
+        var 窗口高 = window.innerHeight;
         var 元素高 = 元素.offsetHeight;
+        var 子元素 = [...元素.children]
         var 主要的子元素 = (
-            [...元素.children]
+            子元素
             // 高于屏幕
-            .filter(e => e && e.offsetHeight && e.offsetHeight > windowHeight)
+            .filter(e => e && e.offsetHeight && e.offsetHeight > 窗口高)
             // 且占比超过 50%
             .filter(e => e.offsetHeight / 元素高 > 0.5)
             // 且质量中心在 屏幕中心的 50% 内
             .filter(e => e.offsetLeft + e.offsetWidth /2 > 0.5)
             )
-        var 是文章 = !主要的子元素.length
+        var 子元素叠高 = 子元素.map(e=>e.offsetHeight).concat([0]).reduce((a,b)=>a+b)
+        var 是文章 = !主要的子元素.length && 子元素叠高 / 窗口高 >  1
         var 子树 = 主要的子元素.map(e => 取文章树(e, level + 1))
         var 占比 = 元素.offsetHeight / 元素.parentElement.offsetHeight
         return { e: 元素, 是文章, 占比, 子树 }
@@ -159,6 +165,7 @@
         恢复所有文章()
         var articleTree = 取文章树(document.body)
         window.debugArticleTree = articleTree
+        
         转换文章(articleTree)
     }
     // setInterval(main, 3000)
