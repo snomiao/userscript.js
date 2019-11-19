@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.8(20191118)
+// @version      0.9(20191119)
 // @description  【自用，目前还有很多BUG】豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间，有建议或想法请联系 QQ 997596439 或 邮箱 snomiao@gmail.com
 // @author       snomiao@gmail.com
 // @match        http*://*/*
@@ -20,7 +20,7 @@
             document.body.appendChild(样式盒)
         }
         var 窗口高 = window.innerHeight;
-        var windowWidth = window.innerWidth;
+        var 窗口宽 = window.innerWidth;
         样式盒.innerHTML = `
 <style>
 .snomiao-article::-webkit-scrollbar { width: 0 !important }
@@ -32,7 +32,7 @@
     top: 0;
     max-height: ${窗口高 * 0.9}px;
     box-sizing: border-box;
-    width: calc(${windowWidth}px - 2em);
+    width: calc(${窗口宽}px - 3em);
 
     display: flex;
     flex-flow: column;
