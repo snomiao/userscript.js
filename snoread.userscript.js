@@ -66,7 +66,7 @@ div#main-wrapper:after, .clearfix:after {
 
     text-align: justify   !important;
     text-indent: 0   !important;
-    padding: 10% 1rem   !important;
+    padding: 10%  1rem   !important;
 }
 .snomiao-article>*{
     margin: 0 -1rem 0 0             !important;
