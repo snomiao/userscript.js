@@ -45,10 +45,10 @@ div#main-wrapper:after, .clearfix:after {
 
 .snomiao-article{
     position: relative  !important;
-    /* top: 0; */
-    box-sizing: border-box !important;
+    top: 0;
+    box-sizing: content-box !important;
     height: ${窗口高}px !important;
-    width: ${窗口宽}px !important;
+    width: 35rem !important;
 
     display: flex   !important;
     flex-flow: column   !important;
@@ -66,7 +66,7 @@ div#main-wrapper:after, .clearfix:after {
 
     text-align: justify   !important;
     text-indent: 0   !important;
-    padding: 10%  1rem   !important;
+    padding: 10% calc(${窗口宽}px - 35rem) 10% 0rem   !important;
 }
 .snomiao-article>*{
     margin: 0 -1rem 0 0             !important;
