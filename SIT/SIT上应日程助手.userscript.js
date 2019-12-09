@@ -1,14 +1,15 @@
 // ==UserScript==
-// @name         SIT上应第二课堂日程助手
-// @namespace    snomiao@gmail.com
-// @version      20191209
-// @description  功能：1) 在任意活动内下载ical格式的日程表 2)一键显示前200项活动 3)教务系统内下载ics格式课程表，可用于导入 Google Calendar
+// @name         SIT上应日程助手
+// @namespace    https://userscript.snomiao.com/
+// @version      0.7.20191209
+// @description  功能：1) 下载ics格式课程表，可用于导入 Google Calendar
 // @author       snomiao
 // @match        http*://sc.sit.edu.cn/*
 // @match        http*://ems.sit.edu.cn:85/student/*
 // @match        http*://ems1.sit.edu.cn:85/student/*
 // @grant        none
 // ==/UserScript==
+
 (function () {
     'use strict';
 
