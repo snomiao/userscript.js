@@ -19,7 +19,7 @@
 
 (function () {
     'use strict';
-
+ 
     // 获取质量参数
     // 前缀乘数 基数量 基数单位 后缀乘数
 
@@ -39,10 +39,10 @@
         }
         var reg1 = /(?:(\d+)\*)?(\d+\.\d+|\d+)(kg|g|mg|ug|L|ml|千克|克|斤|两|公斤|升|毫升|pb|tb|mb|kb|t)(?:\*(\d+))?/i
         var reg2 = /(?:(\d+)\*)?(\d+\.\d+|\d+)(kg|g|mg|ug|L|ml|千克|克|斤|两|公斤|升|毫升|pb|tb|mb|kb|t)\b(?:\*(\d+))?/ig
-        var matches = title.match(reg2)
-        if (matches) {
-            var match = matches.pop().match(reg1)
-            console.log(title, match)
+        var matches = title.match(reg2) || []
+        // 匹配多个价格
+        var vals = matches.map(match => {
+            match = match.match(reg1)
             var mul = parseFloat(match[4] || match[1]) || 1
             var val = parseFloat(match[2])
             var unit = match[3].toLowerCase()
@@ -53,8 +53,21 @@
                 console.log(match)
                 return Infinity
             }
+        })
+        var 挑选价格 = (vals)=>{
+            
+            // 如果匹配到的价格=1个
+            if (vals.length == 1) return vals[0]
+            // 如果匹配到的价格>1个，则进行同价判断
+            if (vals.length > 1) {
+                if (vals.slice(1, -1).includes(vals[0])) return vals[0]
+                if (vals.slice(0, -2).includes(vals[vals.length - 1])) return vals[vals.length - 1]
+            }
+            return Infinity
         }
-        return Infinity
+        var val = 挑选价格(vals)
+        console.log(title, vals, val)
+        return val
     }
 
     //
@@ -100,7 +113,7 @@
             .concat(getListItems({ selItem: ".grid.rec-offer", selTitle: ".offer_titles", selPrice: ".price-num" })) // 首页
             .concat(getListItems({ selItem: ".sm-offer-item", selTitle: ".sm-offer-title", selPrice: ".sm-offer-priceNum" })) //商品搜索页面
 
-            
+
         var lsItems = lsItems.map(e => ({ ...e, 千克价格: 求千克价格(e) }))
             .sort((a, b) => a.千克价格 - b.千克价格)
             .map(e => { e.e.parentNode.appendChild(e.e.parentNode.removeChild(e.e)); return e })
