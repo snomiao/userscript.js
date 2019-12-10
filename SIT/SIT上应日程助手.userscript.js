@@ -412,6 +412,31 @@
         }
         return [上课时间, 下课时间]
     }
+    var 单节考试转日历事件 = (row) => {
+        try {
+            var { 序号, 考试课程, 考试时间, 考试地点, 考试性质} = row;
+            // hack： 用当前学期貌课程序号前3位代表学期时间
+            var 本学期第一天 = 取学期第一天自课程序号("190")
+            var 本节考试时间 = 考试时间.replace(/第(\d+)周 星期(\d+) 第(\d+(?:-\d+))节/, (_, a,b,c) => `第${a}周,周${b},第${c}节`)
+            var 考试时间戳 = 计算课程时间(本节考试时间, 本学期第一天);
+            
+            return {
+                // 事件发生时间地点
+                TSTART: new Date(考试时间戳[0]),
+                TEND: new Date(考试时间戳[1]),
+                LOCATION: 考试地点,
+                // 事件UID，用于更新进展
+                UID: MD5(`考试: ${考试性质}-${考试课程}`) + `@snomiao.com`,
+                // 事件标题
+                SUMMARY: `${考试性质}考: ${考试课程}/${考试地点}/${考试时间}`,
+                // 考试的相关信息 (直接导出所有键值对)
+                DESCRIPTION: [...Object.keys(row)].map(key => `${key}: ${row[key]}\n`).join('')
+            }
+        } catch (e) {
+            console.error(`错误：`, e.message, `, 出错数据: `, row, e.stack)
+            throw new Error(`错误：`, e.message, `, 出错数据: `, row)
+        }
+    }
     var 单节课转日历事件 = (row) => {
         // 范例输入
         // 课程序号 课程名称 课程代码 课程类型 课程学分 授课老师 上课时间 上课地点 校区 计划人数 已选人数 挂牌 配课班 备注
@@ -585,6 +610,14 @@
         var 课程列分节 = 课程列表.map(拆分课程按时间地点).flat()
         var 输出ics = 日历事件列表转ICS格式(课程列分节.map(单节课转日历事件))
         下载文本文件(输出ics, `课程日历` + new Date().toISOString() + `.ics`)
+    }
+    var 下载单个考试日历 = (考试) => {
+        var 输出ics = 日历事件列表转ICS格式([单节考试转日历事件(考试)])
+        下载文本文件(输出ics, `${考试.考试序号}-${考试.考试代码}-${考试.考试名称}.ics`)
+    }
+    var 下载多个考试日历 = (考试列表) => {
+        var 输出ics = 日历事件列表转ICS格式(考试列表.map(单节考试转日历事件))
+        下载文本文件(输出ics, `考试日历` + new Date().toISOString() + `.ics`)
     }
     var 日历事件列表转ICS格式 = (事件列表) => {
         // .ics方案
@@ -800,7 +833,7 @@
             })
         })
 
-        document.body.appendChild(新元素("<style>.clickable{cursor: pointer}</style>"))
+        
     }
 
     if (location.pathname == "/student/selCourse/list1.jsp") {
@@ -823,16 +856,35 @@
         var 表头行 = document.querySelector(`form tr`)
         var 单元格表 = [...表头行.querySelectorAll("th")]
         绑定点击(单元格表[5], "点击下载多个课程日历", () => {
-            var 课程列表 = lsClasses.map(e=>{
+            var 课程列表 = lsClasses.map(e => {
                 var 单元格表 = [...e.querySelectorAll("td")]
                 var [课程序号, 课程名称, 课程代码, 学分, 授课老师, 上课时间, 上课地点, 选课类型, 选课结果, 操作] = 单元格表.map(e => e.innerText.trim())
-                var 课程 = { 课程序号, 课程名称, 课程代码, 学分, 授课老师, 上课时间, 上课地点, 选课类型, 选课结果, 操作 }
-                return 课程
+                return { 课程序号, 课程名称, 课程代码, 学分, 授课老师, 上课时间, 上课地点, 选课类型, 选课结果, 操作 }
             })
             下载多个课程日历(课程列表)
         })
-        document.body.appendChild(新元素("<style>.clickable{cursor: pointer}</style>"))
     }
-
+    
+    // 考试
+    if (location.pathname == "/student/main.jsp") {
+        var 表格 = [...document.querySelectorAll("table")].filter(tab => tab.innerHTML.match("我的考试"))
+        var 表格 = 表格 && 表格[0]
+        var 阵 = [...表格.querySelectorAll("tr")].map(tr => [...tr.querySelectorAll("td")]).filter(e => e.length == 5)
+        绑定点击(阵[0][2], "点击下载所有考试日历", () => {
+            var 考试列表 = 阵.slice(1).map(单元格行 => {
+                var [序号, 考试课程, 考试时间, 考试地点, 考试性质] = 单元格行.map(e => e.innerText.trim());
+                return {序号, 考试课程, 考试时间, 考试地点, 考试性质}
+            })
+            下载多个考试日历(考试列表)
+        })
+        阵.slice(1).map(单元格行 => {
+            var [序号, 考试课程, 考试时间, 考试地点, 考试性质] = 单元格行.map(e => e.innerText.trim());
+            var 考试 = { 序号, 考试课程, 考试时间, 考试地点, 考试性质 }
+            绑定点击(单元格行[2], "点击下载本考试日历", () => {
+                下载单个考试日历(考试)
+            })
+        })
+    }
+    document.body.appendChild(新元素("<style>.clickable{cursor: pointer}</style>"))
 })();
 
