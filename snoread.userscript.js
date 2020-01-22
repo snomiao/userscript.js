@@ -1,16 +1,18 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.10(20191119)
+// @version      0.11(20191215)
 // @description  【自用，目前还有很多BUG】豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间，有建议或想法请联系 QQ 997596439 或 邮箱 snomiao@gmail.com
 // @author       snomiao@gmail.com
-// @match        http*://*/*
+// @match        http://*/*
+// @match        https://*/*
 // @grant        none
 // ==/UserScript==
 
 (function () {
     'use strict';
-
+    'esversion: 6';
+    var 睡 = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     // var 窗口高 = window.innerHeight; // Math.min(window.innerHeight, window.outerHeight);
     // var 窗口高 = // window.innerHeight; // Math.min(window.innerHeight, window.outerHeight);
     // document.body.clientWidth; //window.innerWidth; // Math.min(window.innerWidth, window.outerWidth);
@@ -18,7 +20,8 @@
     var 取窗口宽 = () => document.body.parentElement.clientWidth;
 
     var 更新样式 = () => {
-        var 窗口高 = 取窗口高(), 窗口宽 = 取窗口宽()
+        var 窗口高 = 取窗口高(),
+            窗口宽 = 取窗口宽()
         var 样式盒 = document.querySelector("div.snomiao-article-style")
         if (!样式盒) {
             样式盒 = document.createElement("div");
@@ -45,10 +48,10 @@ div#main-wrapper:after, .clearfix:after {
 
 .snomiao-article{
     position: relative  !important;
-    top: 0;
-    box-sizing: content-box !important;
+    /* top: 0; */
+    box-sizing: border-box !important;
     height: ${窗口高}px !important;
-    width: 35rem !important;
+    width: ${窗口宽}px !important;
 
     display: flex   !important;
     flex-flow: column   !important;
@@ -58,7 +61,7 @@ div#main-wrapper:after, .clearfix:after {
     overflow-x: auto   !important;
     overflow-y: hidden   !important;
 
-    z-index:99999   !important;
+    z-index:1   !important;
 
     box-shadow: 0 0 1rem black inset   !important;
     background: rgba(255,255,255,0.3)   !important;
@@ -66,7 +69,7 @@ div#main-wrapper:after, .clearfix:after {
 
     text-align: justify   !important;
     text-indent: 0   !important;
-    padding: 10% calc(${窗口宽}px - 35rem) 10% 0rem   !important;
+    padding: 10% 1rem   !important;
 }
 .snomiao-article>*{
     margin: 0 -1rem 0 0             !important;
@@ -79,6 +82,12 @@ div#main-wrapper:after, .clearfix:after {
     overflow-y: auto            !important;
     background: rgba(255,255,255,0.3) !important;
 }
+/* 解决pre换行问题 */
+.snomiao-article pre{
+    white-space: pre-wrap;
+}
+
+
 </style>`;
     }
 
@@ -87,19 +96,38 @@ div#main-wrapper:after, .clearfix:after {
         // click to update this article and scroll to it
         元素.addEventListener("click", function (事件) {
             元素.scrollIntoViewIfNeeded()
-            元素.classList.contains("snomiao-article")
-                && 进入雪阅模式(元素)
+            元素.classList.contains("snomiao-article") &&
+                进入雪阅模式(元素)
         }, false);
         // dblclick to turn back
         元素.addEventListener("dblclick", function (事件) {
             // console.log(元素, 元素.classList.contains("snomiao-article"))
-            元素.classList.contains("snomiao-article")
-                && (退出雪阅模式(元素) || true)
-                || 进入雪阅模式(元素)
+            元素.classList.contains("snomiao-article") &&
+                (退出雪阅模式(元素) || true) ||
+                进入雪阅模式(元素)
             // 元素.scrollLeft += 元素.clientWidth + 100
             事件.preventDefault();
         }, true);
         元素.flag_handleClickToggleSnoReadMode = 1
+    }
+    var 解除修复元素可见性 = (元素) => {
+        元素.parentElement && 解除修复元素可见性(元素.parentElement)
+        if (!元素.flag_修复元素可见性) return;
+        元素.flag_修复元素可见性 = false
+
+        // 父元素 overflow: visible
+        if (元素.origin_overflow) { 元素.style.overflow = 元素.origin_overflow }
+    }
+    var 修复元素可见性 = (元素) => {
+        元素.parentElement && 修复元素可见性(元素.parentElement)
+        if (元素.flag_修复元素可见性) return;
+        元素.flag_修复元素可见性 = true
+
+        // 父元素 overflow: visible
+        if (window.getComputedStyle(元素).getPropertyValue('overflow') == "hidden") {
+            元素.origin_overflow = "hidden"
+            元素.style.overflow = "visible"
+        }
     }
 
     var 切换雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") && (退出雪阅模式(元素), true) || 进入雪阅模式(元素)
@@ -118,14 +146,16 @@ div#main-wrapper:after, .clearfix:after {
     var 退出雪阅模式 = 元素 => {
         元素.setAttribute("style", ``);
         元素.classList.remove("snomiao-article")
+        解除修复元素可见性(元素)
         元素.flag_雪阅模式 = false
     }
     var 退出雪阅模式_临时 = 元素 => {
         元素.setAttribute("style", ``);
         元素.classList.remove("snomiao-article")
+        解除修复元素可见性(元素)
     }
     // 进入雪阅模式(window.article)
-    var 恢复所有文章样式 = () => [...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时)
+    var 恢复所有文章样式 = async () => ([...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时), await 睡(0))
 
     // 解决span取到offsetHeight为0的问题
     var 取元素投影高 = (元素) => 元素.offsetHeight || 元素.getBoundingClientRect().height
@@ -141,7 +171,8 @@ div#main-wrapper:after, .clearfix:after {
     var 取相邻关系按 = 关系 => 列 => 取相邻对(列).map(对 => 关系(...对))
     var 文章树取元素 = (文章树) => [文章树.元素, ...(文章树.子树列 && 文章树.子树列.map(文章树取元素) || [])]
     var 检测重叠冲突 = (文章树) => {
-        var 窗口高 = 取窗口高(), 窗口宽 = 取窗口宽()
+        var 窗口高 = 取窗口高(),
+            窗口宽 = 取窗口宽()
         var 元素列 = 文章树取元素(文章树).flat(Infinity)
         var 文章列 = 元素列.filter(e => e.flag_是文章)
         var 文章列 = 排序按(取元素投影顶)(文章列)
@@ -152,18 +183,9 @@ div#main-wrapper:after, .clearfix:after {
         var 冲突弱势元素表 = 异常对列.map(异常对 => 排序按(取元素面积)(异常对)[0])
         冲突弱势元素表.forEach(元素 => 元素.flag_冲突弱势元素 = true)
     }
-    var 修复元素可见性 = (元素) => {
-        元素.parentElement && 修复元素可见性(元素.parentElement)
-        if (元素.flag_修复元素可见性) return;
-        元素.flag_修复元素可见性 = true
-
-        // 父元素 overflow: visible
-        if (window.getComputedStyle(元素).getPropertyValue('overflow') == "hidden") {
-            元素.style.overflow = "visible"
-        }
-    }
     var 取文章树 = (元素, 层数 = 0) => {
-        var 窗口高 = 取窗口高(), 窗口宽 = 取窗口宽()
+        var 窗口高 = 取窗口高(),
+            窗口宽 = 取窗口宽()
         var 元素外高 = 取元素投影高(元素);
         var 子元素 = [...元素.children]
 
@@ -183,11 +205,11 @@ div#main-wrapper:after, .clearfix:after {
         元素.setAttribute("占比", 占比)
         // debug end
 
+        var 子树列 = 子元素高于屏.map(e => 取文章树(e, 层数 + 1)) || []
 
-        var 子树列 = 子元素高于屏.map(e => 取文章树(e, 层数 + 1))
         var 占比 = 取元素投影高(元素) / 取元素投影高(元素.parentElement)
         元素.flag_是文章 = 是文章
-        // 是文章 && console.log(元素, "是文章");
+        是文章 && console.log(元素, "是文章");
         return { 元素, 是文章, 占比, 子树列 }
     }
     var 输出文章树 = (树) => {
@@ -208,12 +230,14 @@ div#main-wrapper:after, .clearfix:after {
         更新雪阅模式(元素)
         // 进入雪阅模式(元素)
     }
-    var 入口 = () => {
+    var 入口 = async () => {
         console.log("LAUNCH：SNOREAD");
-        恢复所有文章样式()
+        await 恢复所有文章样式()
+        await 睡(100)
         var 文章树 = 取文章树(document.body)
         window.调试文章树1 = 文章树
         window.调试文章树2 = 输出文章树(文章树)
+        console.log(输出文章树(文章树))
         检测重叠冲突(文章树)
         转换文章树(文章树)
     }
@@ -251,7 +275,7 @@ div#main-wrapper:after, .clearfix:after {
             // 横竖都滚到底了
             [...e.children].map(监听滚动)
         }
-        e.addEventListener("mousewheel", handleScroll, { capture: false, passive: false })     // Chrome/Edge
+        e.addEventListener("mousewheel", handleScroll, { capture: false, passive: false }) // Chrome/Edge
         e.addEventListener("DOMMouseScroll", handleScroll, { capture: false, passive: false }) // FF
     }
     var 入口 = () => 监听滚动(document.body)
