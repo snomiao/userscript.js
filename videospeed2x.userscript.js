@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name          所有视频2倍速 / video speed 2x
+// @name          所有视频2倍速度播放 / video speed 2x
 // @namespace     https://userscript.snomiao.com/
 // @description   这个世界的一切都太慢了啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
 // @match         *://*.youtube.com/*

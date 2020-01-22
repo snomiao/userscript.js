@@ -9,7 +9,7 @@
 // @grant        none
 // ==/UserScript==
 
-(function () {
+(function() {
     'use strict';
     'esversion: 6';
     var 睡 = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -94,13 +94,13 @@ div#main-wrapper:after, .clearfix:after {
     var 监听点击 = 元素 => {
         if (元素.flag_handleClickToggleSnoReadMode) return;
         // click to update this article and scroll to it
-        元素.addEventListener("click", function (事件) {
+        元素.addEventListener("click", function(事件) {
             元素.scrollIntoViewIfNeeded()
             元素.classList.contains("snomiao-article") &&
                 进入雪阅模式(元素)
         }, false);
         // dblclick to turn back
-        元素.addEventListener("dblclick", function (事件) {
+        元素.addEventListener("dblclick", function(事件) {
             // console.log(元素, 元素.classList.contains("snomiao-article"))
             元素.classList.contains("snomiao-article") &&
                 (退出雪阅模式(元素) || true) ||
@@ -176,7 +176,7 @@ div#main-wrapper:after, .clearfix:after {
         var 元素列 = 文章树取元素(文章树).flat(Infinity)
         var 文章列 = 元素列.filter(e => e.flag_是文章)
         var 文章列 = 排序按(取元素投影顶)(文章列)
-        // console.log(文章列)
+            // console.log(文章列)
         var 相邻对列 = 取相邻对(文章列)
         var 相邻对列 = 相邻对列.map(对 => (对.距离 = 取距离按(取元素投影顶)(...对), 对))
         var 异常对列 = 相邻对列.filter(对 => 对.距离 < 窗口高)
@@ -196,14 +196,15 @@ div#main-wrapper:after, .clearfix:after {
 
         // debug start
         子元素.forEach(e => {
-            e.高度占比 = 取元素投影高(e) / 元素外高
-            元素.setAttribute("高度占比", e.高度占比)
-            元素.setAttribute("高于窗口", 取元素投影高(e) > 窗口高)
-        })
-        // var 子元素叠高 = 子元素.map(e => e.offsetHeight).concat([0]).reduce((a, b) => a + b)
+                e.高度占比 = 取元素投影高(e) / 元素外高
+                元素.setAttribute("高度占比", e.高度占比)
+                元素.setAttribute("高于窗口", 取元素投影高(e) > 窗口高)
+            })
+            // var 子元素叠高 = 子元素.map(e => e.offsetHeight).concat([0]).reduce((a, b) => a + b)
         元素.setAttribute("是文章", 是文章)
         元素.setAttribute("占比", 占比)
-        // debug end
+            // debug end
+
 
         var 子树列 = 子元素高于屏.map(e => 取文章树(e, 层数 + 1)) || []
 
@@ -228,7 +229,7 @@ div#main-wrapper:after, .clearfix:after {
         }
         console.log(元素, "进入雪阅模式");
         更新雪阅模式(元素)
-        // 进入雪阅模式(元素)
+            // 进入雪阅模式(元素)
     }
     var 入口 = async () => {
         console.log("LAUNCH：SNOREAD");
@@ -237,7 +238,7 @@ div#main-wrapper:after, .clearfix:after {
         var 文章树 = 取文章树(document.body)
         window.调试文章树1 = 文章树
         window.调试文章树2 = 输出文章树(文章树)
-        console.log(输出文章树(文章树))
+        //console.log(输出文章树(文章树))
         检测重叠冲突(文章树)
         转换文章树(文章树)
     }
@@ -248,7 +249,7 @@ div#main-wrapper:after, .clearfix:after {
     入口()
 })();
 
-(function () {
+(function() {
     'use strict';
     var 监听滚动 = e => {
         [...e.children].map(监听滚动)
