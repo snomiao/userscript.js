@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.11(20191215)
+// @version      0.12(20200123)
 // @description  【自用，目前还有很多BUG】豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间，有建议或想法请联系 QQ 997596439 或 邮箱 snomiao@gmail.com
 // @author       snomiao@gmail.com
 // @match        http://*/*
