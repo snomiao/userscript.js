@@ -52,6 +52,7 @@ div#main-wrapper:after, .clearfix:after {
     box-sizing: border-box !important;
     height: ${窗口高}px !important;
     width: ${窗口宽}px !important;
+    max-width: ${窗口宽}px !important;
 
     display: flex   !important;
     flex-flow: column   !important;
@@ -95,6 +96,7 @@ div#main-wrapper:after, .clearfix:after {
         if (元素.flag_handleClickToggleSnoReadMode) return;
         // click to update this article and scroll to it
         元素.addEventListener("click", function(事件) {
+            // console.debug("点击元素", 元素)
             元素.scrollIntoViewIfNeeded()
             元素.classList.contains("snomiao-article") &&
                 进入雪阅模式(元素)
@@ -129,33 +131,46 @@ div#main-wrapper:after, .clearfix:after {
             元素.style.overflow = "visible"
         }
     }
+    var 适配元素位置到屏幕 = (元素) => {
+        元素.setAttribute("style", `left: 0`);
+        var { left, top } = 元素.getBoundingClientRect()
+        元素.classList.add("snomiao-article")
+        元素.setAttribute("style", `left: calc(${-left}px)`);
+    }
+    // 适配元素位置到屏幕(temp1)
 
-    var 切换雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") && (退出雪阅模式(元素), true) || 进入雪阅模式(元素)
-    var 更新雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") != 元素.flag_雪阅模式 && 切换雪阅模式(元素)
     var 进入雪阅模式 = (元素) => {
         退出雪阅模式(元素)
         window.snomiao_article = 元素
         监听点击(元素)
-        var { left, top } = 元素.getBoundingClientRect()
-        元素.classList.add("snomiao-article")
-        元素.setAttribute("style", `left: calc(${-left}px)`);
         修复元素可见性(元素)
         更新样式()
+        适配元素位置到屏幕(元素)
+        // ref: 适配此页面https://medium.com/s/story/why-sleep-on-it-is-the-most-useful-advice-for-learning-and-also-the-most-neglected-86b20249f06d
+        // 未知原因错位，不过写2次就能正常了
+        适配元素位置到屏幕(元素) 
         元素.flag_雪阅模式 = true
+        console.debug(元素, "进入雪阅模式");
     }
     var 退出雪阅模式 = 元素 => {
         元素.setAttribute("style", ``);
         元素.classList.remove("snomiao-article")
         解除修复元素可见性(元素)
         元素.flag_雪阅模式 = false
+        console.debug(元素, "退出雪阅模式");
     }
     var 退出雪阅模式_临时 = 元素 => {
         元素.setAttribute("style", ``);
         元素.classList.remove("snomiao-article")
         解除修复元素可见性(元素)
     }
+    
+    var 切换雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") && (退出雪阅模式(元素), true) || 进入雪阅模式(元素)
+    var 更新雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") != 元素.flag_雪阅模式 && 切换雪阅模式(元素)
+
     // 进入雪阅模式(window.article)
-    var 恢复所有文章样式 = async () => ([...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时), await 睡(0))
+    // var 恢复所有文章样式 = async () => ([...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时), await 睡(0))
+    var 恢复所有文章样式 = () => [...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时)
 
     // 解决span取到offsetHeight为0的问题
     var 取元素投影高 = (元素) => 元素.offsetHeight || 元素.getBoundingClientRect().height
@@ -217,24 +232,23 @@ div#main-wrapper:after, .clearfix:after {
         return [树.元素, 树.是文章, 树.占比, ...(树.子树列 && 树.子树列.map(输出文章树) || [])]
     }
     var 转换文章树 = ({ 元素, 是文章, 子树列 }) => {
-        子树列.map(转换文章树);
-
+        var 子树有文章 = !!子树列.map(转换文章树).length
+        if (子树有文章) return;
         if (元素 == document.body) return;
-
+        
         if (!元素.flag_是文章) return;
         if (元素.flag_冲突弱势元素) return;
         if (!元素.flag_进入过雪阅模式) {
             元素.flag_进入过雪阅模式 = true
             元素.flag_雪阅模式 = true
         }
-        console.log(元素, "进入雪阅模式");
         更新雪阅模式(元素)
-            // 进入雪阅模式(元素)
+        // 进入雪阅模式(元素)
     }
     var 入口 = async () => {
         console.log("LAUNCH：SNOREAD");
         await 恢复所有文章样式()
-        await 睡(100)
+        // await 睡(100)
         var 文章树 = 取文章树(document.body)
         window.调试文章树1 = 文章树
         window.调试文章树2 = 输出文章树(文章树)
@@ -280,8 +294,7 @@ div#main-wrapper:after, .clearfix:after {
         e.addEventListener("DOMMouseScroll", handleScroll, { capture: false, passive: false }) // FF
     }
     var 入口 = () => 监听滚动(document.body)
-    document.addEventListener("load", 入口)
+    document.addEventListener("DOMContentLoaded", 入口)
     window.addEventListener("load", 入口)
     入口()
-
 })();
