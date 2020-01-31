@@ -1,15 +1,18 @@
 // ==UserScript==
 // @name         SIT上应教务系统兼容性修复
 // @namespace    snomiao@gmail.com
-// @version      0.7
+// @version      0.8
 // @description  使兼容 Chrome, 目前发现的bug范围包括评教、成绩查询等功能，强行退课、选到无法选中的课等。(20191209)增加学分绩点计算以及刷分重修指标。
 // @author       snomiao
 // @match        http*://ems1.sit.edu.cn:85/student/*
 // @match        http*://ems.sit.edu.cn:85/student/*
 // @match        http*://ems1.sit.edu.cn:85/admin/*
 // @match        http*://ems.sit.edu.cn:85/admin/*
+// @match        http*://sam1.sit.edu.cn/*
+// @match        http*://sam.sit.edu.cn/*
 // @grant        none
 // ==/UserScript==
+
 
 (function () {
     'use strict';
@@ -168,7 +171,6 @@
 
                 var 绩点提高空间 = (5 - 绩点) * 学分
                 单元格表[12].innerHTML = "绩点提高空间：" + (百分位(绩点提高空间 / 已修学分)) + " " + [...Array(0 | 绩点提高空间)].join("|") + "<br>" + 单元格表[12].innerHTML
-                //lstd[12].innerHTML = "刷分权重：" + [...Array(0|刷分权重)].join("|") + "<br>" + lstd[12].innerHTML
             }
         })
 
@@ -183,6 +185,15 @@
             }
             return "";
         }
+    }
+    if (location.hostname == "sam1.sit.edu.cn" && location.pathname == "/menu.jsp") {
+        [...document.querySelectorAll("a")].map(e => {
+            try {
+                var href = e.attributes.onclick.textContent.match(/javascript:loadMask\(["'](.*?)["']/)[1]
+                e.setAttribute("href", href)
+                e.setAttribute("target", "main")
+            } catch{ }
+        })
     }
 
     // 增加表格排序功能（还有些bug..)
