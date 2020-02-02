@@ -11,17 +11,17 @@
 // ==/UserScript==
 
 
-(function () {
+(function() {
     'use strict';
 
     var 绑定Click到元素 = (f, 元素) => (元素.addEventListener("click", f), 元素)
     var 新元素 = (innerHTML) => {
-        var e = document.createElement("div");
-        e.innerHTML = innerHTML;
-        return e.children[0]
-    }
-    //导入MD5函数
-    var MD5 = function (string) {
+            var e = document.createElement("div");
+            e.innerHTML = innerHTML;
+            return e.children[0]
+        }
+        //导入MD5函数
+    var MD5 = function(string) {
         function RotateLeft(lValue, iShiftBits) {
             return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
         }
@@ -48,8 +48,11 @@
         }
 
         function F(x, y, z) { return (x & y) | ((~x) & z); }
+
         function G(x, y, z) { return (x & z) | (y & (~z)); }
+
         function H(x, y, z) { return (x ^ y ^ z); }
+
         function I(x, y, z) { return (y ^ (x | (~z))); }
 
         function FF(a, b, c, d, x, s, ac) {
@@ -96,7 +99,9 @@
         };
 
         function WordToHex(lValue) {
-            var WordToHexValue = "", WordToHexValue_temp = "", lByte, lCount;
+            var WordToHexValue = "",
+                WordToHexValue_temp = "",
+                lByte, lCount;
             for (lCount = 0; lCount <= 3; lCount++) {
                 lByte = (lValue >>> (lCount * 8)) & 255;
                 WordToHexValue_temp = "0" + lByte.toString(16);
@@ -115,12 +120,10 @@
 
                 if (c < 128) {
                     utftext += String.fromCharCode(c);
-                }
-                else if ((c > 127) && (c < 2048)) {
+                } else if ((c > 127) && (c < 2048)) {
                     utftext += String.fromCharCode((c >> 6) | 192);
                     utftext += String.fromCharCode((c & 63) | 128);
-                }
-                else {
+                } else {
                     utftext += String.fromCharCode((c >> 12) | 224);
                     utftext += String.fromCharCode(((c >> 6) & 63) | 128);
                     utftext += String.fromCharCode((c & 63) | 128);
@@ -133,19 +136,37 @@
 
         var x = Array();
         var k, AA, BB, CC, DD, a, b, c, d;
-        var S11 = 7, S12 = 12, S13 = 17, S14 = 22;
-        var S21 = 5, S22 = 9, S23 = 14, S24 = 20;
-        var S31 = 4, S32 = 11, S33 = 16, S34 = 23;
-        var S41 = 6, S42 = 10, S43 = 15, S44 = 21;
+        var S11 = 7,
+            S12 = 12,
+            S13 = 17,
+            S14 = 22;
+        var S21 = 5,
+            S22 = 9,
+            S23 = 14,
+            S24 = 20;
+        var S31 = 4,
+            S32 = 11,
+            S33 = 16,
+            S34 = 23;
+        var S41 = 6,
+            S42 = 10,
+            S43 = 15,
+            S44 = 21;
 
         string = Utf8Encode(string);
 
         x = ConvertToWordArray(string);
 
-        a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
+        a = 0x67452301;
+        b = 0xEFCDAB89;
+        c = 0x98BADCFE;
+        d = 0x10325476;
 
         for (k = 0; k < x.length; k += 16) {
-            AA = a; BB = b; CC = c; DD = d;
+            AA = a;
+            BB = b;
+            CC = c;
+            DD = d;
             a = FF(a, b, c, d, x[k + 0], S11, 0xD76AA478);
             d = FF(d, a, b, c, x[k + 1], S12, 0xE8C7B756);
             c = FF(c, d, a, b, x[k + 2], S13, 0x242070DB);
@@ -233,7 +254,7 @@
     var 异步抓取 = (URL) => {
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function () {
+            xhr.onreadystatechange = function() {
                 if (xhr.readyState == 4) {
                     并发数--;
                     if (xhr.status == 200) {
@@ -242,7 +263,7 @@
                         resolve(data);
                     } else {
                         // 连接失败后的重试机制
-                        (async () => {
+                        (async() => {
                             let data = await 异步抓取(URL)
                             resolve(data);
                         })()
@@ -265,7 +286,7 @@
     }
     var 解析第二课堂活动事件 = (html) => {
         var re = {}
-        // 样例
+            // 样例
         let _抓取html样例 = `
         <h1 class="title_8">【学工部】上海应用技术大学2019届毕业生春季校园综合招聘会</h1>
             <div style=" color:#7a7a7a; text-align:center">
@@ -281,12 +302,12 @@
             !?
         </div>`
 
-        var DOM = document.createElement("html")
-        DOM.innerHTML = html;
+        var v_dom = document.createElement("html")
+        v_dom.innerHTML = html;
 
         // 基本信息
-        var 活动信息 = DOM.querySelector("div.box-1 > div:nth-child(2)").innerHTML.replace(/&nbsp;/g, " ").replace(/<br>/g, "").split('\n').map(x => x).join('\n');
-        var 活动类型 = DOM.querySelector(".hover-a").innerText;
+        var 活动信息 = v_dom.querySelector("div.box-1 > div:nth-child(2)").innerHTML.replace(/&nbsp;/g, " ").replace(/<br>/g, "").split('\n').map(x => x).join('\n');
+        var 活动类型 = v_dom.querySelector(".hover-a").innerText;
 
         var 尝试提取活动时间 = (活动信息) => {
             if (活动信息.match(/刷卡时间段：[-\d]+ [:\d]+.*?[-\d]+ [:\d]+/m)) {
@@ -298,7 +319,7 @@
                 let 活动时长匹配 = 活动信息.match(/活动时长：([零一二三四五六七八九十0-9]*)\s*?个?\s*?((?:年|季度|月|周|天|小时|刻钟|分钟|分钟|星期|礼拜|日|时|刻|分|秒钟|秒)?) 分钟.*?/m);
                 let 量 = 活动时长匹配[1].replace(/[零一二三四五六七八九十]/g, (s) => "零一二三四五六七八九十".indexOf(s))
                 let 单位 = (
-                    活动时长匹配[2].length ? 活动时长匹配[2]
+                        活动时长匹配[2].length ? 活动时长匹配[2]
                         .replace(/年/, 1000 * 60 * 60 * 24 * 365 / 4)
                         .replace(/季度/, 1000 * 60 * 60 * 24 * 365 / 4)
                         .replace(/月/, 1000 * 60 * 60 * 24 * 30)
@@ -307,8 +328,8 @@
                         .replace(/小时|时/, 1000 * 60 * 60)
                         .replace(/刻钟|刻/, 1000 * 60 * 15)
                         .replace(/分钟|分/, 1000 * 60)
-                        .replace(/秒钟|秒/, 1000)
-                        : 1000 * 60) // 不带单位默认分钟
+                        .replace(/秒钟|秒/, 1000) :
+                        1000 * 60) // 不带单位默认分钟
                 let 活动时长毫秒 = parseInt(单位) * 量;
                 var 开始 = new Date(活动信息.match(/活动开始时间：([-\d]+ [:\d]+).*?/m)[1])
                 var 结束 = new Date(+开始 + 活动时长毫秒);
@@ -324,7 +345,7 @@
             }
         }
         var 活动时间 = 尝试提取活动时间(活动信息)
-        // 返回一个事件
+            // 返回一个事件
         return {
             // 事件发生时间地点
             TSTART: 活动时间.开始,
@@ -333,9 +354,9 @@
             // 事件UID，用于更新进展
             UID: MD5("第二课堂活动：" + 活动信息.match(/活动编号：(.*)/m)[1]) + `@snomiao.com`,
             // 事件标题
-            SUMMARY: DOM.querySelector("h1").innerText,
+            SUMMARY: v_dom.querySelector("h1").innerText,
             // 本活动的相关信息
-            DESCRIPTION: "活动类型：" + 活动类型 + '\n\n' + 活动信息 + '\n\n' + eleHTML.querySelector("div.box-1 > div:nth-child(3)").innerText,
+            DESCRIPTION: "活动类型：" + 活动类型 + '\n\n' + 活动信息 + '\n\n' + v_dom.querySelector("div.box-1 > div:nth-child(3)").innerText,
         }
     }
     var 取学期第一天自课程序号 = 课程序号 => {
@@ -415,12 +436,12 @@
     }
     var 单节考试转日历事件 = (row) => {
         try {
-            var { 序号, 考试课程, 考试时间, 考试地点, 考试性质} = row;
+            var { 序号, 考试课程, 考试时间, 考试地点, 考试性质 } = row;
             // hack： 用当前学期貌课程序号前3位代表学期时间
             var 本学期第一天 = 取学期第一天自课程序号("190")
-            var 本节考试时间 = 考试时间.replace(/第(\d+)周 星期(\d+) 第(\d+(?:-\d+))节/, (_, a,b,c) => `第${a}周,周${b},第${c}节`)
+            var 本节考试时间 = 考试时间.replace(/第(\d+)周 星期(\d+) 第(\d+(?:-\d+))节/, (_, a, b, c) => `第${a}周,周${b},第${c}节`)
             var 考试时间戳 = 计算课程时间(本节考试时间, 本学期第一天);
-            
+
             return {
                 // 事件发生时间地点
                 TSTART: new Date(考试时间戳[0]),
@@ -439,82 +460,82 @@
         }
     }
     var 单节课转日历事件 = (row) => {
-        // 范例输入
-        // 课程序号 课程名称 课程代码 课程类型 课程学分 授课老师 上课时间 上课地点 校区 计划人数 已选人数 挂牌 配课班 备注
-        // row = {
-        // 	课程序号,
-        // 	课程代码,
-        // 	课程名称,
-        // 	授课老师,
-        // 	学分,
-        // 	本节上课地点,
-        // 	本节上课时间,
-        // }
-        var { 本节上课时间, 本节上课地点, 课程序号, 课程名称, 课程序号, 课程代码, 授课老师, 学分 } = row;
-        try {
-            var 学期第一天 = 取学期第一天自课程序号(课程序号)
-            var 课程时间戳 = 计算课程时间(本节上课时间, 学期第一天);
-            return {
-                // 事件发生时间地点
-                TSTART: new Date(课程时间戳[0]),
-                TEND: new Date(课程时间戳[1]),
-                LOCATION: 本节上课地点,
-                // 事件UID，用于更新进展
-                UID: MD5(`课程时间: ${课程序号}-${本节上课时间}`) + `@snomiao.com`,
-                // 事件标题
-                SUMMARY: `${课程名称}/${课程序号}/${课程代码}/${授课老师}/${学分}分/${本节上课时间}`,
-                // 本节课的相关信息 (直接导出所有键值对)
-                DESCRIPTION: [...Object.keys(row)].map(key => `${key}: ${row[key]}\n`).join('')
+            // 范例输入
+            // 课程序号 课程名称 课程代码 课程类型 课程学分 授课老师 上课时间 上课地点 校区 计划人数 已选人数 挂牌 配课班 备注
+            // row = {
+            // 	课程序号,
+            // 	课程代码,
+            // 	课程名称,
+            // 	授课老师,
+            // 	学分,
+            // 	本节上课地点,
+            // 	本节上课时间,
+            // }
+            var { 本节上课时间, 本节上课地点, 课程序号, 课程名称, 课程序号, 课程代码, 授课老师, 学分 } = row;
+            try {
+                var 学期第一天 = 取学期第一天自课程序号(课程序号)
+                var 课程时间戳 = 计算课程时间(本节上课时间, 学期第一天);
+                return {
+                    // 事件发生时间地点
+                    TSTART: new Date(课程时间戳[0]),
+                    TEND: new Date(课程时间戳[1]),
+                    LOCATION: 本节上课地点,
+                    // 事件UID，用于更新进展
+                    UID: MD5(`课程时间: ${课程序号}-${本节上课时间}`) + `@snomiao.com`,
+                    // 事件标题
+                    SUMMARY: `${课程名称}/${课程序号}/${课程代码}/${授课老师}/${学分}分/${本节上课时间}`,
+                    // 本节课的相关信息 (直接导出所有键值对)
+                    DESCRIPTION: [...Object.keys(row)].map(key => `${key}: ${row[key]}\n`).join('')
+                }
+            } catch (e) {
+                throw new Error(`错误：`, e.message, `, 出错数据: `, row)
             }
-        } catch (e) {
-            throw new Error(`错误：`, e.message, `, 出错数据: `, row)
         }
-    }
-    // 矩阵转置
+        // 矩阵转置
     var 转置 = m => m[0].map((x, i) => m.map(x => x[i]))
-    // 循环直到不动点，这里的调试技巧：进入死循环时可以在此中断，然后修改变量使其报错或跳出
-    // update: 可配置超时退出
-    var 循环直到不动点 = function (s, proc_function) {
-        var o = s;
-        while (1) {
-            var tmp = proc_function(o)
-            if (tmp == o) {
-                return o;
-            } else {
-                o = tmp;
+        // 循环直到不动点，这里的调试技巧：进入死循环时可以在此中断，然后修改变量使其报错或跳出
+        // update: 可配置超时退出
+    var 循环直到不动点 = function(s, proc_function) {
+            var o = s;
+            while (1) {
+                var tmp = proc_function(o)
+                if (tmp == o) {
+                    return o;
+                } else {
+                    o = tmp;
+                }
             }
         }
-    }
-    // 把时间表按具体某周、某节课展开成独立元素，便于比较
-    var 展开课程节数 = function (s) {
+        // 把时间表按具体某周、某节课展开成独立元素，便于比较
+    var 展开课程节数 = function(s) {
         // 单双周筛选
-        var filter_error = function (s) {
-            return !(s.length == 0 ||
-                s.match(/.*?第\d*?[02468]周\*[^\*].*/) ||
-                s.match(/.*?第\d*?[13579]周\*\*.*/)
-            );
-        }
-        // 单双周统一化
-        var normalyze = function (s) {
+        var filter_error = function(s) {
+                return !(s.length == 0 ||
+                    s.match(/.*?第\d*?[02468]周\*[^\*].*/) ||
+                    s.match(/.*?第\d*?[13579]周\*\*.*/)
+                );
+            }
+            // 单双周统一化
+        var normalyze = function(s) {
             return s.replace(/周\*+/, "周");
         }
 
         // 化为 \n 分割
         s = s.replace(/(?:;|\<br\>)+/g, "\n")
-        // “展开 a-b 为好多节课”
+            // “展开 a-b 为好多节课”
         s = 循环直到不动点(s,
-            x => x.replace(/(.*?)(\d+)-(\d+)(.*)/, function (s, a, b, c, d) {
-                var o = "";
-                var b = parseInt(b);
-                var c = parseInt(c);
-                for (var i = b; i <= c; i++) {
-                    o += a + i + d + "\n";
-                }
-                return o;
-            }))
-        // “展开  a,b” 为2节课
+                x => x.replace(/(.*?)(\d+)-(\d+)(.*)/, function(s, a, b, c, d) {
+                    var o = "";
+                    var b = parseInt(b);
+                    var c = parseInt(c);
+                    for (var i = b; i <= c; i++) {
+                        o += a + i + d + "\n";
+                    }
+                    return o;
+                }))
+            // “展开  a,b” 为2节课
         s = 循环直到不动点(s,
-            x => x.replace(/(.*?)(\d+),(\d+)(.*)/, function (s, a, b, c, d) {
+            x => x.replace(/(.*?)(\d+),(\d+)(.*)/, function(s, a, b, c, d) {
                 var o = "";
                 var b = parseInt(b);
                 var c = parseInt(c);
@@ -528,33 +549,33 @@
     var 合并连续的节数 = (节列) => {
         var lastLength = 节列.length
         节列.forEach((_, 序) => {
-            // 防止比较溢出
-            if (!(序 + 1 < 节列.length)) return;
-            // 跳过已经被变成undefined 的值
-            if (!节列[序]) return;
-            if (!节列[序 + 1]) return;
-            var match1 = 节列[序].match(/(第\d+周,周\d+,)第(\d+)(?:-(\d+))?节/);
-            var match2 = 节列[序 + 1].match(/(第\d+周,周\d+,)第(\d+)(?:-(\d+))?节/);
+                // 防止比较溢出
+                if (!(序 + 1 < 节列.length)) return;
+                // 跳过已经被变成undefined 的值
+                if (!节列[序]) return;
+                if (!节列[序 + 1]) return;
+                var match1 = 节列[序].match(/(第\d+周,周\d+,)第(\d+)(?:-(\d+))?节/);
+                var match2 = 节列[序 + 1].match(/(第\d+周,周\d+,)第(\d+)(?:-(\d+))?节/);
 
-            // 判断是否同周同天
-            if (!(match1 && match2 && match1[1] == match2[1])) return;
+                // 判断是否同周同天
+                if (!(match1 && match2 && match1[1] == match2[1])) return;
 
-            // 补全课程结束时间
-            match1[3] = match1[3] || match1[2];
-            match2[3] = match2[3] || match2[2];
+                // 补全课程结束时间
+                match1[3] = match1[3] || match1[2];
+                match2[3] = match2[3] || match2[2];
 
-            // 判断两节课是否连续
-            if (parseInt(match1[3]) + 1 == parseInt(match2[2])) {
-                // 如果连续，把它们头尾相接
-                var a = match1[2];
-                var b = match2[3];
-                var time_concated = `第${a}-${b}节`
-                节列[序] = 节列[序].replace(/第(\d+)(?:-(\d+))?节/, time_concated);
-                节列[序 + 1] = undefined;
-            }
-            // periods[index] = 0;
-        })
-        // 然后过滤掉计算过程中制造的垃圾
+                // 判断两节课是否连续
+                if (parseInt(match1[3]) + 1 == parseInt(match2[2])) {
+                    // 如果连续，把它们头尾相接
+                    var a = match1[2];
+                    var b = match2[3];
+                    var time_concated = `第${a}-${b}节`
+                    节列[序] = 节列[序].replace(/第(\d+)(?:-(\d+))?节/, time_concated);
+                    节列[序 + 1] = undefined;
+                }
+                // periods[index] = 0;
+            })
+            // 然后过滤掉计算过程中制造的垃圾
         节列 = 节列.filter(x => x);
 
         // 看看有没有合并掉一些课程
@@ -623,48 +644,48 @@
     var 日历事件列表转ICS格式 = (事件列表) => {
         // .ics方案
         var 事件转iCalendar格式的SECTION = (e) => {
-            // 范例输入
-            // {
-            // 	TSTART,
-            // 	TEND,
-            // 	SUMMARY,
-            // 	DESCRIPTION?,
-            // 	LOCATION?,
-            // 	UID?,
-            // }
-            var icalStrFormat = s => s.replace(/\n/g, '\\n').replace(/.{40}/g, c => c + '\r\n ')
-            var EVENT_DTSTAMP = icalStrFormat((new Date()).toISOString().replace(/-|:|\.\d+/g, ''))
-            var EVENT_DTSTART = e.TSTART && icalStrFormat(e.TSTART.toISOString().replace(/-|:|\.\d+/g, ''))
-            var EVENT_DTEND = e.TEND && icalStrFormat(e.TEND.toISOString().replace(/-|:|\.\d+/g, ''))
-            var section_lines = [
-                `BEGIN:VEVENT`,
-                //`DTSTART;TZID=Asia/Shanghai:${EVENT_DTSTART}`,
-                `DTSTAMP:${EVENT_DTSTAMP}`,
-                `DTSTART:${EVENT_DTSTART}`,
-                //`DTEND;TZID=Asia/Shanghai:${EVENT_DTEND}`,
-                `DTEND:${EVENT_DTEND}`,
-                //`RRULE:FREQ=WEEKLY;COUNT=11;BYDAY=FR`, // 后续升级
-                `UID:${e.UID && icalStrFormat(e.UID) || (hash(e.SUMMARY) + "@snomiao.com")}`,
-                e.SUMMARY && `SUMMARY:${icalStrFormat(e.SUMMARY)}`,
-                e.DESCRIPTION && `DESCRIPTION:${icalStrFormat(e.DESCRIPTION)}`,
-                e.LOCATION && `LOCATION:${icalStrFormat(e.LOCATION)}`,
-                `END:VEVENT`,
-            ]
-            return section_lines.filter(e => e).join(`\r\n`);
-        }
-        // 范例输出
-        // BEGIN:VEVENT
-        // DTSTART:20190308T050000Z
-        // DTEND:20190308T063500Z
-        // UID:8523315dacd42732383e3f8d07b9cd88@snomiao.com
-        // SUMMARY:大学生体育测试（一）/1850769/B1230001/张群/0.5分/第2周,周5,第5-6节
-        // DESCRIPTION:课程序号: 1850769\n课程名称: 大学生体育测试（一）\n课程代码: B
-        //  1230001\n课程类型: 公共基础课\n课程学分: 0.5\n授课老师: 张
-        //  群\n上课时间: 第2-5周,周5,第5-6节\n上课地点: 奉贤操场\n校区:
-        //   奉贤校区\n计划人数: 44\n已选人数: 44\n挂牌: 是\n配课班: 1
-        //  6101291, 16101261\n备注: \n
-        // LOCATION:奉贤操场
-        // END:VEVENT
+                // 范例输入
+                // {
+                // 	TSTART,
+                // 	TEND,
+                // 	SUMMARY,
+                // 	DESCRIPTION?,
+                // 	LOCATION?,
+                // 	UID?,
+                // }
+                var icalStrFormat = s => s.replace(/\n/g, '\\n').replace(/.{40}/g, c => c + '\r\n ')
+                var EVENT_DTSTAMP = icalStrFormat((new Date()).toISOString().replace(/-|:|\.\d+/g, ''))
+                var EVENT_DTSTART = e.TSTART && icalStrFormat(e.TSTART.toISOString().replace(/-|:|\.\d+/g, ''))
+                var EVENT_DTEND = e.TEND && icalStrFormat(e.TEND.toISOString().replace(/-|:|\.\d+/g, ''))
+                var section_lines = [
+                    `BEGIN:VEVENT`,
+                    //`DTSTART;TZID=Asia/Shanghai:${EVENT_DTSTART}`,
+                    `DTSTAMP:${EVENT_DTSTAMP}`,
+                    `DTSTART:${EVENT_DTSTART}`,
+                    //`DTEND;TZID=Asia/Shanghai:${EVENT_DTEND}`,
+                    `DTEND:${EVENT_DTEND}`,
+                    //`RRULE:FREQ=WEEKLY;COUNT=11;BYDAY=FR`, // 后续升级
+                    `UID:${e.UID && icalStrFormat(e.UID) || (hash(e.SUMMARY) + "@snomiao.com")}`,
+                    e.SUMMARY && `SUMMARY:${icalStrFormat(e.SUMMARY)}`,
+                    e.DESCRIPTION && `DESCRIPTION:${icalStrFormat(e.DESCRIPTION)}`,
+                    e.LOCATION && `LOCATION:${icalStrFormat(e.LOCATION)}`,
+                    `END:VEVENT`,
+                ]
+                return section_lines.filter(e => e).join(`\r\n`);
+            }
+            // 范例输出
+            // BEGIN:VEVENT
+            // DTSTART:20190308T050000Z
+            // DTEND:20190308T063500Z
+            // UID:8523315dacd42732383e3f8d07b9cd88@snomiao.com
+            // SUMMARY:大学生体育测试（一）/1850769/B1230001/张群/0.5分/第2周,周5,第5-6节
+            // DESCRIPTION:课程序号: 1850769\n课程名称: 大学生体育测试（一）\n课程代码: B
+            //  1230001\n课程类型: 公共基础课\n课程学分: 0.5\n授课老师: 张
+            //  群\n上课时间: 第2-5周,周5,第5-6节\n上课地点: 奉贤操场\n校区:
+            //   奉贤校区\n计划人数: 44\n已选人数: 44\n挂牌: 是\n配课班: 1
+            //  6101291, 16101261\n备注: \n
+            // LOCATION:奉贤操场
+            // END:VEVENT
 
         var lines = [
             `BEGIN:VCALENDAR`,
@@ -691,7 +712,7 @@
 
     if (location.hostname.match(/^sc.*\.sit\.edu\.cn$/)) {
         // 解析并下载当前页面的日历
-        var 下载当前活动日历 = async (e) => {
+        var 下载当前活动日历 = async(e) => {
             if (e) e.disabled = true;
             var href = window.location;
             var html = await 异步抓取(href)
@@ -702,7 +723,7 @@
             if (e) e.disabled = false;
         }
 
-        var 当前页面活动列表日历 = async (e) => {
+        var 当前页面活动列表日历 = async(e) => {
             if (e) e.disabled = true;
             // 获取当前页面上所有活动详情的URL;
             var hrefs = [...document.querySelectorAll("a")].map(a => a.href).filter(href => !!href.match("activityDetail.action"))
@@ -724,7 +745,7 @@
             if (e) e.disabled = false;
         }
 
-        var 下载近期所有第二课堂活动日历 = async (e) => {
+        var 下载近期所有第二课堂活动日历 = async(e) => {
             if (e) e.disabled = true;
             // TODO: 进度条
             // let caption = e.innerText
@@ -732,49 +753,47 @@
             // let doneCount =
             let all_events = [];
 
-            // 异步列出每个分类最近的50个活动，并等待全部返回
-            await Promise.all(([
-                [`001`, `讲座报告`],
-                [`ff808081674ec4720167ce60dda77cea`, `主题教育`],
-                [`ff8080814e241104014eb867e1481dc3`, `创新创业创意`],
-                [`8ab17f543fe626a8013fe6278a880001`, `社团社区易班、学院活动`],
-                [`8ab17f543fe62d5d013fe62efd3a0002`, `社会实践`],
-                [`8ab17f543fe62d5d013fe62e6dc70001`, `公益志愿`],
-                [`402881de5d62ba57015d6320f1a7000c`, `安全教育网络教学`],
-                [`8ab17f2a3fe6585e013fe6596c300001`, `校园文化竞赛活动`],
-                [`8ab17f533ff05c27013ff06d10bf0001`, `论文专利`],
-                [`ff8080814e241104014fedbbf7fd329d`, `会议（无学分）`]
-            ]).map(async (target) => {
-                let url = `/public/activity/activityList.action?pageNo=1&pageSize=50&categoryId=${target[0]}`;
-                let actType = target[1];
+            var 获取当前页面第二课堂分类列表 = () => {
+                var reg = /\/public\/activity\/activityList\.action\?categoryId=(.*)/;
+                return [...document.querySelectorAll("#dekt-nav a[href]")].map(a => {
+                    var match = a.href.match(reg)
 
+                    return match && { categoryId: match[1], actType: a.innerText }
+                }).filter(e => e)
+            }
+
+            var 第二课堂分类列表 = 获取当前页面第二课堂分类列表()
+                // 异步列出每个分类最近的50个活动，并等待全部返回
+            await Promise.all((第二课堂分类列表).map(async({ categoryId, actType }) => {
+                let url = `/public/activity/activityList.action?pageNo=1&pageSize=50&categoryId=${categoryId}`;
                 // 获取当前分类的活动链接（列表）
                 let v_dom = document.createElement("html");
                 v_dom.innerHTML = await 异步抓取(url)
-                var hrefs = [...v_dom.querySelectorAll("a")].map(a => a.href).filter(href => !!href.match("activityDetail.action"))
+                var hrefs = [...v_dom.querySelectorAll("a")].map(a => a.href).filter(href => !!href.match("activityDetail.action"));
 
                 // 异步下载所有活动，并等待全部下载完成
                 let events = await Promise.all(hrefs.map(async href => {
-                    let html = await 异步抓取(href)
-                    var event = 解析第二课堂活动事件(html)
-                    event.DESCRIPTION += '\n' + href;
+                        let html = await 异步抓取(href)
+                        var event = 解析第二课堂活动事件(html)
+                        event.DESCRIPTION += '\n' + href;
 
-                    // 除此之外还要标出活动类型
-                    event.DESCRIPTION = "活动类型: " + actType + "\n\n" + event.DESCRIPTION;
-                    return event;
-                }))
-                // 收集
+                        // 除此之外还要标出活动类型
+                        event.SUMMARY = actType + "/" + event.SUMMARY;
+                        event.DESCRIPTION = "活动类型: " + actType + "\n\n" + event.DESCRIPTION;
+                        return event;
+                    }))
+                    // 收集
                 all_events = all_events.concat(events);
             }))
 
             // 转成ical格式并触发下载
-            var 输出ics = make_ical(all_events);
+            var 输出ics = 日历事件列表转ICS格式(all_events);
             下载文本文件(输出ics, "[" + new Date().toISOString().replace(/[^0-9]/g, '').substr(0, 8) + "]近期第二课堂活动.ical")
 
             if (e) e.disabled = false;
         }
 
-        var 诚信积分一键加满 = async (e) => {
+        var 诚信积分一键加满 = async(e) => {
             if (e) e.disabled = true;
             // 获取当前分类的活动申请编号（列表）
             let v_dom = document.createElement("html");
@@ -787,6 +806,7 @@
                 let actityOrderId = oid
                 await 异步抓取(`http://sc.sit.edu.cn/public/pcenter/assess.action?assess=${assess}&content=${content}&actityOrderId=${actityOrderId}`)
             }));
+            console.log(lsOrderId.length + "个活动已加满")
             if (e) e.disabled = false;
         }
 
@@ -798,9 +818,9 @@
 
             var 工具栏元素列表 = [
                 新元素(`<a href="http://sc.sit.edu.cn/public/activity/activityList.action?pageNo=1&pageSize=200&categoryId=&activityName=">查看最近的200个活动</a>`),
-                window.location.href.match("activityDetail.action")
-                    ? 绑定Click到元素(下载当前活动日历, 新元素(`<button>下载 当前事件.ical</button>`))
-                    : 绑定Click到元素(当前页面活动列表日历, 新元素(`<button>下载 当前页面活动列表.ical</button>`)),
+                window.location.href.match("activityDetail.action") ?
+                绑定Click到元素(下载当前活动日历, 新元素(`<button>下载 当前事件.ical</button>`)) :
+                绑定Click到元素(当前页面活动列表日历, 新元素(`<button>下载 当前页面活动列表.ical</button>`)),
                 绑定Click到元素(下载近期所有第二课堂活动日历, 新元素(`<button>下载 近期所有第二课堂活动.ical</button>`)),
                 绑定Click到元素(诚信积分一键加满, 新元素(`<button>诚信积分一键加满！</button>`)),
             ]
@@ -834,7 +854,7 @@
             })
         })
 
-        
+
     }
 
     if (location.pathname == "/student/selCourse/list1.jsp") {
@@ -865,7 +885,7 @@
             下载多个课程日历(课程列表)
         })
     }
-    
+
     // 考试
     if (location.pathname == "/student/main.jsp") {
         var 表格 = [...document.querySelectorAll("table")].filter(tab => tab.innerHTML.match("我的考试"))
@@ -874,7 +894,7 @@
         绑定点击(阵[0][2], "点击下载所有考试日历", () => {
             var 考试列表 = 阵.slice(1).map(单元格行 => {
                 var [序号, 考试课程, 考试时间, 考试地点, 考试性质] = 单元格行.map(e => e.innerText.trim());
-                return {序号, 考试课程, 考试时间, 考试地点, 考试性质}
+                return { 序号, 考试课程, 考试时间, 考试地点, 考试性质 }
             })
             下载多个考试日历(考试列表)
         })
@@ -888,4 +908,3 @@
     }
     document.body.appendChild(新元素("<style>.clickable{cursor: pointer}</style>"))
 })();
-
