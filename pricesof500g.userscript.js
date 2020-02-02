@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
 // @namespace    snomiao@gmail.com
-// @version      0.5
+// @version      0.6
 // @description  自用。有疑问联系 snomiao@gmail.com   已知bug：淘宝的价格和商品标题上写的重量通常对不上，此bug无法修复，天猫、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算
 // @author       snomiao@gmail.com
 // @match        http*://cart.jd.com/cart*
