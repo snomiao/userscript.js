@@ -14,6 +14,7 @@
 // @match        http*://s.taobao.com/search*
 // @match        http*://cart.taobao.com/cart.htm*
 // @match        http*://www.1688.com/
+// @match        http*://s.1688.com/selloffer/offer_search.htm*
 // @grant        none
 // ==/UserScript==
 
@@ -112,6 +113,7 @@
             // 1688
             .concat(getListItems({ selItem: ".grid.rec-offer", selTitle: ".offer_titles", selPrice: ".price-num" })) // 首页
             .concat(getListItems({ selItem: ".sm-offer-item", selTitle: ".sm-offer-title", selPrice: ".sm-offer-priceNum" })) //商品搜索页面
+            .concat(getListItems({ selItem: ".card-container", selTitle: ".title", selPrice: "div.price" })) //商品搜索页面
 
 
         var lsItems = lsItems.map(e => ({ ...e, 千克价格: 求千克价格(e) }))
