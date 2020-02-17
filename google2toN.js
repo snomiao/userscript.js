@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         一键批量打开谷歌必应搜索前2的n次方项搜索结果
 // @namespace    snomiao@gmail.com
-// @version      0.7
+// @version      0.8
 // @description  快速了解一个领域用，在谷歌或必应的搜索页面 按 Alt+1 ...2,3,4... Alt+5  将会打开前2的n次方项的搜索结果，并复制打开的链接。目前支持：谷歌、必应、知乎。
 // @author       snomiao
 // @match        https://www.google.com/search?*
@@ -10,7 +10,10 @@
 // @match        https://www.zhihu.com/search?*
 // @grant        none
 // ==/UserScript==
-
+// 
+// History:
+// (20200217)兼容 Google News
+// 
 (function () {
     'use strict';
     var 已打开过的链接 = {}
@@ -37,7 +40,7 @@
         var lsa = ""
         if (location.toString().match(/^https\:\/\/www.google\.com(\.\w+)?\/search/)) {
             // 谷歌
-            lsa = [...document.querySelectorAll("h3")].map(h3 => h3.parentElement)
+            lsa = [...document.querySelectorAll("h3>a, a>h3")].map(e => e.tagName == "A" && e || e.parentElement)
         }
         if (location.toString().match(/^https:\/\/\w+\.bing\.com\/search/)) {
             // 必应
