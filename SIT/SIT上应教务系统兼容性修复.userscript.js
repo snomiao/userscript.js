@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SIT上应教务系统兼容性修复
 // @namespace    snomiao@gmail.com
-// @version      0.8
+// @version      0.9
 // @description  使兼容 Chrome, 目前发现的bug范围包括评教、成绩查询等功能，强行退课、选到无法选中的课等。(20191209)增加学分绩点计算以及刷分重修指标。
 // @author       snomiao
 // @match        http*://ems1.sit.edu.cn:85/student/*
@@ -14,7 +14,7 @@
 // ==/UserScript==
 
 
-(function () {
+(function() {
     'use strict';
 
     var 归类以 = 分组依据 => 列表 => 列表.reduce((组, 元) => {
@@ -31,7 +31,7 @@
             var all = [...form.querySelectorAll(`[name]`)];
             form.all[e.name] = all.length == 1 ? all[0] : all;
             e.id = e.id || e.name;
-            [...e.attributes].forEach(attr => { if (!e[attr.name]) (e[attr.name] = attr.value) })
+            [...e.attributes].forEach(attr => { if (!e[attr.name])(e[attr.name] = attr.value) })
         });
     });
 
@@ -110,9 +110,12 @@
     if (location.pathname == "/student/graduate/viewcreditdetail.jsp") {
         // var 计划课程列表 = [...document.querySelectorAll(`tr`)].filter(x => x.querySelectorAll(`td[colspan="13"]`).length == 13)
         var 计划课程列表 = [...document.querySelectorAll(`tr`)].filter(x => x.querySelectorAll(`td:not([rowspan])`).length == 13)
-        var 已修学分 = 0, 已修学分绩点 = 0;
-        var 已修必修学分 = 0, 已修必修学分绩点 = 0;
-        var 已修选修学分 = 0, 已修选修学分绩点 = 0;
+        var 已修学分 = 0,
+            已修学分绩点 = 0;
+        var 已修必修学分 = 0,
+            已修必修学分绩点 = 0;
+        var 已修选修学分 = 0,
+            已修选修学分绩点 = 0;
         var 分类 = ""
         var 课程情况表 = 计划课程列表.map(e => {
             var 分类单元格 = e.querySelector("td[rowspan]")
@@ -155,11 +158,11 @@
             .map(子课程情况表 => `${子课程情况表[0].分类}修读情况：${输出学分(计算学分情况(子课程情况表))}`).join("<br>")
 
         var 修读情况 = [
-            "总修读情况：<br>" + 修读情况所有课程,
-            "修读情况按学期：<br>" + 修读情况按学期,
-            "修读情况按分类：<br>" + 修读情况按分类,
-        ].join("<br><br>")
-        // var 修读情况按性质 = 划分以(({性质})=>性质)(课程情况表).map(子课程情况=>`${子课程情况[0].性质}课程修读情况：${计算学分情况(子课程情况)}`)
+                "总修读情况：<br>" + 修读情况所有课程,
+                "修读情况按学期：<br>" + 修读情况按学期,
+                "修读情况按分类：<br>" + 修读情况按分类,
+            ].join("<br><br>")
+            // var 修读情况按性质 = 划分以(({性质})=>性质)(课程情况表).map(子课程情况=>`${子课程情况[0].性质}课程修读情况：${计算学分情况(子课程情况)}`)
 
         document.querySelector("b").parentElement.innerHTML = `
 <b>个人计划完成情况</b>
@@ -192,34 +195,73 @@
                 var href = e.attributes.onclick.textContent.match(/javascript:loadMask\(["'](.*?)["']/)[1]
                 e.setAttribute("href", href)
                 e.setAttribute("target", "main")
-            } catch{ }
+            } catch {}
         })
     }
 
-    // 增加表格排序功能（还有些bug..)
-    /*
+    // 增加表格排序/筛选功能（还有些bug..)
+
+
+
     var 元素移到尾部 = (e) => e.parentElement.appendChild(e.parentElement.removeChild(e))
-    var 混合排序按 = 函数 => 列 => 列.sort((a, b) => {
-        [a, b] = [a, b].map(函数)
-        var c = isFinite(a), d = isFinite(b);
+    var 混合排序按 = 值函数 => 列 => 列.sort((a, b) => {
+        [a, b] = [a, b].map(值函数)
+        var c = isFinite(a),
+            d = isFinite(b);
         return (c != d && d - c) || (c && d && a - b) || (("" + a).localeCompare(b))
     })
-    var 使可排序 = (表) => {
-        var 表行 = [...表.querySelectorAll("tbody>tr")]
-        if (表行.length < 2) return;
-        var 表头行 = 表行.shift()
-        console.log(表头行)
+
+    var 取表头表行 = (表) => {
+        var 表行列 = [...表.querySelector("tbody").children]
+            // var 表行列 = [...表.querySelectorAll("tbody>tr")]
+        if (表行列.length <= 2) return {};
+
+        var 表头行 = 表行列.shift()
         var 表头单元列 = [...表头行.querySelectorAll("th, td")].filter(e => e.parentElement == 表头行)
-        表头单元列.map((表头单元, 序数) => {
-            表头单元.setAttribute("title", "点击按此列排序")
-            表头单元.addEventListener("click", sortByTr => {
-                var 有序表行 = 混合排序按(e => e.children[序数] && e.children[序数].innerText)(表行)
-                有序表行.reverse().map((e) => e.parentElement.insertBefore(e.parentElement.removeChild(e), 有序表行[0]))
+
+        if (表头单元列.length == 1) {
+            表头行 = 表行列.shift()
+            表头单元列 = [...表头行.querySelectorAll("th, td")].filter(e => e.parentElement == 表头行)
+        }
+        if (表头单元列.length <= 1) return {};
+        // console.log(表, 表头单元列.map(e=>e.textContent))
+        return { 表头单元列, 表行列 }
+    }
+    var 使可排序 = (表) => {
+        var { 表头单元列, 表行列 } = 取表头表行(表)
+        表头单元列 && 表头单元列.map((表头单元, 序数) => {
+            var btn = document.createElement("button")
+            表头单元.appendChild(btn)
+            btn.textContent = "^"
+            btn.setAttribute("title", "点击按此列排序")
+            btn.addEventListener("click", () => {
+                var 有序表行 = 混合排序按(e => e.children[序数] && e.children[序数].textContent)(表行列)
+                有序表行.map(元素移到尾部)
             })
         })
-    }
+        return 表
+    };
 
-    [...document.querySelectorAll("table")].map(使可排序)
-    */
+    var 使可筛选 = (表) => {
+        var { 表头单元列, 表行列 } = 取表头表行(表)
+        if (!表头单元列) return 表
+        var 筛选框列 = 表头单元列.map((表头单元, 序数) => {
+            var div = document.createElement("div")
+            表头单元.appendChild(div)
+            div.innerHTML = `<input title="输入按此列筛选" style="width:5em" />`
+            return div.querySelector("input")
+        })
+        var 设置隐藏 = (e, h) => h ? e.style.display = "none" : e.style.removeProperty('display');
+        var 刷新隐藏 = () => 表行列.forEach(tr => {
+            var 取内容 = (e, 序数) => e.children[序数] && e.children[序数].textContent;
+            var 是否隐藏 = !!筛选框列.filter((筛选框, 序数) => 筛选框.value && !取内容(tr, 序数).toLowerCase().match(筛选框.value.toLowerCase())).length;
+            设置隐藏(tr, 是否隐藏)
+        })
+        筛选框列.map(e => e.addEventListener("input", 刷新隐藏))
+        return 表
+    };
+
+    [...document.querySelectorAll("table")].map(使可排序).map(使可筛选)
+
 
 })();
