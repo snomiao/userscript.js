@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         微信网页版导出：通讯录、群成员名单、聊天列表
 // @namespace    https://userscript.snomiao.com/
-// @version      0.1
-// @description  科代表核对工作用，入口藏在头像右边的下拉菜单里，以及群标题下拉的群成员列表的第一项
+// @version      0.2
+// @description  rt, 课代表核对名单用，入口藏在头像右边的下拉菜单里，以及群标题下拉的群成员列表的第一项
 // @author       snomiao@gmail.com
 // @icon         https://res.wx.qq.com/zh_CN/htmledition/v2/images/favicon31e225.ico
-// @match        https://wx.qq.com/
+// @match        https://wx.qq.com/*
 // @grant        none
 // ==/UserScript==
 
