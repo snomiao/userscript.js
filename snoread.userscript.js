@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.12(20200123)
-// @description  【自用，目前还有很多BUG】豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间，有建议或想法请联系 QQ 997596439 或 邮箱 snomiao@gmail.com
+// @version      0.13(20200225)
+// @description  【自用，目前还有很多BUG】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间，有建议或想法请联系 QQ 997596439 或 邮箱 snomiao@gmail.com
 // @author       snomiao@gmail.com
 // @match        http://*/*
 // @match        https://*/*
@@ -107,7 +107,7 @@ div#main-wrapper:after, .clearfix:after {
             元素.classList.contains("snomiao-article") &&
                 (退出雪阅模式(元素) || true) ||
                 进入雪阅模式(元素)
-            // 元素.scrollLeft += 元素.clientWidth + 100
+                // 元素.scrollLeft += 元素.clientWidth + 100
             事件.preventDefault();
         }, true);
         元素.flag_handleClickToggleSnoReadMode = 1
@@ -132,12 +132,12 @@ div#main-wrapper:after, .clearfix:after {
         }
     }
     var 适配元素位置到屏幕 = (元素) => {
-        元素.setAttribute("style", `left: 0`);
-        var { left, top } = 元素.getBoundingClientRect()
-        元素.classList.add("snomiao-article")
-        元素.setAttribute("style", `left: calc(${-left}px)`);
-    }
-    // 适配元素位置到屏幕(temp1)
+            元素.setAttribute("style", `left: 0`);
+            var { left, top } = 元素.getBoundingClientRect()
+            元素.classList.add("snomiao-article")
+            元素.setAttribute("style", `left: calc(${-left}px)`);
+        }
+        // 适配元素位置到屏幕(temp1)
 
     var 进入雪阅模式 = (元素) => {
         退出雪阅模式(元素)
@@ -146,9 +146,9 @@ div#main-wrapper:after, .clearfix:after {
         修复元素可见性(元素)
         更新样式()
         适配元素位置到屏幕(元素)
-        // ref: 适配此页面https://medium.com/s/story/why-sleep-on-it-is-the-most-useful-advice-for-learning-and-also-the-most-neglected-86b20249f06d
-        // 未知原因错位，不过写2次就能正常了
-        适配元素位置到屏幕(元素) 
+            // ref: 适配此页面https://medium.com/s/story/why-sleep-on-it-is-the-most-useful-advice-for-learning-and-also-the-most-neglected-86b20249f06d
+            // 未知原因错位，不过写2次就能正常了
+        适配元素位置到屏幕(元素)
         元素.flag_雪阅模式 = true
         console.debug(元素, "进入雪阅模式");
     }
@@ -164,13 +164,14 @@ div#main-wrapper:after, .clearfix:after {
         元素.classList.remove("snomiao-article")
         解除修复元素可见性(元素)
     }
-    
+
     var 切换雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") && (退出雪阅模式(元素), true) || 进入雪阅模式(元素)
     var 更新雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") != 元素.flag_雪阅模式 && 切换雪阅模式(元素)
 
     // 进入雪阅模式(window.article)
-    // var 恢复所有文章样式 = async () => ([...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时), await 睡(0))
-    var 恢复所有文章样式 = () => [...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时)
+    // var 恢复所有文章样式_临时 = async () => ([...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时), await 睡(0))
+    var 恢复所有文章样式_临时 = () => [...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时)
+    var 恢复所有文章样式 = () => [...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式)
 
     // 解决span取到offsetHeight为0的问题
     var 取元素投影高 = (元素) => 元素.offsetHeight || 元素.getBoundingClientRect().height
@@ -235,7 +236,7 @@ div#main-wrapper:after, .clearfix:after {
         var 子树有文章 = !!子树列.map(转换文章树).length
         if (子树有文章) return;
         if (元素 == document.body) return;
-        
+
         if (!元素.flag_是文章) return;
         if (元素.flag_冲突弱势元素) return;
         if (!元素.flag_进入过雪阅模式) {
@@ -243,26 +244,28 @@ div#main-wrapper:after, .clearfix:after {
             元素.flag_雪阅模式 = true
         }
         更新雪阅模式(元素)
-        // 进入雪阅模式(元素)
+            // 进入雪阅模式(元素)
     }
-    var 入口 = async () => {
-        console.log("LAUNCH：SNOREAD");
-        await 恢复所有文章样式()
-        // await 睡(100)
-        var 文章树 = 取文章树(document.body)
-        window.调试文章树1 = 文章树
-        window.调试文章树2 = 输出文章树(文章树)
-        //console.log(输出文章树(文章树))
-        检测重叠冲突(文章树)
-        转换文章树(文章树)
-    }
-    // setInterval(入口, 3000)
+    var 入口 = async() => {
+            console.log("LAUNCH：SNOREAD");
+            await 恢复所有文章样式_临时()
+                // await 睡(100)
+            var 文章树 = 取文章树(document.body)
+            window.调试文章树1 = 文章树
+            window.调试文章树2 = 输出文章树(文章树)
+                //console.log(输出文章树(文章树))
+            检测重叠冲突(文章树)
+            转换文章树(文章树)
+        }
+        // setInterval(入口, 3000)
     document.addEventListener("load", 入口)
     window.addEventListener("load", 入口)
     window.addEventListener("resize", 入口)
     入口()
 })();
 
+
+// 横向滚动
 (function() {
     'use strict';
     var 监听滚动 = e => {
