@@ -1,14 +1,15 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.13(20200225)
-// @description  【自用，目前还有很多BUG】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间，有建议或想法请联系 QQ 997596439 或 邮箱 snomiao@gmail.com
+// @version      0.14(20200302)
+// @description  【自用，目前还有很多BUG】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 临时退出按 Escape
 // @author       snomiao@gmail.com
 // @match        http://*/*
 // @match        https://*/*
 // @grant        none
 // ==/UserScript==
-
+//
+// (20200302)增加退出雪阅模式
 (function() {
     'use strict';
     'esversion: 6';
@@ -261,6 +262,7 @@ div#main-wrapper:after, .clearfix:after {
     document.addEventListener("load", 入口)
     window.addEventListener("load", 入口)
     window.addEventListener("resize", 入口)
+    window.addEventListener("keydown", e => e.code == "Escape" && 恢复所有文章样式())
     入口()
 })();
 
