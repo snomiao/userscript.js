@@ -16,8 +16,8 @@
             var h4 = a.parentElement;
             var chapterId = h4.id.match(/(?<=cur)\d+/)[0];
             /* 表示已解锁 */
-            var rp = h4.querySelector('.roundpointStudent');
-            rp.innerHTML = '/';
+            var rp = h4.querySelector('.roundpointStudent.lock');
+            rp && (rp.innerHTML = '/');
             /* 激活链接 */
             a.href = `javascript: getTeacherAjax('` + courseId + `','` + clazzid + `','` + chapterId + `');`;
         })
