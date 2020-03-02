@@ -263,7 +263,7 @@
                     } else {
                         // 连接失败后的重试机制
                         (async() => {
-                            let data = await 异步抓取(URL)
+                            var data = await 异步抓取(URL)
                             resolve(data);
                         })()
                     }
@@ -273,8 +273,8 @@
 
             // 限制并发连接数在10个以内'
             // 改为1的时候就是串行
-            let limit = 10
-            let timer = setInterval(() => {
+            var limit = 10
+            var timer = setInterval(() => {
                 if (并发数 < limit) {
                     xhr.send(null);
                     并发数++;
@@ -286,7 +286,7 @@
     var 解析第二课堂活动事件 = (html) => {
         var re = {}
             // 样例
-        let _抓取html样例 = `
+        var _抓取html样例 = `
         <h1 class="title_8">【学工部】上海应用技术大学2019届毕业生春季校园综合招聘会</h1>
             <div style=" color:#7a7a7a; text-align:center">
             活动编号：1053790 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -315,21 +315,22 @@
                 return { 开始, 结束 }
             } else if (活动信息.match(/活动开始时间：([-\d]+ [:\d]+).*?/m) &&
                 活动信息.match(/活动时长：([零一二三四五六七八九十0-9]*)\s*?个?\s*?((?:年|季度|月|周|天|小时|刻钟|分钟|分钟|星期|礼拜|日|时|刻|分|秒钟|秒)?) 分钟.*?/m)) {
-                let 活动时长匹配 = 活动信息.match(/活动时长：([零一二三四五六七八九十0-9]*)\s*?个?\s*?((?:年|季度|月|周|天|小时|刻钟|分钟|分钟|星期|礼拜|日|时|刻|分|秒钟|秒)?) 分钟.*?/m);
-                let 量 = 活动时长匹配[1].replace(/[零一二三四五六七八九十]/g, (s) => "零一二三四五六七八九十".indexOf(s))
-                let 单位 = (
-                        活动时长匹配[2].length ? 活动时长匹配[2]
-                        .replace(/年/, 1000 * 60 * 60 * 24 * 365 / 4)
-                        .replace(/季度/, 1000 * 60 * 60 * 24 * 365 / 4)
-                        .replace(/月/, 1000 * 60 * 60 * 24 * 30)
-                        .replace(/周|星期|礼拜/, 1000 * 60 * 60 * 24)
-                        .replace(/天|日/, 1000 * 60 * 60 * 24)
-                        .replace(/小时|时/, 1000 * 60 * 60)
-                        .replace(/刻钟|刻/, 1000 * 60 * 15)
-                        .replace(/分钟|分/, 1000 * 60)
-                        .replace(/秒钟|秒/, 1000) :
-                        1000 * 60) // 不带单位默认分钟
-                let 活动时长毫秒 = parseInt(单位) * 量;
+                var 活动时长匹配 = 活动信息.match(/活动时长：([零一二三四五六七八九十0-9]*)\s*?个?\s*?((?:年|季度|月|周|天|小时|刻钟|分钟|分钟|星期|礼拜|日|时|刻|分|秒钟|秒)?) 分钟.*?/m);
+                var 量 = 活动时长匹配[1].replace(/[零一二三四五六七八九十]/g, (s) => "零一二三四五六七八九十".indexOf(s));
+                var 单位 = (
+                    活动时长匹配[2].length ?
+                    活动时长匹配[2]
+                    .replace(/年/, 1000 * 60 * 60 * 24 * 365 / 4)
+                    .replace(/季度/, 1000 * 60 * 60 * 24 * 365 / 4)
+                    .replace(/月/, 1000 * 60 * 60 * 24 * 30)
+                    .replace(/周|星期|礼拜/, 1000 * 60 * 60 * 24)
+                    .replace(/天|日/, 1000 * 60 * 60 * 24)
+                    .replace(/小时|时/, 1000 * 60 * 60)
+                    .replace(/刻钟|刻/, 1000 * 60 * 15)
+                    .replace(/分钟|分/, 1000 * 60)
+                    .replace(/秒钟|秒/, 1000) :
+                    1000 * 60); // 不带单位默认分钟
+                var 活动时长毫秒 = parseInt(单位) * 量;
                 var 开始 = new Date(活动信息.match(/活动开始时间：([-\d]+ [:\d]+).*?/m)[1])
                 var 结束 = new Date(+开始 + 活动时长毫秒);
                 return { 开始, 结束 }
@@ -382,13 +383,13 @@
         var 星期 = match[2];
         var 上课节 = match[3];
         var 下课节 = match[4];
-        let 第一天时间 = 学期第一天凌晨.getTime();
-        let 一秒 = 1000 // 1秒
-        let 一分 = 60 * 一秒 // 1分钟
-        let 一刻 = 15 * 一分 // 1刻钟
-        let 一时 = 60 * 一分 // 1小时
-        let 一天 = 24 * 一时 // 1天
-        let 一周 = 7 * 一天; // 1周
+        var 第一天时间 = 学期第一天凌晨.getTime();
+        var 一秒 = 1000 // 1秒
+        var 一分 = 60 * 一秒 // 1分钟
+        var 一刻 = 15 * 一分 // 1刻钟
+        var 一时 = 60 * 一分 // 1小时
+        var 一天 = 24 * 一时 // 1天
+        var 一周 = 7 * 一天; // 1周
         // 上课时间表
         // 第  1-2 节 08:20-09:55
         // 第  3-4 节 10:15-11:50
@@ -733,7 +734,7 @@
             // 异步下载所有事件
             var 事件列 = [];
             await Promise.all(hrefs.map(async href => {
-                let html = await 异步抓取(href)
+                var html = await 异步抓取(href)
                 var 事件 = 解析第二课堂活动事件(html)
                 事件.DESCRIPTION += '\n' + href;
                 事件列.push(事件)
@@ -750,10 +751,10 @@
         var 下载近期所有第二课堂活动日历 = async(e) => {
             if (e) e.disabled = true;
             // TODO: 进度条
-            // let caption = e.innerText
+            // var caption = e.innerText
             // e.innerText = caption + "" +
-            // let doneCount =
-            let all_events = [];
+            // var doneCount =
+            var all_events = [];
 
             // 异步列出每个分类最近的50个活动，并等待全部返回
             await Promise.all(([
@@ -768,17 +769,17 @@
                 [`8ab17f533ff05c27013ff06d10bf0001`, `论文专利`],
                 [`ff8080814e241104014fedbbf7fd329d`, `会议（无学分）`]
             ]).map(async(target) => {
-                let url = `/public/activity/activityList.action?pageNo=1&pageSize=50&categoryId=${target[0]}`;
-                let actType = target[1];
+                var url = `/public/activity/activityList.action?pageNo=1&pageSize=50&categoryId=${target[0]}`;
+                var actType = target[1];
 
                 // 获取当前分类的活动链接（列表）
-                let v_dom = document.createElement("html");
+                var v_dom = document.createElement("html");
                 v_dom.innerHTML = await 异步抓取(url)
                 var hrefs = [...v_dom.querySelectorAll("a")].map(a => a.href).filter(href => !!href.match("activityDetail.action"))
 
                 // 异步下载所有活动，并等待全部下载完成
-                let events = await Promise.all(hrefs.map(async href => {
-                        let html = await 异步抓取(href)
+                var events = await Promise.all(hrefs.map(async href => {
+                        var html = await 异步抓取(href)
                         var event = 解析第二课堂活动事件(html)
                         event.DESCRIPTION += '\n' + href;
 
@@ -800,14 +801,14 @@
         var 诚信积分一键加满 = async(e) => {
             if (e) e.disabled = true;
             // 获取当前分类的活动申请编号（列表）
-            let v_dom = document.createElement("html");
+            var v_dom = document.createElement("html");
             v_dom.innerHTML = await 异步抓取("http://sc.sit.edu.cn/public/pcenter/activityOrderList.action?pageNo=1&pageSize=999999999")
             var lsOrderId = [...v_dom.querySelectorAll("form td:nth-child(1)>a")].map(e => parseInt(e.innerText));
             await Promise.all(lsOrderId.map(async oid => {
                 // 五分好评666！
-                let assess = 100
-                let content = '666'
-                let actityOrderId = oid
+                var assess = 100
+                var content = '666'
+                var actityOrderId = oid
                 await 异步抓取(`http://sc.sit.edu.cn/public/pcenter/assess.action?assess=${assess}&content=${content}&actityOrderId=${actityOrderId}`)
             }));
             if (e) e.disabled = false;
