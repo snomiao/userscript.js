@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         SIT上应日程助手
 // @namespace    https://userscript.snomiao.com/
-// @version      0.7.20191209
+// @version      0.8(20200302)
 // @description  功能：1) 下载ics格式课程表，可用于导入 Google Calendar
 // @author       snomiao
 // @match        http*://sc.sit.edu.cn/*
