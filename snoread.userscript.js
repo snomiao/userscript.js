@@ -6,10 +6,10 @@
 // @author       snomiao@gmail.com
 // @match        http://*/*
 // @match        https://*/*
-// @exclude      http://*.taobao.com/*
-// @exclude      http://*.jd.com/*
-// @exclude      http://*.1688.com/*
-// @exclude      http://*.tmall.com/*
+// @exclude      https://*.taobao.com/*
+// @exclude      https://*.jd.com/*
+// @exclude      https://*.1688.com/*
+// @exclude      https://*.tmall.com/*
 // @grant        none
 // ==/UserScript==
 //
