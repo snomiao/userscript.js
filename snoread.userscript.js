@@ -1,15 +1,21 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.14(20200302)
-// @description  【自用，目前还有很多BUG】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 临时退出按 Escape
+// @version      0.15(20200307)
+// @description  【自用，目前还有很多BUG】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 在当前页面退出按 Escape
 // @author       snomiao@gmail.com
 // @match        http://*/*
 // @match        https://*/*
+// @exclude      http://*.taobao.com/*
+// @exclude      http://*.jd.com/*
+// @exclude      http://*.1688.com/*
+// @exclude      http://*.tmall.com/*
 // @grant        none
 // ==/UserScript==
 //
 // (20200302)增加退出雪阅模式
+// 双击退出需要按 Alt
+//
 (function() {
     'use strict';
     'esversion: 6';
@@ -104,6 +110,7 @@ div#main-wrapper:after, .clearfix:after {
         }, false);
         // dblclick to turn back
         元素.addEventListener("dblclick", function(事件) {
+            if (!事件.altKey) return;
             // console.log(元素, 元素.classList.contains("snomiao-article"))
             元素.classList.contains("snomiao-article") &&
                 (退出雪阅模式(元素) || true) ||
