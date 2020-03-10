@@ -16,6 +16,9 @@
 // (20200302)增加退出雪阅模式
 // 双击退出需要按 Alt
 //
+// 尝试清除挡物
+// javascript:[...document.querySelectorAll("*")].filter(e=>e).filter(e=>window.getComputedStyle(e).getPropertyValue("z-index")>1).
+
 (function() {
     'use strict';
     'esversion: 6';
