@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         超星提前解锁章节
 // @namespace    https://userscript.snomiao.com
-// @version      0.6.(20200323)
+// @version      0.7.(20200323)
 // @description  在视频播放页面（非课程首页），右边侧边栏可以提前解锁章节。在首页右上角可以查看章节统计。我是热爱学习的好孩子
 // @author       snomiao@gmail.com
 // @match        https://*.chaoxing.com/*
