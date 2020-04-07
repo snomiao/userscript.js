@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
 // @namespace    snomiao@gmail.com
-// @version      0.6
+// @version      0.8
 // @description  自用。有疑问联系 snomiao@gmail.com   已知bug：淘宝的价格和商品标题上写的重量通常对不上，此bug无法修复，天猫、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算
 // @author       snomiao@gmail.com
 // @match        http*://cart.jd.com/cart*
@@ -11,6 +11,7 @@
 // @match        http*://item.jd.com/*.html
 // @match        http*://search.jd.com/Search*
 // @match        http*://list.tmall.com/search_product.htm*
+// @match        http*://detail.tmall.com/item.htm?*
 // @match        http*://s.taobao.com/search*
 // @match        http*://cart.taobao.com/cart.htm*
 // @match        http*://www.1688.com/
@@ -18,9 +19,12 @@
 // @grant        none
 // ==/UserScript==
 
+//
+// (20200404)更新：增加天猫超市支持、优化刷新逻辑
+//
 (function () {
     'use strict';
- 
+
     // 获取质量参数
     // 前缀乘数 基数量 基数单位 后缀乘数
 
@@ -51,12 +55,12 @@
             if (unitMul) {
                 return price / (mul * val * unitMul / 1000)
             } else {
-                console.log(match)
+                // console.debug(match)
                 return Infinity
             }
         })
-        var 挑选价格 = (vals)=>{
-            
+        var 挑选价格 = (vals) => {
+
             // 如果匹配到的价格=1个
             if (vals.length == 1) return vals[0]
             // 如果匹配到的价格>1个，则进行同价判断
@@ -67,7 +71,7 @@
             return Infinity
         }
         var val = 挑选价格(vals)
-        console.log(title, vals, val)
+        // console.debug(title, vals, val)
         return val
     }
 
@@ -82,22 +86,25 @@
                 var eTitle = e.querySelector(selTitle)
                 var ePrice = e.querySelector(selPrice)
                 return eTitle && ePrice &&
-                    {
-                        eTitle, eTitle, ePrice,
-                        title: eTitle.innerText.trim(),
-                        price: parseFloat(ePrice.innerText.trim().replace(/￥|¥/g, "")),
-                        e
-                    }
+                {
+                    eTitle, eTitle, ePrice,
+                    title: eTitle.innerText.trim(),
+                    price: parseFloat(ePrice.innerText.trim().replace(/￥|¥/g, "")),
+                    e
+                }
             }
         ).filter(e => e)
     var 按性价比排序 = () => {
-        var lsItems = []
-            // taobao购物车
+        var 商品列 = []
+            // 淘宝购物车
             .concat(getListItems({ selItem: ".item-holder,.bundle,#J_OrderList>div", selPrice: ".td.td-price", selTitle: ".item-basic-info a" }))
-            // taobao
+            // 淘宝
             .concat(getListItems({ selItem: ".item", selTitle: ".title a", selPrice: ".price" }))
             // TMALL
             .concat(getListItems({ selItem: ".product", selPrice: ".productPrice", selTitle: ".productTitle a" }))
+            // 天猫超市
+            .concat(getListItems({ selItem: ".product", selPrice: ".ui-price", selTitle: ".product-title a" }))
+            .concat(getListItems({ selItem: ".tm-detail-meta", selPrice: ".tm-promo-price", selTitle: ".tb-detail-hd h1" }))
             // JD
             .concat(getListItems({ selItem: ".itemInfo-wrap", selTitle: ".sku-name", selPrice: ".p-price" })) // 当前浏览商品
             .concat(getListItems({ selItem: "ul.more2_list>li.more2_item", selTitle: ".more2_info_name", selPrice: ".more2_info_price" })) // 首页推荐
@@ -115,31 +122,35 @@
             .concat(getListItems({ selItem: ".sm-offer-item", selTitle: ".sm-offer-title", selPrice: ".sm-offer-priceNum" })) //商品搜索页面
             .concat(getListItems({ selItem: ".card-container", selTitle: ".title", selPrice: "div.price" })) //商品搜索页面
 
-
-        var lsItems = lsItems.map(e => ({ ...e, 千克价格: 求千克价格(e) }))
+            // 求得性价比
+            .map(e => ({ ...e, 千克价格: 求千克价格(e) }))
             .sort((a, b) => a.千克价格 - b.千克价格)
+
+            // 显示在标题上
             .map(e => { e.e.parentNode.appendChild(e.e.parentNode.removeChild(e.e)); return e })
-        var 最低价 = Math.min(...lsItems.map(e => e.千克价格).filter(e => e < Infinity))
-        var 最高价 = Math.max(...lsItems.map(e => e.千克价格).filter(e => e < Infinity))
-        lsItems.forEach(
+
+        // 显示颜色并排序
+        var 最低价 = Math.min(...商品列.map(e => e.千克价格).filter(e => e < Infinity))
+        var 最高价 = Math.max(...商品列.map(e => e.千克价格).filter(e => e < Infinity))
+        商品列.forEach(
             e => {
                 var percent = 映射(e.千克价格, 最低价, 最高价, 1, 0)
                 var span = document.createElement("span")
                 span.className = "priceof500g"
-                // 红绿渐变，红的最低价
-                span.style.backgroundColor = `rgba(${percent * 255},${255 - percent * 255},0,1)`
-                span.style.color = "rgba(255,255,255,1)"
-                console.log(解释性价比(e.千克价格))
+                // 红绿渐变，红的作为最低价
+                span.style.backgroundColor = percent && `rgba(${percent * 255},${255 - percent * 255},0,1)` || 'black'
+                span.style.color = "white"
+                // console.debug(解释性价比(e.千克价格))
                 span.innerText = 解释性价比(e.千克价格);
-                // 移除上一次运行结果
+                // 移除上一次运行结果(如果重复运行)
                 [...e.eTitle.parentNode.querySelectorAll(".priceof500g")].map(child => e.eTitle.parentNode.removeChild(child))
                 // 新结果
                 e.eTitle.parentNode.insertBefore(span, e.eTitle)
             })
     }
-    document.addEventListener("onload", 按性价比排序)
-    setInterval(按性价比排序, 5000)
-    setTimeout(按性价比排序, 2000)
-    按性价比排序()
-
+    window.addEventListener('load', 按性价比排序, false)
+    document.addEventListener('mouseup', () => setTimeout(按性价比排序, 200), false)
+    document.addEventListener('keyup', () => setTimeout(按性价比排序, 200), false)
+    // setInterval(按性价比排序, 5000)
+    setTimeout(按性价比排序, 1000)
 })();
