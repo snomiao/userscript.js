@@ -41,7 +41,6 @@
                 "&ut=s&vc=1&cpi=" + h.match(/(?<=cpi=)\d+/)[0] +
                 "&enc=" + h.match(/(?<=enc=)\w+/)[0])
         };
-
         document.querySelector(".navshow ul").appendChild(新元素('<li><a target="_blank" href="' + 取统计地址() + '">统计</a></li>'))
 
     }

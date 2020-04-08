@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         QQ空间相册下载神器
-// @namespace    snomiao@gmail.com
+// @namespace    https://userscript.snomiao.com/
 // @version      0.1
 // @description  批量下载小姐姐空间高清大图照片佳选插件～自动命名快速汲取dalao灵感～
 // @author       snomiao@gmail.com
@@ -11,7 +11,6 @@
 // ==/UserScript==
 
 ; (() => {
-    
     // 只支持同源
     var 下载 = (url, filename = '') => {
         var a = document.createElement('a');
