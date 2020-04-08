@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.15(20200307)
-// @description  【自用，目前还有很多BUG】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 在当前页面退出按 Escape
+// @version      0.16(20200409)
+// @description  【目前还有很多BUG，欢迎加群提意见1043957595】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 在当前页面退出按 Escape
 // @author       snomiao@gmail.com
 // @match        http://*/*
 // @match        https://*/*
@@ -287,17 +287,23 @@ div#main-wrapper:after, .clearfix:after {
 
         var handleScroll = (事件) => {
             if (事件.altKey || 事件.ctrlKey || 事件.shiftKey) return;
-            var scrollRate = (事件.detail || -事件.wheelDelta) / 120 * 0.5
-            var scrolled_x = (e.scrollLeft != (e.scrollLeft += scrollRate * e.clientWidth, e.scrollLeft))
+            var scrollRate = (事件.detail || -事件.wheelDelta) / 120 //Y轴
+            var scrolled_x = (e.scrollLeft != (e.scrollLeft += scrollRate * e.clientWidth * 0.1, e.scrollLeft))
             if (scrolled_x) {
+                // 若需定位则撤销滚动
+                var 当前Y = e.getBoundingClientRect().y
                 e.scrollIntoViewIfNeeded()
+                if(e.getBoundingClientRect().y != 当前Y)
+                    e.scrollLeft -= scrollRate * e.clientWidth * 0.1;
+                //
                 事件.preventDefault();
                 事件.stopPropagation();
                 return false;
             }
-            var scrolled_y = (e.scrollTop != (e.scrollTop += scrollRate * e.clientHeight, e.scrollTop))
+            var scrolled_y = (e.scrollTop != (e.scrollTop += scrollRate * e.clientHeight * 0.5, e.scrollTop))
             if (scrolled_y) {
                 e.scrollIntoViewIfNeeded()
+                //
                 事件.preventDefault();
                 事件.stopPropagation();
                 return false;

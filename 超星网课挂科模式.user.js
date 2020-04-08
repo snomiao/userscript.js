@@ -22,9 +22,17 @@ var 加载状态 = () => { try { var r = JSON.parse(localStorage.超星网课挂
 var 保存状态 = (json = {}) => { localStorage.超星网课挂科模式 = JSON.stringify(json) }
 var 更新状态 = (函数) => 保存状态(函数(加载状态()))
 
+
+// https://mooc1-1.chaoxing.com/mycourse/studentcourse?courseId=210772480&vc=1&clazzid=22245276&enc=0424b2a6c3aad4100aacc1f9135598d1
+
+if (location.pathname == '/mycourse/studentcourse' && location.hash == '#check') {
+    !document.body.innerHTML.match('待完成任务点') && window.close()
+}
+
+// http://i.mooc.chaoxing.com/space/index#looping
 var main = () => {
-    // 
-    if (location.pathname == "/visit/interaction") {
+    // 课程列表
+    if (location.pathname == '/visit/interaction') {
         更新状态((状态) => {
             状态.课程表 = 状态.课程表 || {};
             [...document.querySelectorAll('.ulDiv ul li[style]')].map(e => {
@@ -37,7 +45,8 @@ var main = () => {
         });
         console.debug("状态: ", 加载状态())
     }
-    // 作业
+    location.href.match('')
+    // 作业列表
     if (location.pathname == "/work/getAllWork") {
         更新状态((状态) => {
             var classId = document.querySelector('#cid').value;
@@ -58,9 +67,36 @@ var main = () => {
         });
         console.debug("状态: ", 加载状态())
     }
-    // 签到
+    // 签到列表
+    if (location.pathname == '/widget/pcpick/stu/index') {
+        更新状态((状态) => {
+            var classId = document.querySelector('#cid').value;
+            var 作业表 = {};
+            [...document.querySelectorAll('.ulDiv ul li[style]')].map(e => {
+                var html = e.innerHTML
+                var ls = e.innerText.trim().split(/\r?\n/).map(e => e.trim())
+                var [标题, _, _, 开始时间, 截止时间, _, 作业状态] = ls
+                var 分数 = e.querySelector(".titOper>span")
+                // var workId = 
+                var workId = (e => e && e.data)(e.querySelector("a[data]"))
+                    || (e => e && e[1])(html.match(/workId=(\d+)/))
+                作业表[workId] = { ...(作业表[workId] || {}), workId }
+            })
+            状态.课程表 = 状态.课程 || {};
+            状态.课程表[classId] = { ...(状态.课程表[classId] || {}), classId, 作业表 }
+            return 状态
+        });
+        // https://mobilelearn.chaoxing.com/widget/sign/pcStuSignController/signIn?&courseId={}&classId={}&activeId={}
+        console.debug("状态: ", 加载状态())
+    }
+    
 
     // https://mooc1-1.chaoxing.com/work/getAllWork?classId=13672939&courseId=206787823&isdisplaytable=2&mooc=1&ut=s&enc=5e9934be68b58f581bf74b9373452c93&cpi=46558623&openc=2ff02b4be53b9d9670e7489f338b6286
+
+    // 巡逻页面
+    if (location.pathname == '/space/index' && location.hash == '#looping') {
+        // !document.body.innerHTML.match('待完成任务点') && window.close()
+    }
 }
 main();
 window.addEventListener("load", main);
