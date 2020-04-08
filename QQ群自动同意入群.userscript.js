@@ -8,8 +8,10 @@
 // @match        https://web.qun.qq.com/cgi-bin/sys_msg/getmsg?*
 // @grant        none
 // ==/UserScript==
-// #[/书友/,/(1[6789]........)/]
-
+//
+// 使用方法：
+// https://web.qun.qq.com/cgi-bin/sys_msg/getmsg?ver=7800&filter=0&ep=1#[/书友/,/(1[6789]........)/]
+//
 (function () {
     'use strict';
     
