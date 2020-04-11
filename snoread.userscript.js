@@ -20,6 +20,11 @@
     'use strict';
     'esversion: 6';
 
+    var 新元素 = (innerHTML, attributes = {}) => {
+        var e = document.createElement("div");
+        e.innerHTML = innerHTML;
+        return Object.assign(e.children[0], attributes)
+    }
     var 睡 = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     var 异步防抖函数 = (异步函数, 间隔时间 = 1000) => {
         var 上次执行时间 = null
@@ -158,11 +163,16 @@ div#main-wrapper:after, .clearfix:after {
     }
     // 适配元素位置到屏幕(temp1)
 
+    var 内含文本节点替换为段落 = (元素) => [...元素.childNodes].filter(e => !e.tagName).forEach(e => {
+        e.parentElement.insertBefore(新元素(`<p class='snomiao-replaced'>${e.textContent}</p>`), e)
+        e.remove()
+    })
     var 进入雪阅模式 = (元素) => {
         退出雪阅模式(元素)
         window.snomiao_article = 元素
         监听点击(元素)
-        修复元素可见性(元素)
+        修复元素可见性(元素);
+        内含文本节点替换为段落(元素)
         更新样式()
         适配元素位置到屏幕(元素)
         // ref: 适配此页面https://medium.com/s/story/why-sleep-on-it-is-the-most-useful-advice-for-learning-and-also-the-most-neglected-86b20249f06d
@@ -225,7 +235,8 @@ div#main-wrapper:after, .clearfix:after {
         var 子元素高于屏 = 子元素.filter(e => 取元素投影高(e) > 窗口高)
         var 主要的子元素 = 子元素高于屏.filter(e => 取元素投影高(e) / 元素外高 > 0.5)
 
-        var 是文章 = !主要的子元素.length
+        var 元素宽度占比过小 = 元素.clientWidth < 窗口宽 * 0.90
+        var 是文章 = !主要的子元素.length && 元素宽度占比过小
 
         // debug start
         子元素.forEach(e => {
