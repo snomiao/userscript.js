@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.17(20200409)
-// @description  【目前还有很多 bug，欢迎加群提意见 1043957595 】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 | 使用说明：按 Escape 退出雪阅模式
+// @version      0.18(20200411)
+// @description  【目前还有很多 bug，欢迎加QQ群提意见 1043957595 】刷知乎神器 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 | 使用说明：按 Escape 退出雪阅模式
 // @author       snomiao@gmail.com
 // @match        http://*/*
 // @match        https://*/*
