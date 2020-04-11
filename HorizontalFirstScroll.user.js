@@ -45,7 +45,7 @@
             // 横竖都滚到底了
             [...e.children].map(监听滚动)
         }
-        // e.addEventListener("mousewheel", handleScroll, { capture: false, passive: false }) // Chrome/Edge
+        e.addEventListener("mousewheel", handleScroll, { capture: false, passive: false }) // Chrome/Edge
         e.addEventListener("DOMMouseScroll", handleScroll, { capture: false, passive: false }) // FF
     }
     var 入口 = () => 监听滚动(document.body)

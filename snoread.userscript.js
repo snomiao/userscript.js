@@ -21,7 +21,7 @@
     'esversion: 6';
 
     var 睡 = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-    var 异步防抖函数 = async (异步函数, 间隔时间 = 1000) => {
+    var 异步防抖函数 = (异步函数, 间隔时间 = 1000) => {
         var 上次执行时间 = null
         return async (...参列) => {
             if (上次执行时间 && 上次执行时间 + 间隔时间 <= +new Date())
@@ -30,7 +30,7 @@
             return await 异步函数(参列)
         }
     }
-    
+
     // var 窗口高 = window.innerHeight; // Math.min(window.innerHeight, window.outerHeight);
     // var 窗口高 = // window.innerHeight; // Math.min(window.innerHeight, window.outerHeight);
     // document.body.clientWidth; //window.innerWidth; // Math.min(window.innerWidth, window.outerWidth);
@@ -284,3 +284,49 @@ div#main-wrapper:after, .clearfix:after {
     入口()
 })();
 
+
+// 横向滚动
+(function () {
+    'use strict';
+    var 监听滚动 = e => {
+        [...e.children].map(监听滚动)
+        if (e.flag_已监听滚动) return;
+        e.flag_已监听滚动 = 1;
+
+        var handleScroll = (事件) => {
+            if (事件.altKey || 事件.ctrlKey || 事件.shiftKey) return;
+            var scrollRate = (事件.detail || -事件.wheelDelta) / 120 //Y轴
+            var scrolled_x = (e.scrollLeft != (e.scrollLeft += scrollRate * e.clientWidth * 0.1, e.scrollLeft))
+            if (scrolled_x) {
+                // 若需定位则撤销滚动
+                var 当前Y = e.getBoundingClientRect().y
+                e.scrollIntoViewIfNeeded()
+                if (e.getBoundingClientRect().y != 当前Y)
+                    e.scrollLeft -= scrollRate * e.clientWidth * 0.1;
+                //
+                事件.preventDefault();
+                事件.stopPropagation();
+                return false;
+            }
+            var scrolled_y = (e.scrollTop != (e.scrollTop += scrollRate * e.clientHeight * 0.5, e.scrollTop))
+            if (scrolled_y) {
+                var 当前X = e.getBoundingClientRect().x
+                e.scrollIntoViewIfNeeded()
+                if (e.getBoundingClientRect().x != 当前X)
+                    e.scrollTop -= scrollRate * e.clientHeight * 0.5;
+                //
+                事件.preventDefault();
+                事件.stopPropagation();
+                return false;
+            }
+            // 横竖都滚到底了
+            [...e.children].map(监听滚动)
+        }
+        e.addEventListener("mousewheel", handleScroll, { capture: false, passive: false }) // Chrome/Edge
+        e.addEventListener("DOMMouseScroll", handleScroll, { capture: false, passive: false }) // FF
+    }
+    var 入口 = () => 监听滚动(document.body)
+    document.addEventListener("DOMContentLoaded", 入口)
+    window.addEventListener("load", 入口)
+    入口()
+})();
