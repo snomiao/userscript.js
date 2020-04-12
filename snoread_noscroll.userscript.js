@@ -7,7 +7,6 @@
 // @match        http://*/*
 // @match        https://*/*
 // @exclude      https://*.taobao.com/*
-// @exclude      https://*.jd.com/*
 // @exclude      https://*.1688.com/*
 // @exclude      https://*.tmall.com/*
 // @grant        none
