@@ -102,10 +102,7 @@ div#main-wrapper:after, .clearfix:after {
 
     text-align: justify   !important;
     text-indent: 0   !important;
-    padding: 5% 1rem   !important;
-}
-.snomiao-article:not(ul,ol){
-    padding: 10% 1rem   !important;
+    padding: 10% 1rem;
 }
 .snomiao-article>*{
     /* display: block              !important; */
