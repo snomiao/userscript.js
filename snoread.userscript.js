@@ -100,6 +100,7 @@ div#main-wrapper:after, .clearfix:after {
     padding: 0 2rem 1rem 0          !important;
     min-width: 32rem            !important;
     width: min-content          !important;
+    min-width: 40rem            !important;
     max-height: 100%            !important;
     height:auto                 !important;
     overflow-x: auto            !important;
@@ -236,7 +237,8 @@ div#main-wrapper:after, .clearfix:after {
         var 主要的子元素 = 子元素高于屏.filter(e => 取元素投影高(e) / 元素外高 > 0.5)
 
         var 元素宽度占比过小 = 元素.clientWidth < 窗口宽 * 0.90
-        var 是文章 = !主要的子元素.length && 元素宽度占比过小
+        // var 元素类型正确 = 元素.tagName!= 'IMG'
+        var 是文章 = 子元素.length && !主要的子元素.length && 元素宽度占比过小
 
         // debug start
         子元素.forEach(e => {
