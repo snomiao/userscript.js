@@ -1,9 +1,10 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.20(20200412)
-// @description  你还在浪费你的宽屏吗？雪星邀你体验21世纪新型二维排版！快速提升思想的维度 / 刷知乎神器 / 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 / 快阅速读插件 | 使用说明：按 Escape 退出雪阅模式 | 【欢迎加QQ群提交流 1043957595 】
+// @version      0.21(20200412)
+// @description  【雪阅模式|SNOREAD】你还在浪费你的宽屏吗？雪星邀你体验21世纪新型二维排版！快速提升视觉维度 / 刷知乎神器 / 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 / 快阅速读插件 / 雪阅模式 | 使用说明：按 Escape 退出雪阅模式 | 【欢迎加入QQ群交流 1043957595 】
 // @author       snomiao@gmail.com
+// @match        https://www.zhihu.com/*
 // @match        http://*/*
 // @match        https://*/*
 // @exclude      https://*.taobao.com/*
@@ -11,9 +12,10 @@
 // @exclude      https://*.tmall.com/*
 // @grant        none
 // ==/UserScript==
-
-// @exclude      https://*.jd.com/*
+//
 // 测试页面
+// @exclude      https://*.jd.com/*
+//
 /*
 https://www.zhihu.com/hot
 https://www.zhihu.com/question/35829677
