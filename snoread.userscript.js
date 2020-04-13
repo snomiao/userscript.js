@@ -33,7 +33,7 @@ https://www.jd.com/
     'use strict';
     'esversion: 6';
     var 用户意向_雪阅模式 = true;
-
+    var DEBUG_SNOREAD = false;
     var 新元素 = (innerHTML, attributes = {}) => {
         var e = document.createElement("div");
         e.innerHTML = innerHTML;
@@ -50,9 +50,6 @@ https://www.jd.com/
         }
     }
 
-    // var 窗口高 = window.innerHeight; // Math.min(window.innerHeight, window.outerHeight);
-    // var 窗口高 = // window.innerHeight; // Math.min(window.innerHeight, window.outerHeight);
-    // document.body.clientWidth; //window.innerWidth; // Math.min(window.innerWidth, window.outerWidth);
     var 取窗口高 = () => document.body.parentElement.clientHeight;
     var 取窗口宽 = () => document.body.parentElement.clientWidth;
 
@@ -136,24 +133,14 @@ div#main-wrapper:after, .clearfix:after {
 
     var 监听点击 = 元素 => {
         if (元素.flag_handleClickToggleSnoReadMode) return;
-        // click to update this article and scroll to it
+        元素.flag_handleClickToggleSnoReadMode = 1
+        // 点击定位到文章
         元素.addEventListener("click", function (事件) {
             // console.debug("点击元素", 元素)
             元素.scrollIntoViewIfNeeded()
             元素.classList.contains("snomiao-article") &&
                 进入雪阅模式(元素)
         }, false);
-        // dblclick to turn back
-        元素.addEventListener("dblclick", function (事件) {
-            if (!事件.altKey) return;
-            // console.log(元素, 元素.classList.contains("snomiao-article"))
-            元素.classList.contains("snomiao-article") &&
-                (退出雪阅模式(元素) || true) ||
-                进入雪阅模式(元素)
-            // 元素.scrollLeft += 元素.clientWidth + 100
-            事件.preventDefault();
-        }, true);
-        元素.flag_handleClickToggleSnoReadMode = 1
     }
     var 解除修复元素可见性 = (元素) => {
         元素.parentElement && 解除修复元素可见性(元素.parentElement)
@@ -183,7 +170,7 @@ div#main-wrapper:after, .clearfix:after {
     // 适配元素位置到屏幕(temp1)
 
     var 内含文本节点替换为段落 = (元素) => [...元素.childNodes].filter(e => !e.tagName).forEach(e => {
-        if(!e.textContent.trim()) return null
+        if (!e.textContent.trim()) return null
         e.parentElement.insertBefore(新元素(`<p class='snomiao-replaced'>${e.textContent}</p>`), e)
         e.remove()
     })
@@ -217,12 +204,8 @@ div#main-wrapper:after, .clearfix:after {
 
     var 切换雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") && (退出雪阅模式(元素), true) || 进入雪阅模式(元素)
     var 更新雪阅模式 = (元素) => 元素.classList.contains("snomiao-article") != 元素.flag_雪阅模式 && 切换雪阅模式(元素)
-    // 恢复所有文章样式()
 
-    // 进入雪阅模式(window.article)
-    // var 恢复所有文章样式_临时 = async () => ([...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时), await 睡(0))
     var 恢复所有文章样式_临时 = () => [...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式_临时)
-    var 恢复所有文章样式 = () => [...document.querySelectorAll(".snomiao-article")].map(退出雪阅模式)
 
     // 解决span取到offsetHeight为0的问题
     const 取元素投影高 = (元素) => 元素.offsetHeight || 元素.getBoundingClientRect().height
@@ -243,13 +226,11 @@ div#main-wrapper:after, .clearfix:after {
             窗口宽 = 取窗口宽()
         var 元素列 = 文章树取元素(文章树).flat(Infinity)
         var 文章列 = 排序按(取元素投影顶)(元素列.filter(e => e.flag_是文章))
-        // console.log(文章列)
         var 相邻对列 = 取相邻对(文章列).map(对 => (对.距离 = 取距离按(取元素投影顶)(...对), 对))
         var 异常对列 = 相邻对列.filter(对 => 对.距离 < 窗口高)
         var 冲突元素列 = 异常对列.map(异常对 => 排序按(取元素面积)(异常对))
         冲突元素列.forEach(([弱势元素, 强势元素]) => {
-            // 若子元素与父元素冲突，则子元素不算弱势
-            // 换句话说，若弱势元素为强势元素的子元素，则强弱关系互换
+            // 若子元素与父元素冲突，则子元素不算弱势；换句话说，若弱势元素为强势元素的子元素，则强弱关系互换
             if (元素包含判断(强势元素, 弱势元素)) {
                 var tmp = 弱势元素
                 弱势元素 = 强势元素
@@ -257,9 +238,12 @@ div#main-wrapper:after, .clearfix:after {
             }
             强势元素.flag_冲突弱势元素 = 强势元素.flag_冲突弱势元素 || false
             弱势元素.flag_冲突弱势元素 = 弱势元素.flag_冲突弱势元素 || true
-            强势元素.冲突元素对 = [弱势元素, 强势元素]
-            弱势元素.冲突元素对 = [弱势元素, 强势元素]
-            弱势元素.setAttribute('冲突弱势元素', true)
+
+            if (DEBUG_SNOREAD) {
+                强势元素.冲突元素对 = [弱势元素, 强势元素]
+                弱势元素.冲突元素对 = [弱势元素, 强势元素]
+                弱势元素.setAttribute('冲突弱势元素', true)
+            }
         })
     }
     var 取文章树 = (元素, 层数 = 0) => {
@@ -269,35 +253,25 @@ div#main-wrapper:after, .clearfix:after {
         var 元素外高 = 取元素投影高(元素);
 
         var 子元素 = [...元素.children]
-        元素.setAttribute("len子元素", 子元素.length)
         var 子元素高于屏 = 子元素.filter(e => 取元素投影高(e) > 窗口高)
-        元素.setAttribute("len子元素高于屏", 子元素高于屏.length)
         var 主要的子元素 = 子元素高于屏.filter(e => 取元素投影高(e) / 元素外高 > 0.5)
-        元素.setAttribute("len主要的子元素", 主要的子元素.length)
 
         var 元素宽度占比过小 = 元素.clientWidth < 窗口宽 * 0.90
-        var 元素类型正确 = 元素.tagName != 'IMG'
         var 是文章 = !主要的子元素.length && 元素宽度占比过小 && 子元素.length >= 3
-
-
-        // debug start
-        子元素.forEach(e => {
-            e.高度占比 = 取元素投影高(e) / 元素外高
-            // e.setAttribute("高度占比", e.高度占比)
-            // e.setAttribute("高于窗口", 取元素投影高(e) > 窗口高)
-        })
-        // var 子元素叠高 = 子元素.map(e => e.offsetHeight).concat([0]).reduce((a, b) => a + b)
-        // debug end
-
 
         var 子树列 = 子元素高于屏.map(e => 取文章树(e, 层数 + 1)) || []
 
         var 占比 = 取元素投影高(元素) / 取元素投影高(元素.parentElement)
-        元素.setAttribute("是文章", 是文章)
-        元素.setAttribute("占比", 占比)
-
         元素.flag_是文章 = 是文章
-        是文章 && console.log(元素, "是文章");
+
+        if (DEBUG_SNOREAD) {
+            元素.setAttribute("len子元素", 子元素.length)
+            元素.setAttribute("len子元素高于屏", 子元素高于屏.length)
+            元素.setAttribute("len主要的子元素", 主要的子元素.length)
+            元素.setAttribute("是文章", 是文章)
+            元素.setAttribute("占比", 占比)
+            是文章 && console.debug(元素, "是文章");
+        }
         return { 元素, 是文章, 占比, 子树列 }
     }
     var 输出文章树 = (树) => {
@@ -309,26 +283,23 @@ div#main-wrapper:after, .clearfix:after {
         if (元素 == document.body) return;
 
         if (!元素.flag_是文章) return;
-        // if (是文章) return;
+        // if (!是文章) return;
         if (元素.flag_冲突弱势元素) return;
-        // if (!元素.flag_进入过雪阅模式) {
-        //     元素.flag_进入过雪阅模式 = true
-        //     元素.flag_雪阅模式 = true
-        // }
         更新雪阅模式(元素)
         return true
-        // 进入雪阅模式(元素)
     }
 
     var 扫描并转换文章树 = async () => {
         console.log("LAUNCH：SNOREAD");
         await 恢复所有文章样式_临时()
         if (!用户意向_雪阅模式) return null;
-        // await 睡(100)
+
         var 文章树 = 取文章树(document.body)
-        window.调试文章树1 = 文章树
-        window.调试文章树2 = 输出文章树(文章树)
-        //console.log(输出文章树(文章树))
+        if (DEBUG_SNOREAD) {
+            window.调试文章树1 = 文章树
+            window.调试文章树2 = 输出文章树(文章树)
+            console.debug(输出文章树(文章树))
+        }
         检测重叠冲突(文章树)
         转换文章树(文章树)
     }
@@ -344,7 +315,6 @@ div#main-wrapper:after, .clearfix:after {
     window.addEventListener('keyup', () => setTimeout(入口, 200), false)
     window.addEventListener('mouseup', () => setTimeout(入口, 200), false)
     window.addEventListener("keydown", e => e.code == "Escape" && 用户意向退出雪阅模式())
-
     入口()
 })();
 
@@ -354,8 +324,8 @@ div#main-wrapper:after, .clearfix:after {
     'use strict';
     var 监听滚动 = e => {
         [...e.children].map(监听滚动)
-        if (e.flag_已监听滚动) return;
-        e.flag_已监听滚动 = 1;
+        if (e.flag_已监听横向滚动) return;
+        e.flag_已监听横向滚动 = 1;
 
         var handleScroll = (事件) => {
             if (事件.altKey || 事件.ctrlKey || 事件.shiftKey) return;
