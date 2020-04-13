@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.22(20200413)
+// @version      0.23(20200413)
 // @description  【雪阅模式|SNOREAD】你还在浪费你的宽屏吗？雪星邀你体验21世纪新型二维排版！快速提升视觉维度 / 刷知乎神器 / 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 / 快阅速读插件 / 雪阅模式  / 宽屏必备 / 带鱼屏专属 | 使用说明：按 Escape 退出雪阅模式 | 【欢迎加入QQ群交流 1043957595 】
 // @author       snomiao@gmail.com
 // @match        https://www.zhihu.com/*
@@ -16,6 +16,7 @@
 // 更新内容：
 // (20200413)调整横向滚动速率
 // (20200413)减少背景透明度，降低干扰
+// (20200413)增加调试选项，删除不必要代码
 //
 // @exclude      https://*.jd.com/*
 //
