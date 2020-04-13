@@ -15,6 +15,7 @@
 //
 // 更新内容：
 // (20200413)调整横向滚动速率
+// (20200413)减少背景透明度，降低干扰
 //
 // @exclude      https://*.jd.com/*
 //
@@ -101,7 +102,7 @@ div#main-wrapper:after, .clearfix:after {
     z-index:1   !important;
 
     box-shadow: 0 0 1rem black inset   !important;
-    background: rgba(255,255,255,0.3)   !important;
+    background-color: rgba(255,255,255,0.8)   !important;
     color: black   !important;
 
     text-align: justify   !important;
@@ -110,7 +111,7 @@ div#main-wrapper:after, .clearfix:after {
 }
 .snomiao-article>*{
     /* display: block              !important; */
-    background: rgba(255,255,255,0.3) !important;
+    background-color: rgba(255,255,255,0.8) !important;
     max-width: 40rem            !important;
 }
 .snomiao-article>*:not(li){
