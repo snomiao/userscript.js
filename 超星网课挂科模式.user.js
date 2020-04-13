@@ -20,8 +20,24 @@
 // 开发中
 //
 ///////////////////////////////
-// 对象操作
+// 防多开
+// var genId = '' + Math.random()
+
+
+///////////////////////////////
+// 异步组件
 var 睡 = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+var 异步防抖函数 = (异步函数, 间隔时间 = 1000) => {
+    var 上次执行时间 = null
+    return async (...参列) => {
+        if (上次执行时间 != null && 上次执行时间 + 间隔时间 >= +new Date())
+        return null
+        上次执行时间 = +new Date()
+        return await 异步函数(参列)
+    }
+}
+
+// 对象操作
 var 深合并 = (t, s) => t instanceof Object && ([...Object.keys(s)].forEach(k => t[k] = 深合并(t[k], s[k])), t) || undefined === s && t || s
 var 键值对列转对象 = (键值对列) => 键值对列.reduce((a, b) => (a[b[0]] = b[1], a), {})
 var 全部提取 = (str, reg) => {
@@ -125,48 +141,51 @@ var 更新当前页面状态 = () => {
     if (location.pathname == '/pptSign/stuSignajax') 更新签到状态2(document.body.innerHTML, location.href)
 }
 
+var 自动签到 = async () => {
+    var 状态 = 加载状态()
+    // 4分半钟检查一次签到
+    var 未知签到课程列 = [...Object.values(状态.课程表 || {})].filter(课程 => (课程.t检查签到表 || 课程.t更新签到表 || 0) + 270e3 <= +new Date())
+    合并状态(() => ({ 课程表: 键值对列转对象(未知签到课程列.map(({ classId }) => [classId, { t检查签到表: +new Date() }])) }))
+    var 课程
+    while (课程 = 未知签到课程列.shift()) {
+        const 地址 = 取签到表地址(课程)
+        console.debug('正在检查签到列表', 课程, 地址)
+        更新签到表(await GETHTML(地址))
+        await 睡(3e3)
+    }
+
+    // 5 秒尝试一次签到
+    var 未完成签到列 = [...Object.values(状态.签到表 || {})].filter(签到 => (签到.t尝试签到 || 0) + 5e3 <= +new Date())
+        .filter(签到 => !(签到.succTime || 签到.succTimeRaw || 签到.t签到成功))
+    合并状态(() => ({ 签到表: 键值对列转对象(未完成签到列.map(({ activeId }) => [activeId, { t尝试签到: +new Date() }])) }))
+    var 签到;
+    while (签到 = 未完成签到列.shift()) {
+        let 地址;
+        if (签到.title.match('手势')) {
+            地址 = 取手势签到地址(签到)
+        } else {
+            地址 = 取普通签到地址(签到)
+        }
+        console.debug('正在签到', 签到, 地址)
+        // window.open(地址 + "#自动关闭")
+        更新签到状态(await GETHTML(地址))
+        await 睡(3e3)
+    }
+}
 ///////////////////////////////////////////////////////////////
 
 var main = async () => {
     更新当前页面状态()
-    var 状态 = 加载状态()
-    // var 未知签到课程列 = [...Object.values(状态.课程表)].filter(课程 => 课程.待完成状态 !== false)
-
-    if (decodeURI(location.hash) == "#自动关闭")
-        window.close()
 
     if (location.hostname == 'mobilelearn.chaoxing.com' && decodeURI(location.hash) == "#巡逻自动签到") {
-        document.body.innerHTML = new Date(+new Date()).toISOString() + "#自动签到运行中..."
-        // 10分钟检查一次签到
-        var 未知签到课程列 = [...Object.values(状态.课程表 || {})].filter(课程 => (课程.t检查签到表 || 课程.t更新签到表 || 0) + 60e3 <= +new Date())
-        合并状态(() => ({ 课程表: 键值对列转对象(未知签到课程列.map(({ classId }) => [classId, { t检查签到表: +new Date() }])) }))
-        var 课程
-        while (课程 = 未知签到课程列.shift()) {
-            const 地址 = 取签到表地址(课程)
-            console.debug('正在检查签到列表', 课程, 地址)
-            更新签到表(await GETHTML(地址))
-            await 睡(3e3)
-        }
-
-        // 5 秒尝试一次签到
-        var 未完成签到列 = [...Object.values(状态.签到表 || {})].filter(签到 => (签到.t尝试签到 || 0) + 5e3 <= +new Date())
-            .filter(签到 => !(签到.succTime || 签到.succTimeRaw || 签到.t签到成功))
-        合并状态(() => ({ 签到表: 键值对列转对象(未完成签到列.map(({ activeId }) => [activeId, { t尝试签到: +new Date() }])) }))
-        var 签到;
-        while (签到 = 未完成签到列.shift()) {
-            let 地址;
-            if (签到.title.match('手势')) {
-                地址 = 取手势签到地址(签到)
-            } else {
-                地址 = 取普通签到地址(签到)
+        console.log("[超星网课挂科模式] 启动巡逻自动签到")
+        var 间隔自动签到 = 异步防抖函数(自动签到, 270e3) // 最快四分半钟检查一次签到
+        setInterval(async ()=>{
+            document.body.innerHTML = new Date(+new Date()) + "#自动签到运行中..."
+            if(null !== await 间隔自动签到()){
+                console.log(new Date(), '4分半钟后重新运行')
             }
-            console.debug('正在签到', 签到, 地址)
-            // window.open(地址 + "#自动关闭")
-            更新签到状态(await GETHTML(地址))
-            await 睡(3e3)
-        }
-        console.log('3分钟后重新运行')
-        setTimeout(main, 180e3)
+        }, 1e3)
     }
     if (decodeURI(location.hash) == "#自动签到") {
         var iframe = document.createElement('iframe')
@@ -174,12 +193,12 @@ var main = async () => {
         document.body.appendChild(a)
     }
     if (decodeURI(location.hash) == "#自动巡逻") {
-
         console.log('3分钟后重新运行')
         setTimeout(main, 180e3)
     }
+    if (decodeURI(location.hash) == "#自动关闭"){
+        window.close()
+    }
 }
 
-// await main()
-// window.addEventListener("load", () => setTimeout(main, Math.random() * 5e3));
 window.addEventListener("load", main);
