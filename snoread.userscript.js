@@ -133,8 +133,8 @@ div#main-wrapper:after, .clearfix:after {
     }
 
     var 监听点击 = 元素 => {
-        if (元素.flag_handleClickToggleSnoReadMode) return;
-        元素.flag_handleClickToggleSnoReadMode = 1
+        if (元素.flag_点击切换雪阅模式) return;
+        元素.flag_点击切换雪阅模式 = true
         // 点击定位到文章
         元素.addEventListener("click", function (事件) {
             // console.debug("点击元素", 元素)
@@ -327,7 +327,7 @@ div#main-wrapper:after, .clearfix:after {
     var 监听滚动 = e => {
         [...e.children].map(监听滚动)
         if (e.flag_已监听横向滚动) return;
-        e.flag_已监听横向滚动 = 1;
+        e.flag_已监听横向滚动 = true;
 
         var handleScroll = (事件) => {
             if (事件.altKey || 事件.ctrlKey || 事件.shiftKey) return;
