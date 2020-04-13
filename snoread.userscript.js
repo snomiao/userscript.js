@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.21(20200412)
+// @version      0.22(20200413)
 // @description  【雪阅模式|SNOREAD】你还在浪费你的宽屏吗？雪星邀你体验21世纪新型二维排版！快速提升视觉维度 / 刷知乎神器 / 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 / 快阅速读插件 / 雪阅模式  / 宽屏必备 / 带鱼屏专属 | 使用说明：按 Escape 退出雪阅模式 | 【欢迎加入QQ群交流 1043957595 】
 // @author       snomiao@gmail.com
 // @match        https://www.zhihu.com/*
@@ -12,6 +12,9 @@
 // @exclude      https://*.tmall.com/*
 // @grant        none
 // ==/UserScript==
+//
+// 更新内容：
+// (20200413)调整横向滚动速率
 //
 // @exclude      https://*.jd.com/*
 //
@@ -356,24 +359,26 @@ div#main-wrapper:after, .clearfix:after {
         var handleScroll = (事件) => {
             if (事件.altKey || 事件.ctrlKey || 事件.shiftKey) return;
             var scrollRate = (事件.detail || -事件.wheelDelta) / 120 //Y轴
-            var scrolled_x = (e.scrollLeft != (e.scrollLeft += scrollRate * e.clientWidth * 0.1, e.scrollLeft))
+            var dx = scrollRate * e.clientWidth * 0.3
+            var scrolled_x = (e.scrollLeft != (e.scrollLeft += dx, e.scrollLeft))
             if (scrolled_x) {
                 // 若需定位则撤销滚动
                 var 当前Y = e.getBoundingClientRect().y
                 e.scrollIntoViewIfNeeded()
                 if (e.getBoundingClientRect().y != 当前Y)
-                    e.scrollLeft -= scrollRate * e.clientWidth * 0.1;
+                    e.scrollLeft -= dx;
                 //
                 事件.preventDefault();
                 事件.stopPropagation();
                 return false;
             }
-            var scrolled_y = (e.scrollTop != (e.scrollTop += scrollRate * e.clientHeight * 0.5, e.scrollTop))
+            var dy = scrollRate * e.clientHeight * 0.5
+            var scrolled_y = (e.scrollTop != (e.scrollTop += dy, e.scrollTop))
             if (scrolled_y) {
                 var 当前X = e.getBoundingClientRect().x
                 e.scrollIntoViewIfNeeded()
                 if (e.getBoundingClientRect().x != 当前X)
-                    e.scrollTop -= scrollRate * e.clientHeight * 0.5;
+                    e.scrollTop -= dy;
                 //
                 事件.preventDefault();
                 事件.stopPropagation();
