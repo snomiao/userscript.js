@@ -13,14 +13,15 @@
 // @grant        none
 // ==/UserScript==
 //
-// 测试页面
 // @exclude      https://*.jd.com/*
 //
+// 测试页面
 /*
 https://www.zhihu.com/hot
 https://www.zhihu.com/question/35829677
 https://www.jd.com/
 */
+// TODO
 // 尝试清除挡物
 // javascript:[...document.querySelectorAll("*")].filter(e=>e).filter(e=>window.getComputedStyle(e).getPropertyValue("z-index")>1).
 
