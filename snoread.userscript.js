@@ -258,7 +258,8 @@ div#main-wrapper:after, .clearfix:after {
         var 主要的子元素 = 子元素高于屏.filter(e => 取元素投影高(e) / 元素外高 > 0.5)
 
         var 元素宽度占比过小 = 元素.clientWidth < 窗口宽 * 0.90
-        var 是文章 = !主要的子元素.length && 元素宽度占比过小 && 子元素.length >= 3
+        var 正确的元素类型 = !['IMG', 'PRE'].includes(元素.tagName)
+        var 是文章 = !主要的子元素.length && 元素宽度占比过小 && 子元素.length >= 3 && 正确的元素类型
 
         var 子树列 = 子元素高于屏.map(e => 取文章树(e, 层数 + 1)) || []
 
