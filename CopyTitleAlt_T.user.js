@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Copy Title Alt+T
 // @namespace    https://userscript.snomiao.com/
-// @version      0.1
+// @version      0.2
 // @description  Press Alt+T to copy title and url like this `# ${TITLE}\n${URL}`
 // @author       snomiao@gmail.com
 // @match        *://*/*
