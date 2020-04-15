@@ -31,7 +31,7 @@ var 异步防抖函数 = (异步函数, 间隔时间 = 1000) => {
     var 上次执行时间 = null
     return async (...参列) => {
         if (上次执行时间 != null && 上次执行时间 + 间隔时间 >= +new Date())
-        return null
+            return null
         上次执行时间 = +new Date()
         return await 异步函数(参列)
     }
@@ -79,9 +79,9 @@ var 更新作业表 = (html) => 合并状态((状态) => ({
         ([_, classId]) =>
             [classId, { t检查作业表: +new Date() }]),
     作业表: 提取为表(html,
-        /<a.*?courseId=(\d+).*?classId=(\d+).*?workId=(\d+)(?:.*?workAnswerId=(\d+))?.*?title="(.*?)"[\s\S]*?开始时间.*>(.*?)<[\s\S]*?截止时间.*?>(.*?)<[\s\S]*?作业状态[\s\S]*?<strong>\s*(.*?)\s*?</g,
-        ([_, courseId, classId, workId, workAnswerId, title, 开始时间, 截止时间, 作业状态]) =>
-            [workId, { courseId, classId, workId, workAnswerId, title, 开始时间, 截止时间, 作业状态 }])
+        /<a.*?href="(.*?courseId=(\d+).*?classId=(\d+).*?workId=(\d+)(?:.*?workAnswerId=(\d+))?.*?)".*?title="(.*?)"[\s\S]*?开始时间.*>(.*?)<[\s\S]*?截止时间.*?>(.*?)<[\s\S]*?作业状态[\s\S]*?<strong>\s*(.*?)\s*?</g,
+        ([_, url, courseId, classId, workId, workAnswerId, title, 开始时间, 截止时间, 作业状态]) =>
+            [workId, { url, courseId, classId, workId, workAnswerId, title, 开始时间, 截止时间, 作业状态 }])
 }));
 // 签到列表
 var 取签到表地址 = ({ courseId, classId }) => `https://mobilelearn.chaoxing.com/widget/pcpick/stu/index?courseId=${courseId}&jclassId=${classId}`
@@ -132,9 +132,9 @@ var 更新课程首页 = (html) => 合并状态((状态) => ({
 var 更新当前页面状态 = () => {
     if (location.pathname == '/visit/interaction') 更新课程表(document.body.innerHTML, location.href)
     if (location.pathname == '/mycourse/studentcourse') 更新课程首页(document.body.innerHTML, location.href)
-
+    // 
     if (location.pathname == '/work/getAllWork') 更新作业表(document.body.innerHTML, location.href)
-
+    // 
     if (location.pathname == '/widget/pcpick/stu/index') 更新签到表(document.body.innerHTML, location.href)
     if (location.pathname == '/widget/sign/pcStuSignController/preSign') 更新签到状态(document.body.innerHTML, location.href)
     if (location.pathname == '/widget/sign/pcStuSignController/signIn') 更新签到状态(document.body.innerHTML, location.href)
@@ -176,13 +176,16 @@ var 自动签到 = async () => {
 
 var main = async () => {
     更新当前页面状态()
-
+    var 状态 = 加载状态();
+    
+    var 未完成作业 = [...Object.values(状态.作业表)].filter(e=>e.作业状态!='已完成')
+    
     if (location.hostname == 'mobilelearn.chaoxing.com' && decodeURI(location.hash) == "#巡逻自动签到") {
         console.log("[超星网课挂科模式] 启动巡逻自动签到")
         var 间隔自动签到 = 异步防抖函数(自动签到, 270e3) // 最快四分半钟检查一次签到
-        setInterval(async ()=>{
+        setInterval(async () => {
             document.body.innerHTML = new Date(+new Date()) + "#自动签到运行中..."
-            if(null !== await 间隔自动签到()){
+            if (null !== await 间隔自动签到()) {
                 console.log(new Date(), '4分半钟后重新运行')
             }
         }, 1e3)
@@ -196,7 +199,7 @@ var main = async () => {
         console.log('3分钟后重新运行')
         setTimeout(main, 180e3)
     }
-    if (decodeURI(location.hash) == "#自动关闭"){
+    if (decodeURI(location.hash) == "#自动关闭") {
         window.close()
     }
 }

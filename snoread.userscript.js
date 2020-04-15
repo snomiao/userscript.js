@@ -2,7 +2,7 @@
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
 // @version      0.23(20200413)
-// @description  【雪阅模式|SNOREAD】你还在浪费你的宽屏吗？雪星邀你体验21世纪新型二维排版！快速提升视觉维度 / 刷知乎神器 / 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 / 快阅速读插件 / 雪阅模式  / 宽屏必备 / 带鱼屏专属 | 使用说明：按 Escape 退出雪阅模式 | 【欢迎加入QQ群交流 1043957595 】
+// @description  【雪阅模式|SNOREAD】你还在浪费你的宽屏吗？雪星邀你体验21世纪新型二维排版！快速提升视觉维度 / 刷知乎神器 / 豪华广角宽屏视角 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 / 快阅速读插件 / 雪阅模式  / 宽屏必备 / 带鱼屏专属 | 使用说明：按 Escape 退出雪阅模式 | 【欢迎加入QQ群交流 1043957595 或 官方TG群组 https://t.me/snoread 】
 // @author       snomiao@gmail.com
 // @match        https://www.zhihu.com/*
 // @match        http://*/*
@@ -35,10 +35,10 @@ https://www.jd.com/
     'esversion: 6';
     var 用户意向_雪阅模式 = true;
     var DEBUG_SNOREAD = false;
-    var 新元素 = (innerHTML, attributes = {}) => {
+    var 新元素 = (HTML, 属性 = {}) => {
         var e = document.createElement("div");
-        e.innerHTML = innerHTML;
-        return Object.assign(e.children[0], attributes)
+        e.innerHTML = HTML;
+        return Object.assign(e.children[0], 属性)
     }
     var 睡 = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     var 异步防抖函数 = (异步函数, 间隔时间 = 1000) => {
@@ -65,7 +65,6 @@ https://www.jd.com/
             document.body.appendChild(样式盒)
         }
         // 规避 iframe 的 innerHeight 超长问题
-
         样式盒.innerHTML = `
 <style>
 
