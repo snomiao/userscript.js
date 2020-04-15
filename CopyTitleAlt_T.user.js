@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Copy Title Alt+T
 // @namespace    https://userscript.snomiao.com/
-// @version      0.2
-// @description  Press Alt+T to copy title and url like this `# ${TITLE}\n${URL}`
+// @version      0.3
+// @description  Press Alt+T to copy title and url like this `[${TITLE}](${URL})`
 // @author       snomiao@gmail.com
 // @match        *://*/*
 // @grant        none
@@ -33,7 +33,7 @@
     }
     window.addEventListener('keydown', (e) => {
         if (!(e.altKey && e.code == 'KeyT')) return;
-        var 标题地址 = `# ${取标题()}\n${location.href}`
+        var 标题地址 = `[${取标题()}](${location.href})`
         复制文本(标题地址)
             ? alert(标题地址 + '\n copyied!')
             : alert('copy title failed, please check browser version')
