@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         超星提前解锁章节
 // @namespace    https://userscript.snomiao.com
-// @version      0.7.(20200323)
-// @description  在视频播放页面（非课程首页），右边侧边栏可以提前解锁章节。在首页右上角可以查看章节统计。我是热爱学习的好孩子
+// @version      0.8
+// @description  【脚本已失效】在视频播放页面（非课程首页），右边侧边栏可以提前解锁章节。在首页右上角可以查看章节统计。我是热爱学习的好孩子
 // @author       snomiao@gmail.com
 // @match        https://*.chaoxing.com/*
 // ==/UserScript==
@@ -42,13 +42,9 @@
                 "&ut=s&vc=1&cpi=" + h.match(/(?<=cpi=)\d+/)[0] +
                 "&enc=" + h.match(/(?<=enc=)\w+/)[0])
         };
-<<<<<<< HEAD
-        document.querySelector(".navshow ul").appendChild(新元素('<li><a target="_blank" href="' + 取统计地址() + '">统计</a></li>'))
-=======
 
         var e = document.querySelector(".navshow ul");
         e && e.appendChild(新元素('<li><a target="_blank" href="' + 取统计地址() + '">统计</a></li>'))
->>>>>>> faf18f2a003b0877d9b5a9dfbbbab73e90958792
 
     }
     var main = () => {
