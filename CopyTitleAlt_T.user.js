@@ -1,13 +1,15 @@
 // ==UserScript==
-// @name         Copy Title Alt+T
-// @namespace    https://userscript.snomiao.com/
-// @version      0.3
-// @description  Press Alt+T to copy title and url like this `[${TITLE}](${URL})`
-// @author       snomiao@gmail.com
-// @match        *://*/*
-// @grant        none
+// @name            Copy Title Alt+T
+// @name:zh         Alt+T 复制标题和地址快速分享
+// @description     Press Alt+T to copy title and url like this `# ${TITLE}\n${URL}` and Alt+Shift+T to copy the markdown style link `[${TITLE}](${URL})`
+// @description:zh  按 Alt+T 复制标题和地址 `# ${TITLE}\n${URL}` and Alt+Shift+T 复制 Markdown 格式的链接 `[${TITLE}](${URL})`
+// @namespace       https://userscript.snomiao.com/
+// @version         0.4
+// @author          snomiao@gmail.com
+// @match           *://*/*
+// @grant           none
 // ==/UserScript==
-
+// (20200423)更新：增加格式
 (function () {
     'use strict';
     var 复制文本 = (content) => {
@@ -19,7 +21,6 @@
         document.body.appendChild(input);
         input.select();
         input.setSelectionRange(0, 9999);
-        console.log('test')
         if (document.execCommand('copy')) {
             document.execCommand('copy');
             var ok = true
@@ -32,10 +33,14 @@
         return 标题列.length == 1 && 标题列[0].innerText.trim() || document.title || ''
     }
     window.addEventListener('keydown', (e) => {
-        if (!(e.altKey && e.code == 'KeyT')) return;
-        var 标题地址 = `[${取标题()}](${location.href})`
-        复制文本(标题地址)
-            ? alert(标题地址 + '\n copyied!')
-            : alert('copy title failed, please check browser version')
+        if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyT')
+            复制文本(`# ${取标题()}\n${location.href}`)
+                ? alert(标题地址 + '\n copyied!')
+                : alert('copy title failed, please check browser version')
+        if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == 'KeyT')
+            复制文本(`[${取标题()}](${location.href})`)
+                ? alert(标题地址 + '\n copyied!')
+                : alert('copy title failed, please check browser version')
+
     })
 })();
