@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         超星提前解锁章节
+// @name:zh      【解锁章节已失效】超星提前解锁章节
 // @namespace    https://userscript.snomiao.com
 // @version      0.8
 // @description  【解锁章节功能已失效】在视频播放页面（非课程首页），右边侧边栏可以提前解锁章节。在首页右上角可以查看章节统计。我是热爱学习的好孩子
