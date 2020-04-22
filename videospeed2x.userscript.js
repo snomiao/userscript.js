@@ -5,8 +5,10 @@
 // @author        snomiao@gmail.com
 // @match         *://*.youtube.com/*
 // @match         *://*/*
+// @exclude       *://mooc1-2.chaoxing.com/*
 // @version       0.1.1
 // ==/UserScript==
+// (20200422)更新：规避超星
 
 (() => {
     var rate = 2
