@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         雪阅模式|SNOREAD
 // @namespace    https://userscript.snomiao.com/
-// @version      0.23(20200413)
+// @version      0.24(20200430)
 // @description  【雪阅模式|SNOREAD】像读报纸一样纵览这个世界吧！豪华广角宽屏视角 / 刷知乎神器 / 2D排版 / 快速提升视觉维度 / 横向滚动阅读模式 / 翻页模式 / 充分利用屏幕空间 / 快阅速读插件 / 雪阅模式  / 宽屏必备 / 带鱼屏专属 | 使用说明：按 Escape 退出雪阅模式 | 【欢迎加入QQ群交流 1043957595 或 官方TG群组 https://t.me/snoread 】
 // @author       snomiao@gmail.com
 // @match        https://www.zhihu.com/*
@@ -14,6 +14,7 @@
 // ==/UserScript==
 //
 // 更新内容：
+// (20200430)修复文字溢出问题
 // (20200428)更新文案
 // (20200413)调整横向滚动速率
 // (20200413)减少背景透明度，降低干扰
@@ -173,6 +174,11 @@ div#main-wrapper:after, .clearfix:after {
         e.parentElement.insertBefore(新元素(`<p class='snomiao-replaced'>${e.textContent}</p>`), e)
         e.remove()
     })
+    var 还原段落为文本节点 = (元素) => [...元素.querySelectorAll("p.snomiao-replaced")].forEach(e => {
+        if (!e.textContent.trim()) return null
+        e.parentElement.insertBefore(document.createTextNode(e.textContent), e)
+        e.remove()
+    })
     var 进入雪阅模式 = (元素) => {
         退出雪阅模式(元素)
         window.snomiao_article = 元素
@@ -189,6 +195,7 @@ div#main-wrapper:after, .clearfix:after {
         console.debug(元素, "进入雪阅模式");
     }
     var 退出雪阅模式 = 元素 => {
+        还原段落为文本节点(元素)
         元素.setAttribute("style", ``);
         元素.classList.remove("snomiao-article")
         解除修复元素可见性(元素)
