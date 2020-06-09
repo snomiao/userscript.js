@@ -9,9 +9,9 @@
 // @author           snomiao@gmail.com
 // @match            *://*.youtube.com/*
 // @match            *://*/*
-// @exclude          *://mooc1-2.chaoxing.com/*
+// @exclude          *://mooc*.chaoxing.com/*
 // @run-at           document-end
-// @version          0.1.2
+// @version          0.1.3
 // ==/UserScript==
 // (20200422)Update: avoid chaoxing online courses (needs 1x speed to complete the task)
 
@@ -25,7 +25,6 @@
         }
     })
     setInterval(init, 10000)
-    window.addEventListener("onload", init)
-    document.addEventListener("onload", init)
+    window.addEventListener('load', init, false)
     init()
 })()
