@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name            Copy Title Alt+T
-// @name:zh         Alt+T 复制标题和地址快速分享
+// @name:zh         Alt+T 复制Markdown格式标题和地址快速分享
+// @name:en         Alt+T Copy Title and Link as Markdown Style
 // @description     Press Alt+T to copy title and url like this `# ${TITLE}\n${URL}` and Alt+Shift+T to copy the markdown style link `[${TITLE}]( ${URL} )`
 // @description:zh  按 Alt+T 复制 Markdown 格式的链接 `[${TITLE}]( ${URL} )` and Alt+Shift+T 复制 标题和地址 `# ${TITLE}\n${URL}`
 // @namespace       https://userscript.snomiao.com/
-// @version         0.6
+// @version         0.7
 // @author          snomiao@gmail.com
 // @match           *://*/*
 // @grant           none
@@ -31,7 +32,6 @@
             ok = true
         }
         document.body.removeChild(input);
-
         ok
             ? alert(标题地址 + '\n copyied!')
             : alert('copy title failed, please check browser version')
