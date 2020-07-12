@@ -27,7 +27,7 @@
         input.setAttribute('style', 'position: fixed; top:0; left:0;z-index: 9999');
         document.body.appendChild(input);
         input.select();
-        input.setSelectionRange(0, 9999);
+        input.setSelectionRange(0, input.value.length);
         console.log('test')
         if (document.execCommand('copy')) {
             document.execCommand('copy');
