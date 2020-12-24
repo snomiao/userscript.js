@@ -1,8 +1,11 @@
 // ==UserScript==
 // @name         一键批量打开谷歌必应搜索前2的n次方项搜索结果
+// @name:zh      Alt + 123... 一键批量打开谷歌必应搜索前2的n次方项搜索结果
+// @name:en      Alt + 123... One-click batch open Google Bing search first 2 n-th power search results
 // @namespace    snomiao@gmail.com
 // @version      0.8
-// @description  快速了解一个领域用，在谷歌或必应的搜索页面 按 Alt+1 ...2,3,4... Alt+5  将会打开前2的n次方项的搜索结果，并复制打开的链接。目前支持：谷歌、必应、知乎。
+// @description:en  To quickly understand a field, press Alt+1 ...2,3,4...Alt+5 on the search page of Google or Bing to open the search results of the first 2 nth power items and copy the opened ones link. Currently supports: Google, Bing, Zhihu.
+// @description:zh  快速了解一个领域用，在谷歌或必应的搜索页面 按 Alt+1 ...2,3,4... Alt+5  将会打开前2的n次方项的搜索结果，并复制打开的链接。目前支持：谷歌、必应、知乎。
 // @author       snomiao
 // @match        https://www.google.com/search?*
 // @match        https://www.google.com.*/search?*
@@ -28,7 +31,6 @@
         document.body.appendChild(input);
         input.select();
         input.setSelectionRange(0, input.value.length);
-        console.log('test')
         if (document.execCommand('copy')) {
             document.execCommand('copy');
             console.log(`长度为${content.length}的内容已复制`);
