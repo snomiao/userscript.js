@@ -38,10 +38,18 @@
         return ok || false
     };
     var 取标题 = () => {
-        var 标题列 = [...document.querySelectorAll('h1')]
-        var 页面标题 = 标题列.length == 1 && 标题列[0].innerText.trim() || ''
-        var 头标题 = document.title || ''
-        return 页面标题.length > 头标题.length ? 页面标题 : 头标题
+        const 最长标题 = [
+            document.title,
+            ...[...document.querySelectorAll('h1')]
+                .map(e => e.innerText)]
+            .map(str => str.replace(/\r?\n.*/g, ''))
+            .sort((a, b) => a.length - b.length)
+            .pop()
+        return 最长标题
+        // var 标题列 = [...document.querySelectorAll('h1')]
+        // var 页面标题 = 标题列.length == 1 && 标题列[0].innerText.trim() || ''
+        // var 头标题 = document.title || ''
+        // return 页面标题.length > 头标题.length ? 页面标题 : 头标题
     }
     window.addEventListener('keydown', (e) => {
         if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyT')
