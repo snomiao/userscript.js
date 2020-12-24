@@ -8,239 +8,20 @@
 // @match        http*://ems.sit.edu.cn:85/student/*
 // @match        http*://ems1.sit.edu.cn:85/student/*
 // @grant        none
+// @require      https://greasyfork.org/scripts/32927-md5-hash/code/MD5%20Hash.js?version=225078
 // ==/UserScript==
 
 
-(function() {
+(function () {
     'use strict';
-
     var 绑定Click到元素 = (f, 元素) => (元素.addEventListener("click", f), 元素)
     var 新元素 = (innerHTML) => {
-            var e = document.createElement("div");
-            e.innerHTML = innerHTML;
-            return e.children[0]
-        }
-        //导入MD5函数
-    var MD5 = function(string) {
-        function RotateLeft(lValue, iShiftBits) {
-            return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
-        }
-
-        function AddUnsigned(lX, lY) {
-            var lX4, lY4, lX8, lY8, lResult;
-            lX8 = (lX & 0x80000000);
-            lY8 = (lY & 0x80000000);
-            lX4 = (lX & 0x40000000);
-            lY4 = (lY & 0x40000000);
-            lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
-            if (lX4 & lY4) {
-                return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
-            }
-            if (lX4 | lY4) {
-                if (lResult & 0x40000000) {
-                    return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
-                } else {
-                    return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
-                }
-            } else {
-                return (lResult ^ lX8 ^ lY8);
-            }
-        }
-
-        function F(x, y, z) { return (x & y) | ((~x) & z); }
-
-        function G(x, y, z) { return (x & z) | (y & (~z)); }
-
-        function H(x, y, z) { return (x ^ y ^ z); }
-
-        function I(x, y, z) { return (y ^ (x | (~z))); }
-
-        function FF(a, b, c, d, x, s, ac) {
-            a = AddUnsigned(a, AddUnsigned(AddUnsigned(F(b, c, d), x), ac));
-            return AddUnsigned(RotateLeft(a, s), b);
-        };
-
-        function GG(a, b, c, d, x, s, ac) {
-            a = AddUnsigned(a, AddUnsigned(AddUnsigned(G(b, c, d), x), ac));
-            return AddUnsigned(RotateLeft(a, s), b);
-        };
-
-        function HH(a, b, c, d, x, s, ac) {
-            a = AddUnsigned(a, AddUnsigned(AddUnsigned(H(b, c, d), x), ac));
-            return AddUnsigned(RotateLeft(a, s), b);
-        };
-
-        function II(a, b, c, d, x, s, ac) {
-            a = AddUnsigned(a, AddUnsigned(AddUnsigned(I(b, c, d), x), ac));
-            return AddUnsigned(RotateLeft(a, s), b);
-        };
-
-        function ConvertToWordArray(string) {
-            var lWordCount;
-            var lMessageLength = string.length;
-            var lNumberOfWords_temp1 = lMessageLength + 8;
-            var lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64;
-            var lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16;
-            var lWordArray = Array(lNumberOfWords - 1);
-            var lBytePosition = 0;
-            var lByteCount = 0;
-            while (lByteCount < lMessageLength) {
-                lWordCount = (lByteCount - (lByteCount % 4)) / 4;
-                lBytePosition = (lByteCount % 4) * 8;
-                lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
-                lByteCount++;
-            }
-            lWordCount = (lByteCount - (lByteCount % 4)) / 4;
-            lBytePosition = (lByteCount % 4) * 8;
-            lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80 << lBytePosition);
-            lWordArray[lNumberOfWords - 2] = lMessageLength << 3;
-            lWordArray[lNumberOfWords - 1] = lMessageLength >>> 29;
-            return lWordArray;
-        };
-
-        function WordToHex(lValue) {
-            var WordToHexValue = "",
-                WordToHexValue_temp = "",
-                lByte, lCount;
-            for (lCount = 0; lCount <= 3; lCount++) {
-                lByte = (lValue >>> (lCount * 8)) & 255;
-                WordToHexValue_temp = "0" + lByte.toString(16);
-                WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
-            }
-            return WordToHexValue;
-        };
-
-        function Utf8Encode(string) {
-            string = string.replace(/\r\n/g, "\n");
-            var utftext = "";
-
-            for (var n = 0; n < string.length; n++) {
-
-                var c = string.charCodeAt(n);
-
-                if (c < 128) {
-                    utftext += String.fromCharCode(c);
-                } else if ((c > 127) && (c < 2048)) {
-                    utftext += String.fromCharCode((c >> 6) | 192);
-                    utftext += String.fromCharCode((c & 63) | 128);
-                } else {
-                    utftext += String.fromCharCode((c >> 12) | 224);
-                    utftext += String.fromCharCode(((c >> 6) & 63) | 128);
-                    utftext += String.fromCharCode((c & 63) | 128);
-                }
-
-            }
-
-            return utftext;
-        };
-
-        var x = Array();
-        var k, AA, BB, CC, DD, a, b, c, d;
-        var S11 = 7,
-            S12 = 12,
-            S13 = 17,
-            S14 = 22;
-        var S21 = 5,
-            S22 = 9,
-            S23 = 14,
-            S24 = 20;
-        var S31 = 4,
-            S32 = 11,
-            S33 = 16,
-            S34 = 23;
-        var S41 = 6,
-            S42 = 10,
-            S43 = 15,
-            S44 = 21;
-
-        string = Utf8Encode(string);
-
-        x = ConvertToWordArray(string);
-
-        a = 0x67452301;
-        b = 0xEFCDAB89;
-        c = 0x98BADCFE;
-        d = 0x10325476;
-
-        for (k = 0; k < x.length; k += 16) {
-            AA = a;
-            BB = b;
-            CC = c;
-            DD = d;
-            a = FF(a, b, c, d, x[k + 0], S11, 0xD76AA478);
-            d = FF(d, a, b, c, x[k + 1], S12, 0xE8C7B756);
-            c = FF(c, d, a, b, x[k + 2], S13, 0x242070DB);
-            b = FF(b, c, d, a, x[k + 3], S14, 0xC1BDCEEE);
-            a = FF(a, b, c, d, x[k + 4], S11, 0xF57C0FAF);
-            d = FF(d, a, b, c, x[k + 5], S12, 0x4787C62A);
-            c = FF(c, d, a, b, x[k + 6], S13, 0xA8304613);
-            b = FF(b, c, d, a, x[k + 7], S14, 0xFD469501);
-            a = FF(a, b, c, d, x[k + 8], S11, 0x698098D8);
-            d = FF(d, a, b, c, x[k + 9], S12, 0x8B44F7AF);
-            c = FF(c, d, a, b, x[k + 10], S13, 0xFFFF5BB1);
-            b = FF(b, c, d, a, x[k + 11], S14, 0x895CD7BE);
-            a = FF(a, b, c, d, x[k + 12], S11, 0x6B901122);
-            d = FF(d, a, b, c, x[k + 13], S12, 0xFD987193);
-            c = FF(c, d, a, b, x[k + 14], S13, 0xA679438E);
-            b = FF(b, c, d, a, x[k + 15], S14, 0x49B40821);
-            a = GG(a, b, c, d, x[k + 1], S21, 0xF61E2562);
-            d = GG(d, a, b, c, x[k + 6], S22, 0xC040B340);
-            c = GG(c, d, a, b, x[k + 11], S23, 0x265E5A51);
-            b = GG(b, c, d, a, x[k + 0], S24, 0xE9B6C7AA);
-            a = GG(a, b, c, d, x[k + 5], S21, 0xD62F105D);
-            d = GG(d, a, b, c, x[k + 10], S22, 0x2441453);
-            c = GG(c, d, a, b, x[k + 15], S23, 0xD8A1E681);
-            b = GG(b, c, d, a, x[k + 4], S24, 0xE7D3FBC8);
-            a = GG(a, b, c, d, x[k + 9], S21, 0x21E1CDE6);
-            d = GG(d, a, b, c, x[k + 14], S22, 0xC33707D6);
-            c = GG(c, d, a, b, x[k + 3], S23, 0xF4D50D87);
-            b = GG(b, c, d, a, x[k + 8], S24, 0x455A14ED);
-            a = GG(a, b, c, d, x[k + 13], S21, 0xA9E3E905);
-            d = GG(d, a, b, c, x[k + 2], S22, 0xFCEFA3F8);
-            c = GG(c, d, a, b, x[k + 7], S23, 0x676F02D9);
-            b = GG(b, c, d, a, x[k + 12], S24, 0x8D2A4C8A);
-            a = HH(a, b, c, d, x[k + 5], S31, 0xFFFA3942);
-            d = HH(d, a, b, c, x[k + 8], S32, 0x8771F681);
-            c = HH(c, d, a, b, x[k + 11], S33, 0x6D9D6122);
-            b = HH(b, c, d, a, x[k + 14], S34, 0xFDE5380C);
-            a = HH(a, b, c, d, x[k + 1], S31, 0xA4BEEA44);
-            d = HH(d, a, b, c, x[k + 4], S32, 0x4BDECFA9);
-            c = HH(c, d, a, b, x[k + 7], S33, 0xF6BB4B60);
-            b = HH(b, c, d, a, x[k + 10], S34, 0xBEBFBC70);
-            a = HH(a, b, c, d, x[k + 13], S31, 0x289B7EC6);
-            d = HH(d, a, b, c, x[k + 0], S32, 0xEAA127FA);
-            c = HH(c, d, a, b, x[k + 3], S33, 0xD4EF3085);
-            b = HH(b, c, d, a, x[k + 6], S34, 0x4881D05);
-            a = HH(a, b, c, d, x[k + 9], S31, 0xD9D4D039);
-            d = HH(d, a, b, c, x[k + 12], S32, 0xE6DB99E5);
-            c = HH(c, d, a, b, x[k + 15], S33, 0x1FA27CF8);
-            b = HH(b, c, d, a, x[k + 2], S34, 0xC4AC5665);
-            a = II(a, b, c, d, x[k + 0], S41, 0xF4292244);
-            d = II(d, a, b, c, x[k + 7], S42, 0x432AFF97);
-            c = II(c, d, a, b, x[k + 14], S43, 0xAB9423A7);
-            b = II(b, c, d, a, x[k + 5], S44, 0xFC93A039);
-            a = II(a, b, c, d, x[k + 12], S41, 0x655B59C3);
-            d = II(d, a, b, c, x[k + 3], S42, 0x8F0CCC92);
-            c = II(c, d, a, b, x[k + 10], S43, 0xFFEFF47D);
-            b = II(b, c, d, a, x[k + 1], S44, 0x85845DD1);
-            a = II(a, b, c, d, x[k + 8], S41, 0x6FA87E4F);
-            d = II(d, a, b, c, x[k + 15], S42, 0xFE2CE6E0);
-            c = II(c, d, a, b, x[k + 6], S43, 0xA3014314);
-            b = II(b, c, d, a, x[k + 13], S44, 0x4E0811A1);
-            a = II(a, b, c, d, x[k + 4], S41, 0xF7537E82);
-            d = II(d, a, b, c, x[k + 11], S42, 0xBD3AF235);
-            c = II(c, d, a, b, x[k + 2], S43, 0x2AD7D2BB);
-            b = II(b, c, d, a, x[k + 9], S44, 0xEB86D391);
-            a = AddUnsigned(a, AA);
-            b = AddUnsigned(b, BB);
-            c = AddUnsigned(c, CC);
-            d = AddUnsigned(d, DD);
-        }
-
-        var temp = WordToHex(a) + WordToHex(b) + WordToHex(c) + WordToHex(d);
-
-        return temp.toLowerCase();
+        var e = document.createElement("div");
+        e.innerHTML = innerHTML;
+        return e.children[0]
     }
+
+    //在头信息已导入MD5函数
     var 下载文件 = (href, title) => {
         const a = document.createElement('a');
         a.setAttribute('href', href);
@@ -254,7 +35,7 @@
     var 异步抓取 = (URL) => {
         return new Promise((resolve, reject) => {
             var xhr = new XMLHttpRequest();
-            xhr.onreadystatechange = function() {
+            xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     并发数--;
                     if (xhr.status == 200) {
@@ -263,7 +44,7 @@
                         resolve(data);
                     } else {
                         // 连接失败后的重试机制
-                        (async() => {
+                        (async () => {
                             var data = await 异步抓取(URL)
                             resolve(data);
                         })()
@@ -286,7 +67,7 @@
     }
     var 解析第二课堂活动事件 = (html) => {
         var re = {}
-            // 样例
+        // 样例
         var _抓取html样例 = `
         <h1 class="title_8">【学工部】上海应用技术大学2019届毕业生春季校园综合招聘会</h1>
             <div style=" color:#7a7a7a; text-align:center">
@@ -319,7 +100,7 @@
                 var 活动时长匹配 = 活动信息.match(/活动时长：([零一二三四五六七八九十0-9]*)\s*?个?\s*?((?:年|季度|月|周|天|小时|刻钟|分钟|分钟|星期|礼拜|日|时|刻|分|秒钟|秒)?) 分钟.*?/m);
                 var 量 = 活动时长匹配[1].replace(/[零一二三四五六七八九十]/g, (s) => "零一二三四五六七八九十".indexOf(s));
                 var 单位 = (
-                        活动时长匹配[2].length ? 活动时长匹配[2]
+                    活动时长匹配[2].length ? 活动时长匹配[2]
                         .replace(/年/, 1000 * 60 * 60 * 24 * 365 / 4)
                         .replace(/季度/, 1000 * 60 * 60 * 24 * 365 / 4)
                         .replace(/月/, 1000 * 60 * 60 * 24 * 30)
@@ -345,7 +126,7 @@
             }
         }
         var 活动时间 = 尝试提取活动时间(活动信息)
-            // 返回一个事件
+        // 返回一个事件
         return {
             // 事件发生时间地点
             TSTART: 活动时间.开始,
@@ -462,82 +243,82 @@
         }
     }
     var 单节课转日历事件 = (row) => {
-            // 范例输入
-            // 课程序号 课程名称 课程代码 课程类型 课程学分 授课老师 上课时间 上课地点 校区 计划人数 已选人数 挂牌 配课班 备注
-            // row = {
-            // 	课程序号,
-            // 	课程代码,
-            // 	课程名称,
-            // 	授课老师,
-            // 	学分,
-            // 	本节上课地点,
-            // 	本节上课时间,
-            // }
-            var { 本节上课时间, 本节上课地点, 课程序号, 课程名称, 课程序号, 课程代码, 授课老师, 学分 } = row;
-            try {
-                var 开学时间 = 取开学时间自课程序号(课程序号)
-                var 课程时间戳 = 计算课程时间(本节上课时间, 开学时间);
-                return {
-                    // 事件发生时间地点
-                    TSTART: new Date(课程时间戳[0]),
-                    TEND: new Date(课程时间戳[1]),
-                    LOCATION: 本节上课地点,
-                    // 事件UID，用于更新进展
-                    UID: MD5(`课程时间: ${课程序号}-${本节上课时间}`) + `@snomiao.com`,
-                    // 事件标题
-                    SUMMARY: `${课程名称}/${课程序号}/${课程代码}/${授课老师}/${学分}分/${本节上课时间}`,
-                    // 本节课的相关信息 (直接导出所有键值对)
-                    DESCRIPTION: [...Object.keys(row)].map(key => `${key}: ${row[key]}\n`).join('')
-                }
-            } catch (e) {
-                throw new Error(`错误：`, e.message, `, 出错数据: `, row)
+        // 范例输入
+        // 课程序号 课程名称 课程代码 课程类型 课程学分 授课老师 上课时间 上课地点 校区 计划人数 已选人数 挂牌 配课班 备注
+        // row = {
+        // 	课程序号,
+        // 	课程代码,
+        // 	课程名称,
+        // 	授课老师,
+        // 	学分,
+        // 	本节上课地点,
+        // 	本节上课时间,
+        // }
+        var { 本节上课时间, 本节上课地点, 课程序号, 课程名称, 课程序号, 课程代码, 授课老师, 学分 } = row;
+        try {
+            var 开学时间 = 取开学时间自课程序号(课程序号)
+            var 课程时间戳 = 计算课程时间(本节上课时间, 开学时间);
+            return {
+                // 事件发生时间地点
+                TSTART: new Date(课程时间戳[0]),
+                TEND: new Date(课程时间戳[1]),
+                LOCATION: 本节上课地点,
+                // 事件UID，用于更新进展
+                UID: MD5(`课程时间: ${课程序号}-${本节上课时间}`) + `@snomiao.com`,
+                // 事件标题
+                SUMMARY: `${课程名称}/${课程序号}/${课程代码}/${授课老师}/${学分}分/${本节上课时间}`,
+                // 本节课的相关信息 (直接导出所有键值对)
+                DESCRIPTION: [...Object.keys(row)].map(key => `${key}: ${row[key]}\n`).join('')
             }
+        } catch (e) {
+            throw new Error(`错误：`, e.message, `, 出错数据: `, row)
         }
-        // 矩阵转置
+    }
+    // 矩阵转置
     var 转置 = m => m[0].map((x, i) => m.map(x => x[i]))
-        // 循环直到不动点，这里的调试技巧：进入死循环时可以在此中断，然后修改变量使其报错或跳出
-        // update: 可配置超时退出
-    var 循环直到不动点 = function(s, proc_function) {
-            var o = s;
-            while (1) {
-                var tmp = proc_function(o)
-                if (tmp == o) {
-                    return o;
-                } else {
-                    o = tmp;
-                }
+    // 循环直到不动点，这里的调试技巧：进入死循环时可以在此中断，然后修改变量使其报错或跳出
+    // update: 可配置超时退出
+    var 循环直到不动点 = function (s, proc_function) {
+        var o = s;
+        while (1) {
+            var tmp = proc_function(o)
+            if (tmp == o) {
+                return o;
+            } else {
+                o = tmp;
             }
         }
-        // 把时间表按具体某周、某节课展开成独立元素，便于比较
-    var 展开课程节数 = function(s) {
+    }
+    // 把时间表按具体某周、某节课展开成独立元素，便于比较
+    var 展开课程节数 = function (s) {
         // 单双周筛选
-        var filter_error = function(s) {
-                return !(s.length == 0 ||
-                    s.match(/.*?第\d*?[02468]周\*[^\*].*/) ||
-                    s.match(/.*?第\d*?[13579]周\*\*.*/)
-                );
-            }
-            // 单双周统一化
-        var normalyze = function(s) {
+        var filter_error = function (s) {
+            return !(s.length == 0 ||
+                s.match(/.*?第\d*?[02468]周\*[^\*].*/) ||
+                s.match(/.*?第\d*?[13579]周\*\*.*/)
+            );
+        }
+        // 单双周统一化
+        var normalyze = function (s) {
             return s.replace(/周\*+/, "周");
         }
 
         // 化为 \n 分割
         s = s.replace(/(?:;|\<br\>)+/g, "\n")
-            // “展开 a-b 为好多节课”
+        // “展开 a-b 为好多节课”
         s = 循环直到不动点(s,
-                x => x.replace(/(.*?)(\d+)-(\d+)(.*)/, function(s, a, b, c, d) {
-                    var o = "";
-                    var b = parseInt(b);
-                    var c = parseInt(c);
-                    for (var i = b; i <= c; i++) {
-                        o += a + i + d + "\n";
-                    }
-                    return o;
-                }))
-            // “展开  a,b” 为2节课
+            x => x.replace(/(.*?)(\d+)-(\d+)(.*)/, function (s, a, b, c, d) {
+                var o = "";
+                var b = parseInt(b);
+                var c = parseInt(c);
+                for (var i = b; i <= c; i++) {
+                    o += a + i + d + "\n";
+                }
+                return o;
+            }))
+        // “展开  a,b” 为2节课
         s = 循环直到不动点(s,
-            x => x.replace(/(.*?)(\d+),(\d+)(.*)/, function(s, a, b, c, d) {
+            x => x.replace(/(.*?)(\d+),(\d+)(.*)/, function (s, a, b, c, d) {
                 var o = "";
                 var b = parseInt(b);
                 var c = parseInt(c);
@@ -551,33 +332,33 @@
     var 合并连续的节数 = (节列) => {
         var lastLength = 节列.length
         节列.forEach((_, 序) => {
-                // 防止比较溢出
-                if (!(序 + 1 < 节列.length)) return;
-                // 跳过已经被变成undefined 的值
-                if (!节列[序]) return;
-                if (!节列[序 + 1]) return;
-                var match1 = 节列[序].match(/(第\d+周,周\d+,)第(\d+)(?:-(\d+))?节/);
-                var match2 = 节列[序 + 1].match(/(第\d+周,周\d+,)第(\d+)(?:-(\d+))?节/);
+            // 防止比较溢出
+            if (!(序 + 1 < 节列.length)) return;
+            // 跳过已经被变成undefined 的值
+            if (!节列[序]) return;
+            if (!节列[序 + 1]) return;
+            var match1 = 节列[序].match(/(第\d+周,周\d+,)第(\d+)(?:-(\d+))?节/);
+            var match2 = 节列[序 + 1].match(/(第\d+周,周\d+,)第(\d+)(?:-(\d+))?节/);
 
-                // 判断是否同周同天
-                if (!(match1 && match2 && match1[1] == match2[1])) return;
+            // 判断是否同周同天
+            if (!(match1 && match2 && match1[1] == match2[1])) return;
 
-                // 补全课程结束时间
-                match1[3] = match1[3] || match1[2];
-                match2[3] = match2[3] || match2[2];
+            // 补全课程结束时间
+            match1[3] = match1[3] || match1[2];
+            match2[3] = match2[3] || match2[2];
 
-                // 判断两节课是否连续
-                if (parseInt(match1[3]) + 1 == parseInt(match2[2])) {
-                    // 如果连续，把它们头尾相接
-                    var a = match1[2];
-                    var b = match2[3];
-                    var time_concated = `第${a}-${b}节`
-                    节列[序] = 节列[序].replace(/第(\d+)(?:-(\d+))?节/, time_concated);
-                    节列[序 + 1] = undefined;
-                }
-                // periods[index] = 0;
-            })
-            // 然后过滤掉计算过程中制造的垃圾
+            // 判断两节课是否连续
+            if (parseInt(match1[3]) + 1 == parseInt(match2[2])) {
+                // 如果连续，把它们头尾相接
+                var a = match1[2];
+                var b = match2[3];
+                var time_concated = `第${a}-${b}节`
+                节列[序] = 节列[序].replace(/第(\d+)(?:-(\d+))?节/, time_concated);
+                节列[序 + 1] = undefined;
+            }
+            // periods[index] = 0;
+        })
+        // 然后过滤掉计算过程中制造的垃圾
         节列 = 节列.filter(x => x);
 
         // 看看有没有合并掉一些课程
@@ -646,48 +427,48 @@
     var 日历事件列表转ICS格式 = (事件列表) => {
         // .ics方案
         var 事件转iCalendar格式的SECTION = (e) => {
-                // 范例输入
-                // {
-                // 	TSTART,
-                // 	TEND,
-                // 	SUMMARY,
-                // 	DESCRIPTION?,
-                // 	LOCATION?,
-                // 	UID?,
-                // }
-                var icalStrFormat = s => s.replace(/\n/g, '\\n').replace(/.{40}/g, c => c + '\r\n ')
-                var EVENT_DTSTAMP = icalStrFormat((new Date()).toISOString().replace(/-|:|\.\d+/g, ''))
-                var EVENT_DTSTART = e.TSTART && icalStrFormat(e.TSTART.toISOString().replace(/-|:|\.\d+/g, ''))
-                var EVENT_DTEND = e.TEND && icalStrFormat(e.TEND.toISOString().replace(/-|:|\.\d+/g, ''))
-                var section_lines = [
-                    `BEGIN:VEVENT`,
-                    //`DTSTART;TZID=Asia/Shanghai:${EVENT_DTSTART}`,
-                    `DTSTAMP:${EVENT_DTSTAMP}`,
-                    `DTSTART:${EVENT_DTSTART}`,
-                    //`DTEND;TZID=Asia/Shanghai:${EVENT_DTEND}`,
-                    `DTEND:${EVENT_DTEND}`,
-                    //`RRULE:FREQ=WEEKLY;COUNT=11;BYDAY=FR`, // 后续升级
-                    `UID:${e.UID && icalStrFormat(e.UID) || (hash(e.SUMMARY) + "@snomiao.com")}`,
-                    e.SUMMARY && `SUMMARY:${icalStrFormat(e.SUMMARY)}`,
-                    e.DESCRIPTION && `DESCRIPTION:${icalStrFormat(e.DESCRIPTION)}`,
-                    e.LOCATION && `LOCATION:${icalStrFormat(e.LOCATION)}`,
-                    `END:VEVENT`,
-                ]
-                return section_lines.filter(e => e).join(`\r\n`);
-            }
-            // 范例输出
-            // BEGIN:VEVENT
-            // DTSTART:20190308T050000Z
-            // DTEND:20190308T063500Z
-            // UID:8523315dacd42732383e3f8d07b9cd88@snomiao.com
-            // SUMMARY:大学生体育测试（一）/1850769/B1230001/张群/0.5分/第2周,周5,第5-6节
-            // DESCRIPTION:课程序号: 1850769\n课程名称: 大学生体育测试（一）\n课程代码: B
-            //  1230001\n课程类型: 公共基础课\n课程学分: 0.5\n授课老师: 张
-            //  群\n上课时间: 第2-5周,周5,第5-6节\n上课地点: 奉贤操场\n校区:
-            //   奉贤校区\n计划人数: 44\n已选人数: 44\n挂牌: 是\n配课班: 1
-            //  6101291, 16101261\n备注: \n
-            // LOCATION:奉贤操场
-            // END:VEVENT
+            // 范例输入
+            // {
+            // 	TSTART,
+            // 	TEND,
+            // 	SUMMARY,
+            // 	DESCRIPTION?,
+            // 	LOCATION?,
+            // 	UID?,
+            // }
+            var icalStrFormat = s => s.replace(/\n/g, '\\n').replace(/.{40}/g, c => c + '\r\n ')
+            var EVENT_DTSTAMP = icalStrFormat((new Date()).toISOString().replace(/-|:|\.\d+/g, ''))
+            var EVENT_DTSTART = e.TSTART && icalStrFormat(e.TSTART.toISOString().replace(/-|:|\.\d+/g, ''))
+            var EVENT_DTEND = e.TEND && icalStrFormat(e.TEND.toISOString().replace(/-|:|\.\d+/g, ''))
+            var section_lines = [
+                `BEGIN:VEVENT`,
+                //`DTSTART;TZID=Asia/Shanghai:${EVENT_DTSTART}`,
+                `DTSTAMP:${EVENT_DTSTAMP}`,
+                `DTSTART:${EVENT_DTSTART}`,
+                //`DTEND;TZID=Asia/Shanghai:${EVENT_DTEND}`,
+                `DTEND:${EVENT_DTEND}`,
+                //`RRULE:FREQ=WEEKLY;COUNT=11;BYDAY=FR`, // 后续升级
+                `UID:${e.UID && icalStrFormat(e.UID) || (hash(e.SUMMARY) + "@snomiao.com")}`,
+                e.SUMMARY && `SUMMARY:${icalStrFormat(e.SUMMARY)}`,
+                e.DESCRIPTION && `DESCRIPTION:${icalStrFormat(e.DESCRIPTION)}`,
+                e.LOCATION && `LOCATION:${icalStrFormat(e.LOCATION)}`,
+                `END:VEVENT`,
+            ]
+            return section_lines.filter(e => e).join(`\r\n`);
+        }
+        // 范例输出
+        // BEGIN:VEVENT
+        // DTSTART:20190308T050000Z
+        // DTEND:20190308T063500Z
+        // UID:8523315dacd42732383e3f8d07b9cd88@snomiao.com
+        // SUMMARY:大学生体育测试（一）/1850769/B1230001/张群/0.5分/第2周,周5,第5-6节
+        // DESCRIPTION:课程序号: 1850769\n课程名称: 大学生体育测试（一）\n课程代码: B
+        //  1230001\n课程类型: 公共基础课\n课程学分: 0.5\n授课老师: 张
+        //  群\n上课时间: 第2-5周,周5,第5-6节\n上课地点: 奉贤操场\n校区:
+        //   奉贤校区\n计划人数: 44\n已选人数: 44\n挂牌: 是\n配课班: 1
+        //  6101291, 16101261\n备注: \n
+        // LOCATION:奉贤操场
+        // END:VEVENT
 
         var lines = [
             `BEGIN:VCALENDAR`,
@@ -714,7 +495,7 @@
 
     if (location.hostname.match(/^sc.*\.sit\.edu\.cn$/)) {
         // 解析并下载当前页面的日历
-        var 下载当前活动日历 = async(e) => {
+        var 下载当前活动日历 = async (e) => {
             if (e) e.disabled = true;
             var href = window.location;
             var html = await 异步抓取(href)
@@ -725,7 +506,7 @@
             if (e) e.disabled = false;
         }
 
-        var 当前页面活动列表日历 = async(e) => {
+        var 当前页面活动列表日历 = async (e) => {
             if (e) e.disabled = true;
             // 获取当前页面上所有活动详情的URL;
             var hrefs = [...document.querySelectorAll("a")].map(a => a.href).filter(href => !!href.match("activityDetail.action"))
@@ -747,7 +528,7 @@
             if (e) e.disabled = false;
         }
 
-        var 下载近期所有第二课堂活动日历 = async(e) => {
+        var 下载近期所有第二课堂活动日历 = async (e) => {
             if (e) e.disabled = true;
             // TODO: 进度条
             // var caption = e.innerText
@@ -765,8 +546,8 @@
             }
 
             var 第二课堂分类列表 = 获取当前页面第二课堂分类列表()
-                // 异步列出每个分类最近的50个活动，并等待全部返回
-            await Promise.all((第二课堂分类列表).map(async({ categoryId, actType }) => {
+            // 异步列出每个分类最近的50个活动，并等待全部返回
+            await Promise.all((第二课堂分类列表).map(async ({ categoryId, actType }) => {
                 var url = `/public/activity/activityList.action?pageNo=1&pageSize=50&categoryId=${categoryId}`;
                 // 获取当前分类的活动链接（列表）
                 var v_dom = document.createElement("html");
@@ -775,16 +556,16 @@
 
                 // 异步下载所有活动，并等待全部下载完成
                 var events = await Promise.all(hrefs.map(async href => {
-                        var html = await 异步抓取(href)
-                        var event = 解析第二课堂活动事件(html)
-                        event.DESCRIPTION += '\n' + href;
+                    var html = await 异步抓取(href)
+                    var event = 解析第二课堂活动事件(html)
+                    event.DESCRIPTION += '\n' + href;
 
-                        // 除此之外还要标出活动类型
-                        event.SUMMARY = actType + "/" + event.SUMMARY;
-                        event.DESCRIPTION = "活动类型: " + actType + "\n\n" + event.DESCRIPTION;
-                        return event;
-                    }))
-                    // 收集
+                    // 除此之外还要标出活动类型
+                    event.SUMMARY = actType + "/" + event.SUMMARY;
+                    event.DESCRIPTION = "活动类型: " + actType + "\n\n" + event.DESCRIPTION;
+                    return event;
+                }))
+                // 收集
                 all_events = all_events.concat(events);
             }))
 
@@ -795,7 +576,7 @@
             if (e) e.disabled = false;
         }
 
-        var 诚信积分一键加满 = async(e) => {
+        var 诚信积分一键加满 = async (e) => {
             if (e) e.disabled = true;
             // 获取当前分类的活动申请编号（列表）
             var v_dom = document.createElement("html");
@@ -821,8 +602,8 @@
             var 工具栏元素列表 = [
                 新元素(`<a href="http://sc.sit.edu.cn/public/activity/activityList.action?pageNo=1&pageSize=200&categoryId=&activityName=">查看最近的200个活动</a>`),
                 window.location.href.match("activityDetail.action") ?
-                绑定Click到元素(下载当前活动日历, 新元素(`<button>下载 当前事件.ical</button>`)) :
-                绑定Click到元素(当前页面活动列表日历, 新元素(`<button>下载 当前页面活动列表.ical</button>`)),
+                    绑定Click到元素(下载当前活动日历, 新元素(`<button>下载 当前事件.ical</button>`)) :
+                    绑定Click到元素(当前页面活动列表日历, 新元素(`<button>下载 当前页面活动列表.ical</button>`)),
                 绑定Click到元素(下载近期所有第二课堂活动日历, 新元素(`<button>下载 近期所有第二课堂活动.ical</button>`)),
                 绑定Click到元素(诚信积分一键加满, 新元素(`<button>诚信积分一键加满！</button>`)),
             ]
@@ -888,7 +669,7 @@
         })
     }
 
-    // 考试
+    // 考试列表
     if (location.pathname == "/student/main.jsp") {
         var 表格 = [...document.querySelectorAll("table")].filter(tab => tab.innerHTML.match("我的考试"))
         var 表格 = 表格 && 表格[0]
