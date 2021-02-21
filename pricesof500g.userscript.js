@@ -50,18 +50,19 @@ var 质量正则 = RegExp([
 ].map(e => e.source).join(''), 'i')
 var 分组计数 = (列, 按 = e => JSON.stringify(e)) => 列.reduce((表, 数) => (表[数] = (表[数] || 0) + 1, 表), {})
 var 众数 = (列) => Object.entries(分组计数(列)).sort(([, v1], [, v2]) => v2-v1)[0][0]
-var 中文数字解析 = 大写数字=>大写数字.split('').reduce((数, 字)=>
-		(e=> e !==-1 && (数 ?? 0) + e)('012345789'.indexOf(字) ) ||
-		(e=> e !==-1 && (数 ?? 0) + e)('零一二三四五六七八九'.indexOf(字) ) ||
-		(e=> e !==-1 && (数 ?? 0) + e)('零壹贰叁肆伍陆柒捌玖'.indexOf(字) ) ||
-		(e=> e !==-1 && (数 ?? 0) + e)('幺两三四五六拐怕勾洞'.indexOf(字) ) ||
-		(e=> e !==-1 && (数 ?? 1) * 10 ** e)("个十百千万一兆一亿".indexOf(字) )||
-		(e=> e !==-1 && (数 ?? 1) * 10 ** e)("个拾佰仟".indexOf(字) ) ||
-		NaN, null)
-var 中文数字替换 = 串 => 串.replace(/[零一二三四五六七八九零壹贰叁肆伍陆柒捌玖个十百千万一兆一亿个拾佰仟]+/g, 中文数字解析)
+var 中文数字解析 = 大写数字 => 大写数字.split('').reduce((数, 字)=>
+	(e=> e !==-1 && (数 ?? 0) + e)('012345789'.indexOf(字) ) ||
+	(e=> e !==-1 && (数 ?? 0) + e)('零一二三四五六七八九'.indexOf(字) ) ||
+	(e=> e !==-1 && (数 ?? 0) + e)('零壹贰叁肆伍陆柒捌玖'.indexOf(字) ) ||
+	(e=> e !==-1 && (数 ?? 0) + e)('洞幺两三四五六拐怕勾'.indexOf(字) ) ||
+	(e=> e !==-1 && (数 ?? 1) * 10 ** e)("个十百千万一兆一亿".indexOf(字) )||
+	(e=> e !==-1 && (数 ?? 1) * 10 ** e)("个拾佰仟".indexOf(字) ) ||
+	NaN, null)
+var 中文数字替换 = 串 => 串.replace(/[幺两三四五六拐怕勾洞零一二三四五六七八九零壹贰叁肆伍陆柒捌玖个十百千万一兆一亿个拾佰仟]+/g, 中文数字解析)
+中文数字替换(`四万万 四亿 四亿亿 二万二千 二百二 三十三 四百 六十四 五百亿 两个亿 十一`)
+
 var 质量千克自标题解析 = (标题) => {
-	标题 = 中文数字替换(标题)
-    var 质量表述列 = 标题.match(RegExp(质量正则.source, 'ig')) || []
+    var 质量表述列 = (中文数字替换(标题) + 标题).match(RegExp(质量正则.source, 'ig')) || []
     var 质量列 = 质量表述列.map(串 => {
         const [_, 前乘数串, 质量串, 单位串, 后乘数串] = 串.match(质量正则)
         const [前乘数, 后乘数] = [前乘数串, 后乘数串].map(e => parseFloat(e) || 1)
@@ -70,7 +71,6 @@ var 质量千克自标题解析 = (标题) => {
         return 前乘数 * 质量 * 单位乘数 * 后乘数 / 1e3 //kg
     })
     return 质量列.length ? parseFloat(众数(质量列)) : NaN
-// '三十三 四百 六十四 五百亿 两个亿 十一'.replace(/[零一二三四五六七八九零壹贰叁肆伍陆柒捌玖个十百千万一兆一亿个拾佰仟]+/g, 大写数字解析)
 }
 var 查看 = e => (console.log(e), e)
 var 每千克价格按每斤解释 = (每千克价格) => (每千克价格/2).toFixed(2) + "¥/500g"
@@ -89,7 +89,7 @@ var 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) =>
 var 新元素 = (innerHTML, attributes = {}) =>
     Object.assign(Object.assign(document.createElement("div"), {innerHTML}).children[0], attributes)
 var 商品列每斤价格排序显示 = (新增商品列) => {
-	console.info('[pricesof500g] 正在处理'+新增商品列.length+'个商品价格。')
+	console.log('[pricesof500g] 正在处理'+新增商品列.length+'个商品价格。')
 	var 现存商品列 = [...document.querySelectorAll('span.priceof500g')].map(价格标签=>价格标签.商品信息)
 	var 有序商品列 = [...现存商品列, ...新增商品列].sort((a, b) => a.每千克价格 - b.每千克价格)
     var 最低每千克价格 = Math.min(...有序商品列.map(e => e.每千克价格).filter(e => !isNaN(e)))
@@ -166,8 +166,8 @@ var 页面变动监视器 = new MutationObserver((mutations) => {
 }); 页面变动监视器.observe(目标, 监视配置)
 window.addEventListener('load', 刷新函数, false)
 刷新函数()
-document.addEventListener('keyup', () => setTimeout(主动刷新函数, 100), false)
+document.addEventListener('keyup', () => setTimeout(刷新函数, 100), false)
 document.addEventListener('mouseup', () => setTimeout(主动刷新函数, 100), false)
-document.addEventListener('visibilitychange', () => setTimeout(主动刷新函数, 100), false)
+document.addEventListener('visibilitychange', () => setTimeout(刷新函数, 100), false)
 
 // })();
