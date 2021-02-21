@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
 // @namespace    snomiao@gmail.com
-// @version      0.9.0
-// @description  已知bug：淘宝的价格和商品标题上写的重量通常对不上，此bug无法修复，天猫、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算
+// @version      0.9.1
+// @description  已知bug：淘宝的价格和商品标题上写的重量通常对不上，此bug无法修复，天猫、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算 ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
 // @author       snomiao@gmail.com
 // @match        http*://cart.jd.com/cart*
 // @match        http*://cart.jd.com/addToCart.html*
@@ -20,6 +20,7 @@
 // ==/UserScript==
 
 //
+// (20210221)更新：优化性能与数据单位的识别
 // (20200404)更新：增加天猫超市支持、优化刷新逻辑
 //
 // (function () {
@@ -33,7 +34,7 @@ var 单位比例表 = {
     // 重量、容积单位（按水的重量算）
     ton: 1e6, kg: 1e3, g: 1, 克: 1,mg: 1e-3, ug: 1e-6,
     l: 1e3,  ml: 1,
-    千克: 1e3, 
+    千克: 1e3,
     磅: 453.59237, lb: 453.59237,
     吨: 1e6, 公斤: 1e3, 斤: 500, 两: 50,
     // 数据单位（采用硬盘工业单位）
@@ -61,7 +62,7 @@ var 质量千克自标题解析 = (标题) => {
     })
     return 质量列.length ? parseFloat(众数(质量列)) : NaN
 }
-var 每斤价格解释 = (每千克价格) => (每千克价格 / 2).toFixed(2) + "¥/500g"
+var 每千克价格按每斤解释 = (每千克价格) => (每千克价格).toFixed(2) + "¥/500g"
 var 范围映射 = (x, [a, b], [c, d]) => (x - a) / (b - a) * (d - c) + c
 var 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) => [...document.querySelectorAll(选项目)].map(元素 => {
     var [标题元素, 价格元素] = [选标题, 选价格].map(选 => 元素.querySelector(选))
@@ -72,7 +73,7 @@ var 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) => [...d
     var 每千克价格 = 价格 / (千克质量 || 0)
     return { 标题, 价格, 千克质量, 每千克价格, 标题元素, 价格元素, 元素 }
 }).filter(e => e)
-var 新元素 = (innerHTML, attributes = {}) => 
+var 新元素 = (innerHTML, attributes = {}) =>
     Object.assign(Object.assign(document.createElement("div"), {innerHTML}).children[0], attributes)
 var 商品列每斤价格排序显示 = (商品列) => {
     var 最低每千克价格 = Math.min(...商品列.map(e => e.每千克价格).filter(e => !isNaN(e)))
@@ -85,10 +86,10 @@ var 商品列每斤价格排序显示 = (商品列) => {
         var 价率 = 范围映射(每千克价格, [最低每千克价格, 最高每千克价格], [1, 0])
         // 从最低价到最高价由红到绿渐变
         var 颜色 = 价率 && `rgba(${价率 * 255},${255 - 价率 * 255},0.1,1)` || 'black'
-        var 描述 = `${标题}\n\n${价格}¥/${千克质量}kg = ${每斤价格解释(每千克价格/2)}\n\n © 2016 - 2021 雪星实验室 \n  ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )`
+        var 描述 = `${标题}\n\n${价格}¥/${千克质量}kg = ${每千克价格按每斤解释(每千克价格)}\n\n © 2016 - 2021 雪星实验室 \n  ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )`
         var 价格标签 = 新元素(`
         	<span class="priceof500g" style="background: ${颜色}; color: white" title="${描述}">
-                ${每斤价格解释(每千克价格/2)}
+                ${每千克价格按每斤解释(每千克价格)}
             </span>`)
         // 标签换新或显示
         标题元素.价格标签 && 标题元素.parentNode.removeChild(标题元素.价格标签)
@@ -111,7 +112,7 @@ var 商品选择列 = [
     { 选项目: ".freqt-items>.freqt-item", 选标题: ".p-name a", 选价格: ".p-price" }, // 常购商品
     { 选项目: ".gl-item", 选标题: ".p-name em", 选价格: ".p-price" },
     { 选项目: ".track-con>ul>li", 选标题: "a>div", 选价格: "a>p" },   //看了又看
-    { 选项目: "ul.plist>li", 选标题: ".p-name", 选价格: ".p-price" }, //店铺新品、店铺热销、店长推荐等    
+    { 选项目: "ul.plist>li", 选标题: ".p-name", 选价格: ".p-price" }, //店铺新品、店铺热销、店长推荐等
     { 选项目: "ul>li.item", 选标题: ".p-name", 选价格: ".p-price" },    // 本店好评
     // JD购物车
     { 选项目: ".goods-list>ul>li", 选标题: ".p-name a", 选价格: ".p-price" },
