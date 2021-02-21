@@ -30,11 +30,10 @@ var 尝试到 = async(ms, fn) => {
 var 等元素 = async(ms, sel, el = document) => await 尝试到(ms, () => el.querySelector(sel))
 var 等元素消失 = async(ms, sel, el = document) => await 尝试到(ms, () => !el.querySelector(sel))
 var 绑定Click到元素 = (f, 元素) => (元素.addEventListener("click", f), 元素)
-var 新元素 = (innerHTML, attributes = {}) => {
-    var e = document.createElement("div");
-    e.innerHTML = innerHTML;
-    return Object.assign(e.children[0], attributes)
-}
+var 新元素 = (innerHTML, attributes = {}) => 
+    Object.assign(
+        Object.assign(document.createElement("div"), {innerHTML}).children[0]
+    , attributes)
 var 解析行 = (line) => {
     var m = line.trim().match(/^(\S*?(\b[A|B][0-9A-Z]{32}\b))$/)
     m = m || line.trim().match(/^(\S*?)\s+#?(\b[A|B][0-9A-Z]{32}\b)$/)
