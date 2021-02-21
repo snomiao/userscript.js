@@ -141,5 +141,7 @@ var 页面变动监视器 = new MutationObserver((mutations) => {
     页面变动监视器.disconnect(); 刷新函数(); 目标 && 页面变动监视器.observe(目标, 监视配置)
 }); 页面变动监视器.observe(目标, 监视配置)
 window.addEventListener('load', 刷新函数, false)
+window.addEventListener('keyup', () => setTimeout(刷新函数, 100), false)
+window.addEventListener('mouseup', () => setTimeout(刷新函数, 100), false)
 刷新函数()
 // })();
