@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
 // @namespace    snomiao@gmail.com
-// @version      0.9.1
+// @version      0.9.3
 // @description  已知bug：淘宝的价格和商品标题上写的重量通常对不上，此bug无法修复，天猫、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算 ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
 // @author       snomiao@gmail.com
 // @match        http*://cart.jd.com/cart*
@@ -62,7 +62,7 @@ var 质量千克自标题解析 = (标题) => {
     })
     return 质量列.length ? parseFloat(众数(质量列)) : NaN
 }
-var 每千克价格按每斤解释 = (每千克价格) => (每千克价格).toFixed(2) + "¥/500g"
+var 每千克价格按每斤解释 = (每千克价格) => (每千克价格/2).toFixed(2) + "¥/500g"
 var 范围映射 = (x, [a, b], [c, d]) => (x - a) / (b - a) * (d - c) + c
 var 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) => [...document.querySelectorAll(选项目)].map(元素 => {
     var [标题元素, 价格元素] = [选标题, 选价格].map(选 => 元素.querySelector(选))
