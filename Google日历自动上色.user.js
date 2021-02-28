@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         [雪星实验室] Google Calendar 谷歌日历自动上色
 // @namespace    https://userscript.snomiao.com/
-// @version      0.0.3
+// @version      0.0.4
 // @description  【功能测试中, bug反馈：snomiao@gmail.com】Google日历自动上色、根据匹配到的关键词显示特定颜色，例如： 休|睡、洗漱|收拾|整理|日记|日志、研究|学习|探索|背词|了解、上学|上班|上课、健身|锻练|热身、路上|通勤、料理|做饭、仪式|典礼|祭祀、紧急|重要|考试|测验、群聊|交流|玩|游戏|知乎、电影|看书|阅书|影评
 // @author       snomiao@gmail.com
 // @match        *://calendar.google.com/*
@@ -11,7 +11,7 @@
 // [颜色名 — HTML颜色代码](https://htmlcolorcodes.com/zh/yanse-ming/)
 var 颜色表 = {
     '休|睡': 'Azure',
-    '洗漱|收拾|整理|日记|日志': "LightYellow",
+    '洗漱|收拾|购物|购买|整理|日记|日志': "LightYellow",
     '科研|研发|开发|研究|探索': "deepskyblue",
     '上学|上班|上课|课程': "skyblue",
     '健身|锻练|热身': "Lime",
@@ -27,6 +27,7 @@ var 更新颜色 = () => {
     var 颜色分析 = 事件元素列.map(e => ({ 元素: e, 文本: e.textContent, 颜色: window.getComputedStyle(e).getPropertyValue('background-color') }))
     颜色分析.forEach(({ 元素, 文本 }) => Object.keys(颜色表)
         .filter(正则 => 文本.match(正则))
+        .sort((正则1, 正则2) => 文本.match(正则1).index - 文本.match(正则2).index)
         .map(正则 => 元素.style.backgroundColor = 颜色表[正则]))
 }
 
