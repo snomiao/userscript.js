@@ -1,0 +1,22 @@
+{
+  "name": "sno-userscript",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.user.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snomiao/userscript.js.git"
+  },
+  "author": "snomiao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/snomiao/userscript.js/issues"
+  },
+  "homepage": "https://github.com/snomiao/userscript.js#readme"
+}
