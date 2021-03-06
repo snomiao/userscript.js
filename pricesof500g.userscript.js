@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
 // @namespace    snomiao@gmail.com
-// @version      1.1.3
+// @version      1.1.4
 // @description  已知bug：淘宝的价格和商品标题上写的重量通常对不上，此bug无法修复，天猫、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算 ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
 // @author       snomiao@gmail.com
 // @match        http*://cart.jd.com/cart*
@@ -122,14 +122,14 @@ var 商品选择列 = `
 | taobao.com | .item-holder                | .item-basic-info a    | .td.td-price       |
 | taobao.com | .bundle                     | .item-basic-info a    | .td.td-price       |
 | taobao.com | #J_OrderList>div            | .item-basic-info a    | .td.td-price       |
-| tmall.com  |  .product                   | .productTitle a       | .productPrice      |
+| tmall.com  | .product                    | .productTitle a       | .productPrice      |
 | tmall.com  | .product                    | .product-title a      | .ui-price          |
-| tmall.com  | .tm-detail-meta             | .tb-detail-hd h1      | .tm-promo-price    |
 | tmall.com  | .j_ItemInfo                 | .title                | .price             |
 | tmall.com  | .one-grid-price             | .floor-item-title     | .floor-price       |
 | tmall.com  | .wonderful-item             | .item-desc            | .item-price        |
-| tmall.com  | .J_TSaleProp>li.tb-selected | a                     | @@.tm-price        | 小的商品描述标签
-| tmall.com  | .tb-property                | h1                    | .tm-price          | 详情页标题
+| tmall.com  | .J_TSaleProp>li.tb-selected | a                     | @@.tm-promo-price  | 小的商品描述标签
+| tmall.com  | .tb-property                | h1                    | .tm-promo-price    | 详情页标题
+| tmall.com  | .tm-detail-meta             | .tb-detail-hd h1      | .tm-promo-price    | 详情页标题
 | jd.com     | .itemInfo-wrap              | .sku-name             | .p-price           | 当前浏览商品
 | jd.com     | ul>li.more2_item            | .more2_info_name      | .more2_info_price  | 首页推荐
 | jd.com     | .freqt-item                 | .p-name a             | .p-price           | 常购商品
