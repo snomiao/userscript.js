@@ -37,7 +37,7 @@ var xyz2srgb = (x, y, z) => {
 }
 var srgb2str = (r, g, b) => `rgb(${[r, g, b].map(e => Math.min(Math.max(0, e | 0), 255)).join(',')})`
 var lch2str = (l, c, h) => srgb2str(...xyz2srgb(...lab2xyz(...lch2lab(l, c, h))))
-var sslch2str = (l, c, h) => srgb2str(...xyz2srgb(...lab2xyz(...lch2lab(l, c, h ** 1.2 * 300+30))))
+var sslch2str = (l, c, h) => srgb2str(...xyz2srgb(...lab2xyz(...lch2lab(l, c, h ** 1.2 * 300 + 30))))
 // document.body.style.background = lch2str(100, 80, 30)
 var 深色事件 = { // 一般红到青
     '紧急|重要|考试|测验|吵架|事故': 'red',
@@ -53,7 +53,8 @@ var 浅色事件 = { // 从浅红到天蓝
     '休|睡': '',
     '洗漱|收拾|整理|大扫除': '',
     '健身|锻练|热身|料理|做饭|吃': '',
-    '日记|日程|日志': '维护|运维|配置',
+    '日记|日程|日志': '',
+    '维护|运维|配置': '',
     '路上|通勤|上学|上班|上课|课程': '',
 }
 深色事件 = Object.fromEntries(Object.entries(深色事件).map(([k, v], i, a) => [k, v || sslch2str(90, 100, i / a.length)]))
