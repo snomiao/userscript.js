@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name            LinksListBatchOpen
+// @name            Links List Batch Open
 // @name:zh         Alt + 123... 一键批量打开谷歌必应搜索的前2的n次方项搜索结果
 // @namespace       snomiao@gmail.com
 // @version         1.0.1
