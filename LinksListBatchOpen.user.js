@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name            Alt + 123... Searching Results Links List Batch Open
-// @name:zh         Alt + 123... 一键批量打开谷歌必应搜索的前2的n次方项搜索结果
+// @name            [SNOLAB] Alt + 123... Searching Results Links List Batch Open
+// @name:zh         [雪星实验室] Alt + 123... 一键批量打开谷歌必应搜索的前2的n次方项搜索结果
 // @namespace       snomiao@gmail.com
 // @version         1.0.1
 // @description  To quickly understand a field, press Alt+1 ...2,3,4...Alt+5 on the search page of Google or Bing to open the search results of the first 2 nth power items and copy the opened ones link. Currently supports: Google, Bing, Zhihu.

@@ -1,5 +1,6 @@
 // ==UserScript==
 // @name         QQ空间相册下载神器
+// @name:zh      [雪星实验室] QQ空间相册下载神器
 // @namespace    https://userscript.snomiao.com/
 // @version      0.4.0
 // @description  批量下载小姐姐空间高清大图照片佳选插件～自动命名快速汲取dalao灵感～（bug反馈联系 snomiao@gmail.com ）  注：使用 chrome 的用户也可以考虑 QQ空间导出助手 插件
