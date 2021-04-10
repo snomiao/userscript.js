@@ -14,10 +14,10 @@
 // https://chrome.google.com/webstore/detail/qq%E7%A9%BA%E9%97%B4%E5%AF%BC%E5%87%BA%E5%8A%A9%E6%89%8B/aofadimegphfgllgjblddapiaojbglhf
 //
 // 更新：(20210228) 0.4.0 修复史前照片下载
-// 更新：(20200518) 0.3.0 还是弹吧……（因为IFRAME可能会漏照片）
+// 更新：(20200518) 0.3.0 还是弹吧……（因为 IFRAME 没法监控状态可能会漏照片、用 xhr 和 fetch 会有跨域问题）
 // 更新：(20200501) 0.2.0 改进下载逻辑，不再弹出窗口
 //
-//; (() => {
+; (() => {
     var 下载 = (url, filename = '') => {
         var a = document.createElement('a');
         a.style.display = 'none';
@@ -77,7 +77,7 @@
                 .replace(/null&.*$/, '')
                 .replace(/\/(?:m|b)(\/|$)/, '/b$1') //高清（一些早期照片没有原图）
                 .replace(/&(?:w|h)=\d+/, '');
-        } else{
+        } else {
             return src
                 .replace('http:', 'https:')
                 .replace(/\/\/.*?\//, '//r.photo.store.qq.com/')
@@ -102,7 +102,7 @@
                 ).replace(/\/|\?|\*|\:|\||\\|\<|\>|\r|\n/, "_").substr(0, 50) + ".jpg"
             }))
     }
-    var 下载当页 = globalThis.下载当页=  () => {
+    var 下载当页 = globalThis.下载当页 = () => {
         const 试取列 = 照片列を取()
         const 列有效 = 试取列.every(({ src }) => src)
         if (列有效) return 照片列を取().forEach(({ url, filename }) => 智能下载(url, filename));
@@ -125,7 +125,7 @@
             title: "请滚动到底以确保当前页面所有照片都已加载",
             //onclick: 下载当页,
         })
-        ;[...document.querySelectorAll('.photo-op-item.photos-download')].forEach(e=>e.remove())
+            ;[...document.querySelectorAll('.photo-op-item.photos-download')].forEach(e => e.remove())
         var 更多按钮 = document.querySelector('.photo-op-item.j-pl-moreop')
         更多按钮 && 更多按钮.parentNode.insertBefore(下载按钮, 更多按钮)
     }
@@ -138,4 +138,4 @@
     // 相册页面
     if (location.hostname == 'user.qzone.qq.com')
         (window.addEventListener('load', 生成下载界面, false), 生成下载界面())
-//})()
+})()
