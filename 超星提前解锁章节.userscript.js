@@ -6,6 +6,7 @@
 // @description  【解锁章节功能已失效 --- 划掉，2021-04-10 有小朋友反馈还能用，各位看情况安吧】在视频播放页面（非课程首页），右边侧边栏可以提前解锁章节。在首页右上角可以查看章节统计。我是热爱学习的好孩子
 // @author       snomiao@gmail.com
 // @match        https://*.chaoxing.com/*
+// @supportURL   https://github.com/snomiao/userscript.js/blob/master/%E8%B6%85%E6%98%9F%E6%8F%90%E5%89%8D%E8%A7%A3%E9%94%81%E7%AB%A0%E8%8A%82.userscript.js
 // ==/UserScript==
 // 
 // 据说还能用的评论：
