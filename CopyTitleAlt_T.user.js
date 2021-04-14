@@ -5,11 +5,12 @@
 // @description     Press Alt+T to copy title and url like this `# ${TITLE}\n${URL}` and Alt+Shift+T to copy the markdown style link `[${TITLE}]( ${URL} )`
 // @description:zh  按 Alt+T 复制 Markdown 格式的链接 `[${TITLE}]( ${URL} )` and Alt+Shift+T 复制 标题和地址 `# ${TITLE}\n${URL}`
 // @namespace       https://userscript.snomiao.com/
-// @version         0.7.1
+// @version         0.7.2
 // @author          snomiao@gmail.com
 // @match           *://*/*
 // @grant           none
 // ==/UserScript==
+// (20210414)更新：修复知乎复制标题 bug
 // (20210303)更新：优化提示
 // (20200425)更新：优化取标题方案
 // (20200425)更新：修改格式
@@ -39,8 +40,7 @@
     var 取标题 = () => {
         const 最长标题 = [
             document.title,
-            ...[...document.querySelectorAll('h1')]
-                .map(e => e.innerText)
+            document.querySelector('h1')?.innerText || ''
         ]
             .map(str => str.replace(/\r?\n.*/g, ''))
             .sort((a, b) => a.length - b.length)
@@ -48,12 +48,12 @@
         return 最长标题
     }
     window.addEventListener('keydown', (e) => {
-        if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyT'){
+        if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyT') {
             复制标题文本(`[${取标题()}]( ${location.href} )`)
             e.preventDefault()
             e.stopPropagation()
         }
-        if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == 'KeyT'){
+        if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == 'KeyT') {
             复制标题文本(`# ${取标题()}\n${location.href}`)
             e.preventDefault()
             e.stopPropagation()
