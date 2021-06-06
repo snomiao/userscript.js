@@ -6,6 +6,7 @@
 // @author       snomiao
 // @include      https://www.google.com/url?*
 // @run-at       document-start
+// @github       https://github.com/snomiao/userscript.js/blob/master/GoogleImFeelingLuckyRedirect.user.js
 // ==/UserScript==
 
 // ref: [Workaround for Google I'm Feeling Lucky Redirect]( https://greasyfork.org/en/scripts/390770-workaround-for-google-i-m-feeling-lucky-redirect )

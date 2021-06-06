@@ -1,15 +1,21 @@
 // ==UserScript==
 // @name         超星提前解锁章节
-// @name:zh      【解锁章节已失效】超星提前解锁章节
+// @name:zh      超星提前解锁章节
 // @namespace    https://userscript.snomiao.com
-// @version      0.8
-// @description  【解锁章节功能已失效】在视频播放页面（非课程首页），右边侧边栏可以提前解锁章节。在首页右上角可以查看章节统计。我是热爱学习的好孩子
+// @version      0.9.0
+// @description  【解锁章节功能已失效 --- 划掉，2021-04-10 有小朋友反馈还能用，各位看情况安吧】在视频播放页面（非课程首页），右边侧边栏可以提前解锁章节。在首页右上角可以查看章节统计。我是热爱学习的好孩子
 // @author       snomiao@gmail.com
 // @match        https://*.chaoxing.com/*
+// @supportURL   https://github.com/snomiao/userscript.js/blob/master/%E8%B6%85%E6%98%9F%E6%8F%90%E5%89%8D%E8%A7%A3%E9%94%81%E7%AB%A0%E8%8A%82.userscript.js
 // ==/UserScript==
-
+// 
+// 据说还能用的评论：
+// [超星提前解锁章节 - 反馈]( https://greasyfork.org/zh-CN/scripts/397180-%E8%B6%85%E6%98%9F%E6%8F%90%E5%89%8D%E8%A7%A3%E9%94%81%E7%AB%A0%E8%8A%82/discussions/78545 )
+// 
+// 作者已近毕业不再使用超星课堂，想维护的同学 fork 或者 pr 或者 邮箱提交代码 到 snomiao@gmail.com 都可以。
+// 
 (() => {
-    var 解锁 = async() => {
+    var 解锁 = async () => {
         var query = new URLSearchParams(window.location.search);
         var courseId = query.get('courseId');
         var clazzid = query.get('clazzid');
@@ -29,7 +35,7 @@
         e.innerHTML = innerHTML;
         return Object.assign(e.children[0], attributes)
     }
-    var 增加统计功能 = async() => {
+    var 增加统计功能 = async () => {
         if ([...document.querySelectorAll(".navshow ul li")].filter(e => e.innerText.trim() == "统计").length)
             return;
         //
