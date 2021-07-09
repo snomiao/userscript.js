@@ -48,7 +48,7 @@ var 深色事件 = { // 一般红到青，如果写了就用写的颜色
     'ritual|ceremony|sacrifice|仪式|典礼|祭祀': '',
     'groupchat|communication|know|blog|little red book|video|jitter|bilibili|B station|群聊|交流|知乎|微博|小红书|视频|抖音|bilibili|B站': '',
     'play|games|玩|游戏': '',
-    'bill|payment|账单|还款': '',
+    'bill|payment|finance|economic|账单|还款|金融|经济': '',
     'Study|Memorize|Understand|Read|Movies|Watch|Read|Books|Reviews|The|学习|背词|了解|阅读|电影|看书|阅书|影评|《': '',
     'Think|Research|R&D|Develop|Research|Explore|思考|科研|研发|开发|研究|探索': '',
 }
