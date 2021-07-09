@@ -58,7 +58,7 @@ var 浅色事件 = { // 从浅红到天蓝
     'shower|wash|clean|organize|clean up|洗澡|洗漱|收拾|整理|大扫除': '',
     'workout|body building|warm up|cook|cook|eat|exercise|健身|锻练|热身|料理|做饭|吃|运动': '',
     'diary|schedule|journal|jour|日记|日程|日志': '',
-    'Maintenance|Operation|Configuration|conf|维护|运维|配置': '',
+    'maintenance|maintain|Operation|ops|Configuration|conf|维护|运维|配置': '',
     'On the road|commute|school|work|class|course|路上|通勤|上学|上班|上课|课程': '',
 }
 const 表值色带转换 = (预设颜色表, s, e) => Object.fromEntries(Object.entries(预设颜色表).map(([k, v], i, a) => [k, v || sslch2str(s, e, i / a.length)]))
