@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
 // @namespace    snomiao@gmail.com
-// @version      1.1.4
-// @description  已知bug：淘宝的价格和商品标题上写的重量通常对不上，此bug无法修复，天猫、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算 ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
+// @version      1.1.6
+// @description  【雪星实验室】如题，已知bug：淘宝的价格和商品标题上写的重量通常对不上，此bug无法修复，天猫、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算 ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
 // @author       snomiao@gmail.com
 // @match        http*://cart.jd.com/cart*
 // @match        http*://order.jd.com/center/alwaysbuy.action*
@@ -19,7 +19,7 @@
 // @grant        none
 // ==/UserScript==
 
-//
+// (20210805)更新：天猫超市购物车页面、修复页面点击失焦问题
 // (20210221)更新：性能优化、数据单位识别优化、更新天猫超市、amazon、suning、加入中文数字识别
 // (20200404)更新：增加天猫超市支持、优化刷新逻辑
 //
@@ -91,13 +91,22 @@ var 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) =>
     }).filter(e => e)
 var 新元素 = (innerHTML, attributes = {}) =>
     Object.assign(Object.assign(document.createElement("div"), { innerHTML }).children[0], attributes)
-var 商品列每斤价格排序显示 = (新增商品列) => {
-    console.log('[pricesof500g] 正在处理' + 新增商品列.length + '个商品价格。')
+var 商品列每斤价格排序显示 = (刷新商品列) => {
+    console.log('[pricesof500g] 正在处理' + 刷新商品列.length + '个商品价格。')
     var 现存商品列 = [...document.querySelectorAll('span.priceof500g')].map(价格标签 => 价格标签.商品信息)
-    var 有序商品列 = [...现存商品列, ...新增商品列].sort((a, b) => a.每千克价格 - b.每千克价格)
+    var 无序商品列 = [...现存商品列, ...刷新商品列];
+    var 有序商品列 = [...无序商品列].sort((a, b) => a.每千克价格 - b.每千克价格)
     var 最低每千克价格 = Math.min(...有序商品列.map(e => e.每千克价格).filter(e => !isNaN(e)))
     var 最高每千克价格 = Math.max(...有序商品列.map(e => e.每千克价格).filter(e => !isNaN(e)))
-    有序商品列.forEach(({ 元素 }) => 元素.parentNode.appendChild(元素.parentNode.removeChild(元素)))
+
+    var [现存商品列特征, 刷新商品列特征] = [现存商品列, 刷新商品列].map(x => x.sort((a, b) => a.每千克价格 - b.每千克价格).map(e => e.每千克价格).join('\n'))
+    console.log(现存商品列特征, 刷新商品列特征);
+    if (现存商品列特征 === 刷新商品列特征) {
+        console.log('商品价格顺序没有变化')
+    } else {
+        有序商品列.forEach(({ 元素 }) => 元素.parentNode.appendChild(元素.parentNode.removeChild(元素)))
+    }
+
     有序商品列.forEach(商品信息 => {
         const { 标题, 千克质量, 价格, 每千克价格, 标题元素 } = 商品信息
         var 价率 = 范围映射(每千克价格, [最低每千克价格, 最高每千克价格], [1, 0])
@@ -131,6 +140,7 @@ var 商品选择列 = `
 | tmall.com  | .J_TSaleProp>li.tb-selected | a                     | @@.tm-promo-price  | 小的商品描述标签
 | tmall.com  | .tb-property                | h1                    | .tm-promo-price    | 详情页标题
 | tmall.com  | .tm-detail-meta             | .tb-detail-hd h1      | .tm-promo-price    | 详情页标题
+| tmall.com  | .item-holder                | .item-title           | .price-line        | 天猫超市购物车
 | jd.com     | .itemInfo-wrap              | .sku-name             | .p-price           | 当前浏览商品
 | jd.com     | ul>li.more2_item            | .more2_info_name      | .more2_info_price  | 首页推荐
 | jd.com     | .freqt-item                 | .p-name a             | .p-price           | 常购商品
