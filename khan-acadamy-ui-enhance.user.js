@@ -12,13 +12,15 @@
 (function() {
     'use strict';
     const e = document.createElement('div')
-    e.innerHTML = `<style>
-[role="dialog"] {
-    width: 100% !important;
-    height: 100% !important;
-    max-height: 100% !important;
-    max-width: 100% !important;
-}<style>`
+    e.innerHTML = `
+        <style>
+            [role="dialog"] {
+                width: 100% !important;
+                height: 100% !important;
+                max-height: 100% !important;
+                max-width: 100% !important;
+            }
+        <style>`
     document.addEventListener('keydown',(event)=>{
         // ctrl+enter or Alt+Enter to click the confirm button
         if((event.ctrlKey&&!event.altKey&&!event.shiftKey&&event.key==='Enter')
