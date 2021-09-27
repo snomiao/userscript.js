@@ -7,8 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "postversion": "git push --follow-tag",
-    "patch": "npm version patch"
+    "patch": "npm version patch",
+    "postversion": "git push --follow-tag"
   },
   "repository": {
     "type": "git",
