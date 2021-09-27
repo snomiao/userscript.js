@@ -34,6 +34,7 @@
             ok = true
         }
         document.body.removeChild(input);
+        ok && alert('标题已复制\n' + content)
         ok || alert('copy title failed, please check browser version')
         return ok || false
     };
@@ -58,5 +59,5 @@
             e.preventDefault()
             e.stopPropagation()
         }
-    })
+    }, false)
 })();
