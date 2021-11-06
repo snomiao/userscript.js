@@ -1,13 +1,14 @@
 {
-  "name": "sno-userscript",
-  "version": "1.0.4",
-  "description": "",
+  "name": "sno-userscripts",
+  "version": "1.0.6",
+  "description": "a collection of snos userscripts",
   "main": "index.user.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "postversion": "git push --follow-tag",
+    "patch": "npm version patch",
+    "postversion": "git push --follow-tag"
   },
   "repository": {
     "type": "git",
