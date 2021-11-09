@@ -1,6 +1,6 @@
 {
   "name": "sno-userscripts",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "a collection of snos userscripts",
   "main": "index.user.js",
   "directories": {
