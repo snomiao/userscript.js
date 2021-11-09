@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
 // @namespace    snomiao@gmail.com
-// @version      1.1.7
+// @version      1.1.8
 // @description  注：淘宝的价格和商品标题上写的重量通常对不上，点进商品页面，选择分类即可了解商品小分类的价格、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算。( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
 // @author       snomiao@gmail.com
 // @match        http*://cart.jd.com/cart*
@@ -143,8 +143,8 @@ const 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) =>
   [...document.querySelectorAll(选项目)]
     .map((元素) => {
       let [标题元素, 价格元素] = [选标题, 选价格].map((选) =>
-        选?.startsWith("全局>")
-          ? document.querySelector(选?.slice("全局>".length))
+        选?.startsWith("DOC>")
+          ? document.querySelector(选?.slice("DOC>".length))
           : 元素?.querySelector(选)
       );
       if (!标题元素 || !价格元素) return null;
@@ -210,35 +210,36 @@ const 商品列每斤价格排序显示 = (新增商品列) => {
   有序商品列.forEach(商品信息解释生成);
 };
 const 商品选择列 = `
-| taobao.com | .item                       | .title a              | .price                 | 商品页面
-| taobao.com | .item-holder                | .item-basic-info a    | .price-now             | 购物车
-| taobao.com | .bundle                     | .item-basic-info a    | .price-now             | 购物车商品页面标题
-| taobao.com | .bundle                     | .item-props           | .price-now             | 购物车商品分类标签
-| taobao.com | #J_OrderList>div            | .item-basic-info a    | .price-now             | 购物车
-| taobao.com | .J_TSaleProp>li.tb-selected | a                     | 全局>#J_PromoPriceNum,.tm-price  | 小的商品描述标签，
-| tmall.com  | .product                    | .productTitle a       | .productPrice          |
-| tmall.com  | .product                    | .product-title a      | .ui-price              |
-| tmall.com  | .j_ItemInfo                 | .title                | .price                 |
-| tmall.com  | .one-grid-price             | .floor-item-title     | .floor-price           |
-| tmall.com  | .wonderful-item             | .item-desc            | .item-price            |
-| tmall.com  | .J_TSaleProp>li.tb-selected | a                     | 全局>.tm-promo-price,.tm-price   | 小的商品描述标签
-| tmall.com  | .tb-property                | h1                    | .tm-promo-price        | 详情页标题
-| tmall.com  | .tm-detail-meta             | .tb-detail-hd h1      | .tm-promo-price        | 详情页标题
-| jd.com     | .itemInfo-wrap              | .sku-name             | .p-price               | 当前浏览商品
-| jd.com     | ul>li.more2_item            | .more2_info_name      | .more2_info_price      | 首页推荐
-| jd.com     | .freqt-item                 | .p-name a             | .p-price               | 常购商品
-| jd.com     | .gl-item                    | .p-name em            | .p-price               |
-| jd.com     | .track-con>ul>li            | a>div                 | a>p                    | 看了又看
-| jd.com     | ul.plist>li                 | .p-name               | .p-price               | 店铺新品、店铺热销、店长推荐等
-| jd.com     | ul>li.item                  | .p-name               | .p-price               | 本店好评
-| jd.com     | .goods-list>ul>li           | .p-name a             | .p-price               | JD购物车
-| jd.com     | .item-item,.item-full       | .p-name a             | .p-price               | JD购物车
-| jd.com     | .smart-items>ul>li          | .item-name a          | .item-price            | JD购物车
-| 1688.com   | .grid.rec-offer             | .offer_titles         | .price-num             | 首页
-| 1688.com   | .sm-offer-item              | .sm-offer-title       | .sm-offer-priceNum     | 商品搜索页面
-| 1688.com   | .card-container             | .title                | div.price              | 商品搜索页面
-| amazon.cn  | .s-result-item              | h2                    | .a-price               | 商品搜索页面
-| suning.com | li.item-wrap                | .title-selling-point  | .price-box             | 商品搜索页面
+| taobao.com | .item                       | .title a              | .price                             | 商品页面
+| taobao.com | .tb-property                | .tb-main-title        | .tb-property-cont                  | 商品搜索结果页面
+| taobao.com | .item-holder                | .item-basic-info a    | .price-now                         | 购物车
+| taobao.com | .bundle                     | .item-basic-info a    | .price-now                         | 购物车商品页面标题
+| taobao.com | .item-holder                | .item-props           | .price-now                         | 购物车商品分类标签 https://cart.taobao.com/cart.htm
+| taobao.com | #J_OrderList>div            | .item-basic-info a    | .price-now                         | 购物车
+| taobao.com | .J_TSaleProp>li.tb-selected | a                     | DOC>#J_PromoPriceNum,.tm-price     | 小的商品描述标签，
+| tmall.com  | .product                    | .productTitle a       | .productPrice                      |
+| tmall.com  | .product                    | .product-title a      | .ui-price                          |
+| tmall.com  | .j_ItemInfo                 | .title                | .price                             |
+| tmall.com  | .one-grid-price             | .floor-item-title     | .floor-price                       |
+| tmall.com  | .wonderful-item             | .item-desc            | .item-price                        |
+| tmall.com  | .J_TSaleProp>li.tb-selected | a                     | DOC>.tm-promo-price,.tm-price      | 小的商品描述标签
+| tmall.com  | .tb-property                | h1                    | .tm-promo-price                    | 详情页标题
+| tmall.com  | .tm-detail-meta             | .tb-detail-hd h1      | .tm-promo-price                    | 详情页标题
+| jd.com     | .itemInfo-wrap              | .sku-name             | .p-price                           | 当前浏览商品
+| jd.com     | ul>li.more2_item            | .more2_info_name      | .more2_info_price                  | 首页推荐
+| jd.com     | .freqt-item                 | .p-name a             | .p-price                           | 常购商品
+| jd.com     | .gl-item                    | .p-name em            | .p-price                           |
+| jd.com     | .track-con>ul>li            | a>div                 | a>p                                | 看了又看
+| jd.com     | ul.plist>li                 | .p-name               | .p-price                           | 店铺新品、店铺热销、店长推荐等
+| jd.com     | ul>li.item                  | .p-name               | .p-price                           | 本店好评
+| jd.com     | .goods-list>ul>li           | .p-name a             | .p-price                           | JD购物车
+| jd.com     | .item-item,.item-full       | .p-name a             | .p-price                           | JD购物车
+| jd.com     | .smart-items>ul>li          | .item-name a          | .item-price                        | JD购物车
+| 1688.com   | .grid.rec-offer             | .offer_titles         | .price-num                         | 首页
+| 1688.com   | .sm-offer-item              | .sm-offer-title       | .sm-offer-priceNum                 | 商品搜索页面
+| 1688.com   | .card-container             | .title                | div.price                          | 商品搜索页面
+| amazon.cn  | .s-result-item              | h2                    | .a-price                           | 商品搜索页面
+| suning.com | li.item-wrap                | .title-selling-point  | .price-box                         | 商品搜索页面
 `
   .replace(/\/\/.*/gm, "")
   .split(/\r?\n/g)
