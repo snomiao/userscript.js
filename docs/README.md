@@ -2,12 +2,7 @@
 
 snomiao's userscripts, sync to [snomiao - Greasy Fork](https://greasyfork.org/zh-CN/users/31387-snomiao)
 
-<style>
-    img{
-        max-width: 60vw;
-        margin: auto;
-    }
-</style>
+
 
 
 
@@ -27,11 +22,24 @@ Greasy Fork: [snomiao - Greasy Fork](https://greasyfork.org/zh-CN/users/31387-sn
 
 Github: [snomiao/userscript.js: sync to greasyfork.com](https://github.com/snomiao/userscript.js#readme) (Source)
 
-## Sync
+## Sync By github
 
-https://greasyfork.org/en/import
+from:
+- https://github.com/snomiao/userscript.js
+
+to:
+- [Import scripts - greasyfork]( https://greasyfork.org/en/import )
+- [New Script | OpenUserJS]( https://openuserjs.org/user/add/scripts )
 
 ## ref
 
 ---
 
+## markdown style
+
+<style>
+    img{
+        max-width: 60vw;
+        margin: auto;
+    }
+</style>

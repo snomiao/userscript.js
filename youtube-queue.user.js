@@ -4,6 +4,7 @@
 // @version      0.0.1
 // @description  Youtube Search Results Pages Push To Queue To Play Button
 // @author       snomiao@gmail.com
+// @copyright    2021, snomiao (snomiao.com)
 // @match        https://www.youtube.com/results?search_query=*
 // @grant        none
 // ==/UserScript==
