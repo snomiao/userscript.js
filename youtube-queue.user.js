@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YoutubeAllResultsPushToQueuePlay
 // @namespace    snomiao@gmail.com
-// @version      0.0.1
+// @version      0.0.2
 // @description  Youtube Search Results Pages Push To Queue To Play Button
 // @author       snomiao@gmail.com
 // @copyright    2021, snomiao (snomiao.com)
@@ -43,7 +43,7 @@ const menuClick = async (e) => {
 };
 
 const AllResultsPushToQueuePlay = async function () {
-  const vs = qsa("ytd-video-renderer").slice(0, 10);
+  const vs = qsa("ytd-video-renderer");
   for await (const e of vs) {
     await menuClick(e);
   }
