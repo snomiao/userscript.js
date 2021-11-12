@@ -43,6 +43,8 @@ const menuClick = async (e) => {
 };
 
 const AllResultsPushToQueuePlay = async function () {
+  // clean list
+  // ytp-miniplayer-close-button
   const vs = qsa("ytd-video-renderer");
   for await (const e of vs) {
     await menuClick(e);
