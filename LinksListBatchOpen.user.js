@@ -3,7 +3,7 @@
 // @name:zh         [雪星实验室] Alt + 123... 一键批量打开谷歌必应搜索的前2的n次方项搜索结果
 // @namespace       snomiao@gmail.com
 // @version         1.0.1
-// @description  To quickly understand a field, press Alt+1 ...2,3,4...Alt+5 on the search page of Google or Bing to open the search results of the first 2 nth power items and copy the opened ones link. Currently supports: Google, Bing, Zhihu.
+// @description     To quickly understand a field, press Alt+1 ...2,3,4...Alt+5 on the search page of Google or Bing to open the search results of the first 2 nth power items and copy the opened ones link. Currently supports: Google, Bing, Zhihu.
 // @description:zh  快速了解一个领域用，在谷歌或必应的搜索页面 按 Alt+1 ...2,3,4... Alt+5  将会打开前2的n次方项的搜索结果，并复制打开的链接。目前支持：谷歌、必应、知乎。
 // @author          snomiao
 // @match           *://google.com/*
@@ -40,47 +40,53 @@ const 最长共列 = (a, b) => {
 };
 const 元素特征列取 = (e) =>
     [...e.querySelectorAll("*")].map((e) => e?.tagName + e?.className);
+const 特征元素筛函数 = (e) =>
+    !"style script span".toUpperCase().split(" ").includes(e.tagName);
 const 元素列表强度 = (e) =>
     e.textContent.length *
     (e.children.length - 1) *
     [...e.children]
-        .filter(
-            (e) => !"style script".toUpperCase().split(" ").includes(e.tagName)
-        )
+        .filter(特征元素筛函数)
         .map(元素特征列取)
         .map((_, i, a) => 最长共列(a[i], a[i + 1] || []))
         .reduce((前, 后) => 前 + 后.length, 0);
 const 列元素列提取 = () =>
     [...document.querySelectorAll("div,dl,ul,ol,tbody,table,td")]
         .filter((e) => e.children.length > 1)
-        .map((e) => [
-            元素列表强度(e),
-            e,
-            [...e.children]
-                .filter(
-                    (e) => !"style script span".split(" ").includes(e.tagName)
-                )
+        .map((元素) => ({
+            元素,
+            强度: 元素列表强度(元素),
+            特征列: [...元素.children]
+                .filter(特征元素筛函数)
+                // .filter((e) => !["style", "script", "span"].includes(e.tagName))
                 .map(元素特征列取),
-        ])
-        .sort((a, b) => a[0] - b[0])
-        .reverse();
+        }));
 const 标链元素提取 = (e) =>
     e?.querySelector("dd,dt,h1,h2,h3,h4,h5,h6")?.querySelector("a") ||
     [...e?.querySelectorAll("a")]?.filter((e) =>
         e.querySelector("dd,dt,h1,h2,h3,h4,h5,h6")
     )?.[0] ||
     e?.querySelector("a");
-const 标链提取 = (e) =>
-    e && [e?.textContent?.replace(/\s+/g, " ").trim(), e?.href];
+const 标链提取 = (元素) => ({
+    元素,
+    标题: 元素?.textContent?.replace(/\s+/g, " ").trim(),
+    链接: 元素?.href,
+});
+const 子列父亲节点筛函数 = (eFa, i, a) =>
+    !a.some((eSon, j) => i != j && eFa.元素.contains(eSon.元素));
 const 页主标链列提取 = () =>
     列元素列提取()
-        .filter((x, i, a) => a[i][0] > a[0][0] * 0.1)
-        .sort((a, b) => a[1].offsetTop - b[1].offsetTop)
-        .map(([r, e]) => e)
-        .flatMap(
-            (e) => [...e?.children]?.map?.(标链元素提取)?.map?.(标链提取) || []
-        )
-        .filter((e) => e);
+        .sort((a, b) => -(a.强度 - b.强度))
+        .filter((e, _, a) => e.强度 > a[0].强度 * 0.1) // 按最强者 10% 筛选
+        .filter(子列父亲节点筛函数)
+        .sort((a, b) => a.元素.offsetTop - b.元素.offsetTop) // 按垂直位置对比
+        .filter(({ 元素, 强度, 特征列 }) => !console.log(元素, 强度, 特征列)) // 元素提取debug
+        .map(({ 元素 }) => 元素) // 元素提取
+        .flatMap((e) => [...e?.children]?.map?.(标链元素提取) || [])
+        .filter((e) => e)
+        .map(标链提取)
+        .filter(({ 标题, 链接 }) => 标题)
+        .filter(({ 标题, 链接 }) => 链接?.match?.(/^http/));
 const 文本复制 = (内容) => {
     const input = document.createElement("textarea");
     input.setAttribute("readonly", "readonly");
@@ -105,16 +111,11 @@ const 链接打开 = (链接) => {
     }
     已打开过的链接[链接] = 1;
 };
-const 链接列获取 = (数量) =>
-    页主标链列提取()
-        .map(([标题, 链接]) => ({ 标题, 链接 }))
-        .slice(0, 数量)
-        .reverse(); //在 chrome 下需要反过来。。
+const 链接列获取 = (数量 = undefined) => 页主标链列提取().slice(0, 数量);
+const md格式链接生成 = ({ 标题, 链接 }) => `- [${标题}](${链接})`;
 const 打开一定数量链接 = (数量) => {
-    const 链接列 = 链接列获取(数量);
-    文本复制(
-        链接列.map(({ 标题, 链接 }) => "#" + 标题 + "\n" + 链接).join("\n\n")
-    );
+    const 链接列 = 链接列获取(数量).reverse(); //在 chrome 下需要反过来才能让第1个链接先打开。。;
+    文本复制(链接列.map(md格式链接生成).join("\n\n"));
     链接列.map(({ 链接 }) => 链接).map(链接打开);
 };
 window.addEventListener("keydown", (e) => {
@@ -124,3 +125,4 @@ window.addEventListener("keydown", (e) => {
     }
 });
 console.log("[loaded]: 谷歌一键打开前N项搜索结果, Copy");
+链接列获取();
