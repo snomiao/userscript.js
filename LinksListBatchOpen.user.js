@@ -2,7 +2,7 @@
 // @name            [SNOLAB] Alt + 123... Searching Results Links List Batch Open
 // @name:zh         [雪星实验室] Alt + 123... 一键批量打开谷歌必应搜索的前2的n次方项搜索结果
 // @namespace       snomiao@gmail.com
-// @version         1.0.2
+// @version         1.0.3
 // @description     To quickly understand a field, press Alt+1 ...2,3,4...Alt+5 on the search page of Google or Bing to open the search results of the first 2 nth power items and copy the opened ones link. Currently supports: Google, Bing, Zhihu.
 // @description:zh  快速了解一个领域用，在谷歌或必应的搜索页面 按 Alt+1 ...2,3,4... Alt+5  将会打开前2的n次方项的搜索结果，并复制打开的链接。目前支持：谷歌、必应、知乎。
 // @author          snomiao
@@ -124,5 +124,5 @@ window.addEventListener("keydown", (e) => {
         打开一定数量链接(打开数量);
     }
 });
-console.log("[loaded]: 谷歌一键打开前N项搜索结果, Copy");
-链接列获取();
+console.log("[谷歌一键打开前N项搜索结果] LOADED");
+// 链接列获取();
