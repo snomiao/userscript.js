@@ -3,7 +3,9 @@
 snomiao's userscripts, sync to
 [snomiao - Greasy Fork](https://greasyfork.org/zh-CN/users/31387-snomiao)
 
-## pricesof500g.userscript.js
+## 脚本介绍与使用说明
+
+### pricesof500g.userscript.js
 
 提供购物车的相对重量（或容积）的价格标签并自动排序，常用于挑选相对重量（或容积）
 价格比最高的商品。使用场景包括但不限于例如购买廉价耗材、食品、按数据容积购买数据
@@ -39,7 +41,7 @@ to:
 
 ---
 
-## markdown style
+<!-- markdown style -->
 
 <style>
     img{
