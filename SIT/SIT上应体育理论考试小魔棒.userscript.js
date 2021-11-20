@@ -8,10 +8,10 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-var data_str=`1	test	A.test1
+    var data_str = `1	test	A.test1
 2	凤梨科植物要求的pH值（    ）	B.4.5~5.0
 3	请选择以下描述正确的项？	B.原料….
 4	请判断以下是否正确？	A.原料….
@@ -12714,40 +12714,40 @@ var data_str=`1	test	A.test1
 13146	中国第一位奥运会女冠军是射击运动员	A.吴小旋
 13147	在    奥运会上，金牌数和奖牌总数两项指标，创中国自参加奥运会以来单届最高纪录	C.第28届雅典
 13148	年7月13日，时任国际奥委会主席的萨马兰奇在     宣布中国北京为第29届奥运会举办城市	A.2001，莫斯科
-13149	是北京奥运的灵魂。人文奥运是文化的奥运，以人为本的奥运，是实现和谐的奥运，是“更快、更高、更强”与“    ”的有机统一	D.人文奥运，和谐、和睦、和平`
+13149	是北京奥运的灵魂。人文奥运是文化的奥运，以人为本的奥运，是实现和谐的奥运，是“更快、更高、更强”与“    ”的有机统一	D.人文奥运，和谐、和睦、和平`;
 
-var list_QA = data_str.split('\n').map(x=>x.split('\t'))
-var dict_QA = {}
-var simp = (str) => str.replace(/\s+/g,"")
-var simp_QA = list_QA.map(qa=>{
-	var id=qa[0]
-	var q=qa[1]
-	var a=qa[2]
-	dict_QA[simp(q)] = a
-});
+    var list_QA = data_str.split('\n').map((x) => x.split('\t'));
+    var dict_QA = {};
+    var simp = (str) => str.replace(/\s+/g, '');
+    var simp_QA = list_QA.map((qa) => {
+        var id = qa[0];
+        var q = qa[1];
+        var a = qa[2];
+        dict_QA[simp(q)] = a;
+    });
 
-[...document.querySelectorAll("dt")].map(dt=>{
-var q = dt.innerText.replace(/^\d+、|（本题\d+分）|答案：.*/g,"");
-var ans = dict_QA[simp(q)];
-console.log(q, ans)
-var dl = dt.parentElement
-// 显示答案
-var g = document.createElement("span");
-g.innerHTML = `<span style="color:red">答案：${ans}</span>`
-dl.appendChild(g);
+    [...document.querySelectorAll('dt')].map((dt) => {
+        var q = dt.innerText.replace(/^\d+、|（本题\d+分）|答案：.*/g, '');
+        var ans = dict_QA[simp(q)];
+        console.log(q, ans);
+        var dl = dt.parentElement;
+        // 显示答案
+        var g = document.createElement('span');
+        g.innerHTML = `<span style="color:red">答案：${ans}</span>`;
+        dl.appendChild(g);
 
-// 自动选择正确答案
-var len = [...dl.querySelectorAll('dd')]
-	.filter(e=>simp(e.innerText.replace(/^[A-Z] /,"")) === simp(ans.replace(/^[A-Z]./,"")))
-	.map(dd=>dd.querySelector("input").checked=true)
-	.length
-if(len){
-	var g = document.createElement("span");
-	g.innerHTML = `<div style="color:red">已自动选择正确答案</div>`
-	dl.appendChild(g);
-}
-
-})
-
-
+        // 自动选择正确答案
+        var len = [...dl.querySelectorAll('dd')]
+            .filter(
+                (e) =>
+                    simp(e.innerText.replace(/^[A-Z] /, '')) ===
+                    simp(ans.replace(/^[A-Z]./, ''))
+            )
+            .map((dd) => (dd.querySelector('input').checked = true)).length;
+        if (len) {
+            var g = document.createElement('span');
+            g.innerHTML = `<div style="color:red">已自动选择正确答案</div>`;
+            dl.appendChild(g);
+        }
+    });
 })();

@@ -29,37 +29,37 @@
 // 获取质量参数
 // 重量、容积单位（按水的重量算）
 const 重量单位比例表 = {
-  ton: 1e6,
-  kg: 1e3,
-  g: 1,
-  克: 1,
-  mg: 1e-3,
-  ug: 1e-6,
-  l: 1e3,
-  ml: 1,
-  千克: 1e3,
-  磅: 453.59237,
-  lb: 453.59237,
-  吨: 1e6,
-  公斤: 1e3,
-  斤: 500,
-  两: 50,
+    ton: 1e6,
+    kg: 1e3,
+    g: 1,
+    克: 1,
+    mg: 1e-3,
+    ug: 1e-6,
+    l: 1e3,
+    ml: 1,
+    千克: 1e3,
+    磅: 453.59237,
+    lb: 453.59237,
+    吨: 1e6,
+    公斤: 1e3,
+    斤: 500,
+    两: 50,
 };
 // 数据单位（采用硬盘工业单位，一般商品上标的都是这种）
 const 数据单位比例表 = {
-  t: 1e3,
-  g: 1,
-  //   m: 1e-3, //和米冲突
-  k: 1e-6,
-  pb: 1e6,
-  tb: 1e3,
-  gb: 1,
-  mb: 1e-3,
-  kb: 1e-6,
+    t: 1e3,
+    g: 1,
+    //   m: 1e-3, //和米冲突
+    k: 1e-6,
+    pb: 1e6,
+    tb: 1e3,
+    gb: 1,
+    mb: 1e-3,
+    kb: 1e-6,
 };
 const 单位比例表 = {
-  ...重量单位比例表,
-  ...数据单位比例表,
+    ...重量单位比例表,
+    ...数据单位比例表,
 };
 // 匹配： 前缀乘数？ 基数量 基数单位 后缀乘数？
 const 质量正则 = RegExp(
@@ -111,22 +111,22 @@ const 范围映射 = (x, [a, b], [c, d]) => ((x - a) / (b - a)) * (d - c) + c;
 const 查看 = (e) => (console.log(e), e);
 // 流程控制
 function 节流(间隔, 函数, 提示函数 = () => null, 上次执行 = 0) {
-  return async (...参数) =>
-    +new Date() - 上次执行 > 间隔
-      ? ((上次执行 = +new Date()), await 函数(...参数))
-      : await 提示函数(...参数);
+    return async (...参数) =>
+        +new Date() - 上次执行 > 间隔
+            ? ((上次执行 = +new Date()), await 函数(...参数))
+            : await 提示函数(...参数);
 }
 function 防抖(间隔, 函数, 提示函数 = () => null, timerId = null) {
-  return (...参数) =>
-    new Promise(
-      (resolve, reject) => (
-        timerId && (clearTimeout(timerId), resolve(提示函数(...参数))),
-        (timerId = setTimeout(() => resolve(函数(...参数)), 间隔))
-      )
-    );
+    return (...参数) =>
+        new Promise(
+            (resolve, reject) => (
+                timerId && (clearTimeout(timerId), resolve(提示函数(...参数))),
+                (timerId = setTimeout(() => resolve(函数(...参数)), 间隔))
+            )
+        );
 }
 const 节流防抖 = (间隔, 函数, 提示函数 = () => null) =>
-  节流(间隔, 函数, 防抖(间隔, 函数, 提示函数));
+    节流(间隔, 函数, 防抖(间隔, 函数, 提示函数));
 // 量纲计算
 const 质量千克自标题解析 = (标题) => {
     const 质量表述列 =
@@ -143,77 +143,86 @@ const 质量千克自标题解析 = (标题) => {
     return 质量列.length ? parseFloat(众数(质量列)) : NaN;
 };
 const 每千克价格按每斤解释 = (每千克价格) =>
-  `${(每千克价格 / 2).toFixed(2)}¥/500g`;
+    `${(每千克价格 / 2).toFixed(2)}¥/500g`;
 // 元素操作
 const 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) =>
-  [...document.querySelectorAll(选项目)]
-    .map((元素) => {
-      let [标题元素, 价格元素] = [选标题, 选价格].map((选) =>
-        选?.startsWith("DOC>")
-          ? document.querySelector(选?.slice("DOC>".length))
-          : 元素?.querySelector(选)
-      );
-      if (!标题元素 || !价格元素) return null;
-      const 标题 = 标题元素.innerText.trim();
-      let 价格 =
-        parseFloat(价格元素.innerText.trim().replace(/￥|¥/g, "")) || NaN; //无报价
-      let 千克质量 = 质量千克自标题解析(标题);
-      const 每千克价格 = 价格 / (千克质量 || 0);
-      return {
-        标题,
-        价格,
-        千克质量,
-        每千克价格,
-        标题元素,
-        价格元素,
-        元素,
-      };
-    })
-    .filter((e) => e);
+    [...document.querySelectorAll(选项目)]
+        .map((元素) => {
+            let [标题元素, 价格元素] = [选标题, 选价格].map((选) =>
+                选?.startsWith('DOC>')
+                    ? document.querySelector(选?.slice('DOC>'.length))
+                    : 元素?.querySelector(选)
+            );
+            if (!标题元素 || !价格元素) return null;
+            const 标题 = 标题元素.innerText.trim();
+            let 价格 =
+                parseFloat(价格元素.innerText.trim().replace(/￥|¥/g, '')) ||
+                NaN; //无报价
+            let 千克质量 = 质量千克自标题解析(标题);
+            const 每千克价格 = 价格 / (千克质量 || 0);
+            return {
+                标题,
+                价格,
+                千克质量,
+                每千克价格,
+                标题元素,
+                价格元素,
+                元素,
+            };
+        })
+        .filter((e) => e);
 const 抽取并在末尾插入 = (元素) =>
-  元素.parentNode.appendChild(元素.parentNode.removeChild(元素));
+    元素.parentNode.appendChild(元素.parentNode.removeChild(元素));
 const 新元素 = (innerHTML, attributes = {}) =>
-  Object.assign(
-    Object.assign(document.createElement("div"), { innerHTML }).children[0],
-    attributes
-  );
+    Object.assign(
+        Object.assign(document.createElement('div'), { innerHTML }).children[0],
+        attributes
+    );
 // 商品计算
 const 商品列每斤价格排序显示 = (新增商品列) => {
-  console.log(`[pricesof500g] 正在处理${新增商品列.length}个商品价格。`);
-  const 现存商品元素列 = [...document.querySelectorAll("span.priceof500g")];
-  const 现存商品列 = 现存商品元素列.map((价格标签) => 价格标签.商品信息);
-  const 每千克价格对比 = (a, b) => a.每千克价格 - b.每千克价格;
-  const 有序商品列 = [...现存商品列, ...新增商品列].sort(每千克价格对比);
-  const 有效价格列 = 有序商品列
-    .map((e) => e.每千克价格)
-    .filter((e) => !isNaN(e));
-  const 最低每千克价格 = Math.min(...有效价格列);
-  const 最高每千克价格 = Math.max(...有效价格列);
-  console.debug("当页商品价格列", 有序商品列, 最低每千克价格, 最高每千克价格);
-  const 商品信息解释生成 = (商品信息) => {
-    const { 标题, 千克质量, 价格, 每千克价格, 标题元素 } = 商品信息;
-    let 价率 = 范围映射(每千克价格, [最低每千克价格, 最高每千克价格], [1, 0]);
-    // 从最低价到最高价由红到绿渐变
-    const 颜色 =
-      (价率 && `rgba(${价率 * 255},${255 - 价率 * 255},0.1,1)`) || "black";
-    const 描述 = `${标题}\n\n${价格}¥/${千克质量}kg = ${每千克价格按每斤解释(
-      每千克价格
-    )}\n\n © 2016 - 2021 雪星实验室 \n  ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )`;
-    const 价格标签 = 新元素(`
+    console.log(`[pricesof500g] 正在处理${新增商品列.length}个商品价格。`);
+    const 现存商品元素列 = [...document.querySelectorAll('span.priceof500g')];
+    const 现存商品列 = 现存商品元素列.map((价格标签) => 价格标签.商品信息);
+    const 每千克价格对比 = (a, b) => a.每千克价格 - b.每千克价格;
+    const 有序商品列 = [...现存商品列, ...新增商品列].sort(每千克价格对比);
+    const 有效价格列 = 有序商品列
+        .map((e) => e.每千克价格)
+        .filter((e) => !isNaN(e));
+    const 最低每千克价格 = Math.min(...有效价格列);
+    const 最高每千克价格 = Math.max(...有效价格列);
+    console.debug('当页商品价格列', 有序商品列, 最低每千克价格, 最高每千克价格);
+    const 商品信息解释生成 = (商品信息) => {
+        const { 标题, 千克质量, 价格, 每千克价格, 标题元素 } = 商品信息;
+        let 价率 = 范围映射(
+            每千克价格,
+            [最低每千克价格, 最高每千克价格],
+            [1, 0]
+        );
+        // 从最低价到最高价由红到绿渐变
+        const 颜色 =
+            (价率 && `rgba(${价率 * 255},${255 - 价率 * 255},0.1,1)`) ||
+            'black';
+        const 描述 = `${标题}\n\n${价格}¥/${千克质量}kg = ${每千克价格按每斤解释(
+            每千克价格
+        )}\n\n © 2016 - 2021 雪星实验室 \n  ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )`;
+        const 价格标签 = 新元素(`
 <span class="priceof500g" style="background: ${颜色}; color: white" title="${描述}">
   ${每千克价格按每斤解释(每千克价格)}
 </span>`);
 
-    价格标签.商品信息 = 商品信息;
-    // 标记商品已处理
-    商品信息.元素?.classList.add("pricesof500g");
-    // 标签换新或显示
-    标题元素.价格标签 && 标题元素.parentNode.removeChild(标题元素.价格标签);
-    if (!价格 || !千克质量) return;
-    标题元素.价格标签 = 标题元素.parentNode.insertBefore(价格标签, 标题元素);
-  };
-  有序商品列.forEach(({ 元素 }) => 抽取并在末尾插入(元素));
-  有序商品列.forEach(商品信息解释生成);
+        价格标签.商品信息 = 商品信息;
+        // 标记商品已处理
+        商品信息.元素?.classList.add('pricesof500g');
+        // 标签换新或显示
+        标题元素.价格标签 && 标题元素.parentNode.removeChild(标题元素.价格标签);
+        if (!价格 || !千克质量) return;
+        标题元素.价格标签 = 标题元素.parentNode.insertBefore(
+            价格标签,
+            标题元素
+        );
+    };
+    有序商品列.forEach(({ 元素 }) => 抽取并在末尾插入(元素));
+    有序商品列.forEach(商品信息解释生成);
 };
 const 商品选择列 = `
 | taobao.com | .item                       | .title a              | .price                             | 商品页面
@@ -247,52 +256,52 @@ const 商品选择列 = `
 | amazon.cn  | .s-result-item              | h2                    | .a-price                           | 商品搜索页面
 | suning.com | li.item-wrap                | .title-selling-point  | .price-box                         | 商品搜索页面
 `
-  .replace(/\/\/.*/gm, "")
-  .split(/\r?\n/g)
-  .map((e) =>
-    e
-      .trim()
-      .split("|")
-      .slice(1)
-      .map((e) => e.trim())
-  )
-  .filter((e) => e && e[1])
-  .map(([域名, 选项目, 选标题, 选价格]) => ({
-    域名,
-    选项目,
-    选标题,
-    选价格,
-  }));
+    .replace(/\/\/.*/gm, '')
+    .split(/\r?\n/g)
+    .map((e) =>
+        e
+            .trim()
+            .split('|')
+            .slice(1)
+            .map((e) => e.trim())
+    )
+    .filter((e) => e && e[1])
+    .map(([域名, 选项目, 选标题, 选价格]) => ({
+        域名,
+        选项目,
+        选标题,
+        选价格,
+    }));
 const 页面商品列获取 = () =>
     商品选择列
         .filter(({ 域名 }) => location.origin.match(域名))
         .flatMap(页面特定商品列获取);
 const 页面商品列商品列每斤价格排序显示 = () =>
-  !document.hidden && 商品列每斤价格排序显示(页面商品列获取());
+    !document.hidden && 商品列每斤价格排序显示(页面商品列获取());
 // 标签探索
 function 价格标签探索() {
-  // var 商品标签列 = [...document.querySelectorAll('.J_TSaleProp>li')];
-  // var 价格解释含于 = (e) => !e.querySelector('span.priceof500g');
-  // var 价格解释含于 = (e) => !e.querySelector('span.priceof500g');
-  // var 未解释商品标签列 = 商品标签列.filter(价格解释含于);
-  var 未解释商品标签列 = [
-    ...document.querySelectorAll(".J_TSaleProp>li:not(.pricesof500g)"),
-  ];
-  if (!未解释商品标签列.length) return;
-  console.log(
-    "[pricesof500g] 发现" + 未解释商品标签列.length + "个未解释商品标签列"
-  );
-  var 剩余未解释商品标签点击 = () => {
-    var 未解释商品标签 = 未解释商品标签列?.pop();
-    未解释商品标签?.querySelector("a")?.click();
-    未解释商品标签 && setTimeout(主动刷新函数, 1);
-    未解释商品标签 && setTimeout(剩余未解释商品标签点击, 100);
-  };
-  剩余未解释商品标签点击();
+    // var 商品标签列 = [...document.querySelectorAll('.J_TSaleProp>li')];
+    // var 价格解释含于 = (e) => !e.querySelector('span.priceof500g');
+    // var 价格解释含于 = (e) => !e.querySelector('span.priceof500g');
+    // var 未解释商品标签列 = 商品标签列.filter(价格解释含于);
+    var 未解释商品标签列 = [
+        ...document.querySelectorAll('.J_TSaleProp>li:not(.pricesof500g)'),
+    ];
+    if (!未解释商品标签列.length) return;
+    console.log(
+        '[pricesof500g] 发现' + 未解释商品标签列.length + '个未解释商品标签列'
+    );
+    var 剩余未解释商品标签点击 = () => {
+        var 未解释商品标签 = 未解释商品标签列?.pop();
+        未解释商品标签?.querySelector('a')?.click();
+        未解释商品标签 && setTimeout(主动刷新函数, 1);
+        未解释商品标签 && setTimeout(剩余未解释商品标签点击, 100);
+    };
+    剩余未解释商品标签点击();
 }
 // 主函数
 function 刷新() {
-  页面商品列商品列每斤价格排序显示();
+    页面商品列商品列每斤价格排序显示();
 }
 globalThis.价格标签探索 = 价格标签探索;
 const 防抖刷新 = 节流防抖(10e3 /* 3s */, 刷新);
@@ -302,31 +311,31 @@ const 延时主动刷新 = () => setTimeout(主动刷新函数, 1);
 // オブザーバインスタンスを作成
 const 监视目标 = document.documentElement || document.body;
 const 监视配置 = {
-  attributes: false,
-  childList: true,
-  characterData: false,
+    attributes: false,
+    childList: true,
+    characterData: false,
 };
 function 页面变动处理(mutations) {
-  if (!mutations.some((record) => record.addedNodes.length)) return;
-  页面变动监视器.disconnect();
-  防抖刷新();
-  监视目标 && 页面变动监视器.observe(监视目标, 监视配置);
+    if (!mutations.some((record) => record.addedNodes.length)) return;
+    页面变动监视器.disconnect();
+    防抖刷新();
+    监视目标 && 页面变动监视器.observe(监视目标, 监视配置);
 }
 const 页面变动监视器 = new MutationObserver(页面变动处理);
 function 加载() {
-  页面变动监视器.observe(监视目标, 监视配置);
-  window.addEventListener("load", 防抖刷新, false);
-  document.addEventListener("keyup", 延时刷新, false);
-  document.addEventListener("mouseup", 延时主动刷新, false);
-  document.addEventListener("visibilitychange", 延时刷新, false);
-  防抖刷新();
+    页面变动监视器.observe(监视目标, 监视配置);
+    window.addEventListener('load', 防抖刷新, false);
+    document.addEventListener('keyup', 延时刷新, false);
+    document.addEventListener('mouseup', 延时主动刷新, false);
+    document.addEventListener('visibilitychange', 延时刷新, false);
+    防抖刷新();
 }
 function unload() {
-  window.removeEventListener("load", 防抖刷新, false);
-  document.removeEventListener("keyup", 延时刷新, false);
-  document.removeEventListener("mouseup", 延时主动刷新, false);
-  document.removeEventListener("visibilitychange", 延时刷新, false);
-  页面变动监视器.disconnect();
+    window.removeEventListener('load', 防抖刷新, false);
+    document.removeEventListener('keyup', 延时刷新, false);
+    document.removeEventListener('mouseup', 延时主动刷新, false);
+    document.removeEventListener('visibilitychange', 延时刷新, false);
+    页面变动监视器.disconnect();
 }
 加载();
 // 全局卸载函数（自动卸载上一个实例）

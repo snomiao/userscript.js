@@ -8,15 +8,25 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    if(location.pathname.match(/(.*?\/\d+_\d+_\d+_\d+)(_\d)?(\.shtml)/)){
-       location.pathname = location.pathname.replace(/(.*?\/\d+_\d+_\d+_\d+)(_\d)?(\.shtml)/, "$1_s$3")
+    if (location.pathname.match(/(.*?\/\d+_\d+_\d+_\d+)(_\d)?(\.shtml)/)) {
+        location.pathname = location.pathname.replace(
+            /(.*?\/\d+_\d+_\d+_\d+)(_\d)?(\.shtml)/,
+            '$1_s$3'
+        );
     }
-    window.addEventListener('load', ()=>{
-        [...document.querySelectorAll('a')].forEach(e=>{
-            e.href = e.href.replace(/(.*?\/\d+_\d+_\d+_\d+)(_\d)?(\.shtml)/, "$1_s$3")
-        });
-    }, false)
+    window.addEventListener(
+        'load',
+        () => {
+            [...document.querySelectorAll('a')].forEach((e) => {
+                e.href = e.href.replace(
+                    /(.*?\/\d+_\d+_\d+_\d+)(_\d)?(\.shtml)/,
+                    '$1_s$3'
+                );
+            });
+        },
+        false
+    );
 })();
