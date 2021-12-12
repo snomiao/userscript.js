@@ -9,9 +9,10 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(function () {
     'use strict';
 
-    Array.from(document.querySelectorAll(".answer")).forEach( answer_element => answer_element.style.display = 'block' )
-
+    Array.from(document.querySelectorAll('.answer')).forEach(
+        (answer_element) => (answer_element.style.display = 'block')
+    );
 })();

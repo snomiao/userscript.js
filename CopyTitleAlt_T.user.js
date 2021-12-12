@@ -22,41 +22,49 @@
 
         input.setAttribute('readonly', 'readonly');
         input.setAttribute('value', content);
-        input.innerHTML = (content);
-        input.setAttribute('style', 'position: fixed; top:0; left:0;z-index: 9999');
+        input.innerHTML = content;
+        input.setAttribute(
+            'style',
+            'position: fixed; top:0; left:0;z-index: 9999'
+        );
         document.body.appendChild(input);
         input.select();
         input.setSelectionRange(0, input.value.length);
 
-        let ok = false
+        let ok = false;
         if (document.execCommand('copy')) {
             document.execCommand('copy');
-            ok = true
+            ok = true;
         }
         document.body.removeChild(input);
-        ok || alert('copy title failed, please check browser version')
-        return ok || false
+        ok && alert('标题已复制\n' + content);
+        ok || alert('copy title failed, please check browser version');
+        return ok || false;
     };
     var 取标题 = () => {
         const 最长标题 = [
             document.title,
-            document.querySelector('h1')?.innerText || ''
+            document.querySelector('h1')?.innerText || '',
         ]
-            .map(str => str.replace(/\r?\n.*/g, ''))
+            .map((str) => str.replace(/\r?\n.*/g, ''))
             .sort((a, b) => a.length - b.length)
-            .pop()
-        return 最长标题
-    }
-    window.addEventListener('keydown', (e) => {
-        if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyT') {
-            复制标题文本(`[${取标题()}]( ${location.href} )`)
-            e.preventDefault()
-            e.stopPropagation()
-        }
-        if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == 'KeyT') {
-            复制标题文本(`# ${取标题()}\n${location.href}`)
-            e.preventDefault()
-            e.stopPropagation()
-        }
-    })
+            .pop();
+        return 最长标题;
+    };
+    window.addEventListener(
+        'keydown',
+        (e) => {
+            if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyT') {
+                复制标题文本(`[${取标题()}]( ${location.href} )`);
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == 'KeyT') {
+                复制标题文本(`# ${取标题()}\n${location.href}`);
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        },
+        false
+    );
 })();

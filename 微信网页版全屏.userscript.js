@@ -9,8 +9,8 @@
 // @icon         https://res.wx.qq.com/zh_CN/htmledition/v2/images/favicon31e225.ico
 // ==/UserScript==
 
-(()=>{
-    var ele = document.createElement("style");
+(() => {
+    var ele = document.createElement('style');
     ele.innerHTML = `
     div.main{height: 100%; padding-top: 0}
     div.main_inner{max-width: 100% !important}
