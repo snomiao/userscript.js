@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "postversion": "git push --follow-tag",
+    "postversion": "git push --follow-tag"
   },
   "repository": {
     "type": "git",

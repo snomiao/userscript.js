@@ -14,10 +14,12 @@ var clk = (sel) => {
     console.log("clk", e)
     e?.focus()
     e?.click()
+    e.value = "12:00"
+    e?.click()
     return !!e
 }
-var stmo = () => clk('input[aria-label="Start time"]')
-var etmo = () => clk('input[aria-label="End time"]')
+var stmo = () => (clk('span[data-key="startTime"]'), clk('input[aria-label="Start time"]'))
+var etmo = () => (clk('span[data-key="endTime"]'),clk('input[aria-label="End time"]'))
 
 document.onkeydown = (e) => {
     var isInput = ['INPUT', 'BUTTON'].includes(e.target.tagName)
@@ -27,15 +29,15 @@ document.onkeydown = (e) => {
         e.defaultPrevented()
         e.stopPropagation()
     }
-    console.log(keyName + ' pressed on ', e.target.tagName)
-    if (keyName === '!s') {
+    if (keyName === '!j') {
         stmo()
         okay()
         return
     }
-    if (keyName === '!e') {
+    if (keyName === '!k') {
         etmo()
         okay()
         return
     }
+    console.log(keyName + ' pressed on ', e.target.tagName)
 }
