@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         YoutubeAllResultsPushToQueuePlay
 // @namespace    snomiao@gmail.com
-// @version      0.0.2
+// @version      0.0.3
 // @description  Youtube Search Results Pages Push To Queue To Play Button
-// @author       snomiao@gmail.com
+// @author       snomiao
 // @copyright    2021, snomiao (snomiao.com)
-// @match        https://www.youtube.com/results?search_query=*
+// @match        https://www.youtube.com/results*
 // @grant        none
 // ==/UserScript==
 
