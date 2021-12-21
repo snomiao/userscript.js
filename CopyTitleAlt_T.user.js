@@ -5,21 +5,16 @@
 // @description     Press Alt+T to copy title and url like this `# ${TITLE}\n${URL}` and Alt+Shift+T to copy the markdown style link `[${TITLE}]( ${URL} )`
 // @description:zh  按 Alt+T 复制 Markdown 格式的链接 `[${TITLE}]( ${URL} )` and Alt+Shift+T 复制 标题和地址 `# ${TITLE}\n${URL}`
 // @namespace       https://userscript.snomiao.com/
-// @version         0.7.2
+// @version         0.7.3
 // @author          snomiao@gmail.com
 // @match           *://*/*
 // @grant           none
 // ==/UserScript==
-// (20210414)更新：修复知乎复制标题 bug
-// (20210303)更新：优化提示
-// (20200425)更新：优化取标题方案
-// (20200425)更新：修改格式
-// (20200423)更新：增加格式
+
 (function () {
     'use strict';
-    var 复制标题文本 = (content) => {
+    var textCopy = (content) => {
         const input = document.createElement('textarea');
-
         input.setAttribute('readonly', 'readonly');
         input.setAttribute('value', content);
         input.innerHTML = content;
@@ -37,30 +32,30 @@
             ok = true;
         }
         document.body.removeChild(input);
-        ok && alert('标题已复制\n' + content);
+        ok && alert('Title Copied\n' + content);
         ok || alert('copy title failed, please check browser version');
         return ok || false;
     };
-    var 取标题 = () => {
-        const 最长标题 = [
+    var TitleGet = () => {
+        const LongestTitle = [
             document.title,
             document.querySelector('h1')?.innerText || '',
         ]
             .map((str) => str.replace(/\r?\n.*/g, ''))
             .sort((a, b) => a.length - b.length)
             .pop();
-        return 最长标题;
+        return LongestTitle;
     };
     window.addEventListener(
         'keydown',
         (e) => {
             if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyT') {
-                复制标题文本(`[${取标题()}]( ${location.href} )`);
+                textCopy(`[${TitleGet()}]( ${location.href} )`);
                 e.preventDefault();
                 e.stopPropagation();
             }
             if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == 'KeyT') {
-                复制标题文本(`# ${取标题()}\n${location.href}`);
+                textCopy(`# ${TitleGet()}\n${location.href}`);
                 e.preventDefault();
                 e.stopPropagation();
             }
