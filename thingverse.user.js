@@ -2,7 +2,7 @@
 // @name         Thingverse auto download
 // @namespace    https://userscript.snomiao.com/
 // @version      0.0.1
-// @description  1. Khan Acadamy dialogs force FullScreen, 2. Ctrl+Enter To confirm
+// @description  Thingverse auto download
 // @author       snomiao@gmail.com
 // @match        https://www.thingiverse.com/search?*
 // @match        https://www.thingiverse.com/thing*
@@ -19,6 +19,6 @@
         [...document.querySelectorAll('*')]
             .reverse()
             .find((e) => e.textContent?.match(pattern));
-    if (thingpageQ) eleFind(/Download All Files/).click();
+    if (thingpageQ) eleFind(/Download All Files/)?.click();
     // 'Downloading...'
 })();
