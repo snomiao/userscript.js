@@ -60,7 +60,8 @@ const 列元素列提取 = () =>
                 .filter(特征元素筛函数)
                 // .filter((e) => !["style", "script", "span"].includes(e.tagName))
                 .map(元素特征列取),
-        }));
+        }))
+        .sort((a, b) => -(a.强度 - b.强度));
 const 标链元素提取 = (e) =>
     e?.querySelector('dd,dt,h1,h2,h3,h4,h5,h6')?.querySelector('a') ||
     [...e?.querySelectorAll('a')]?.filter((e) =>
@@ -76,9 +77,8 @@ const 子列父亲节点筛函数 = (eFa, i, a) =>
     !a.some((eSon, j) => i != j && eFa.元素.contains(eSon.元素));
 const 页主标链列提取 = () =>
     列元素列提取()
-        .sort((a, b) => -(a.强度 - b.强度))
-        .filter((e, _, a) => e.强度 > a[0].强度 * 0.1) // 按最强者 10% 筛选
         .filter(子列父亲节点筛函数)
+        .filter((e, _, a) => e.强度 > a[0].强度 * 0.1) // 按最强者 10% 筛选
         .sort((a, b) => a.元素.offsetTop - b.元素.offsetTop) // 按垂直位置对比
         .filter(({ 元素, 强度, 特征列 }) => !console.log(元素, 强度, 特征列)) // 元素提取debug
         .map(({ 元素 }) => 元素) // 元素提取
