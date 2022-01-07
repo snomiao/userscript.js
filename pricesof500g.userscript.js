@@ -237,7 +237,7 @@ const 商品选择列 = `
 | tmall.com  | .j_ItemInfo                 | .title                | .price                             |
 | tmall.com  | .one-grid-price             | .floor-item-title     | .floor-price                       |
 | tmall.com  | .wonderful-item             | .item-desc            | .item-price                        |
-| tmall.com  | .J_TSaleProp>li.tb-selected | a                     | DOC>.tm-promo-price,.tm-price      | 小的商品描述标签
+| tmall.com  | .J_TSaleProp>li.tb-selected | a                     | DOC>.tm-promo-price                | 小的商品描述标签
 | tmall.com  | .tb-property                | h1                    | .tm-promo-price                    | 详情页标题
 | tmall.com  | .tm-detail-meta             | .tb-detail-hd h1      | .tm-promo-price                    | 详情页标题
 | jd.com     | .itemInfo-wrap              | .sku-name             | .p-price                           | 当前浏览商品
