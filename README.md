@@ -1,3 +1,3 @@
 # README
 
-go to see [docs/README.md](docs/README.md)x
+go to see [docs/README.md](docs/README.md)
