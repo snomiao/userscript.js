@@ -2,7 +2,7 @@
 // @name         [snolab] Google 日历键盘操作增强
 // @name:zh      [雪星实验室] Google Calendar with Keyboard Enhanced
 // @namespace    https://userscript.snomiao.com/
-// @version      0.0.2
+// @version      0.0.4
 // @description  【功能测试中, bug反馈：snomiao@gmail.com】Google日历键盘增强，雪星自用，功能：双击复制日程视图里的文本内容
 // @author       snomiao@gmail.com
 // @match        *://calendar.google.com/*
@@ -101,7 +101,7 @@ const eventDragStart = async ([dx = 0, dy = 0] = [], { expand = false, immediate
         const dragTarget = expand ? floatingBtn.querySelector('*[data-dragsource-type="3"]') : floatingBtn;
         debugger;
         const cPos = centerGet(dragTarget); // !expand ?  : bottomGet(floatingBtn);
-        console.log('cpos', cPos)
+        console.log('cpos', cPos);
         // mousedown
         globalThis.gckDraggingPos = cPos;
         dragTarget.dispatchEvent(new MouseEvent('mousedown', mouseEventOpt(globalThis.gckDraggingPos)));
@@ -279,3 +279,26 @@ globalThis.gcksHotkeyHandler && document.removeEventListener('keydown', globalTh
 globalThis.gcksHotkeyHandler = gcksHotkeyHandler;
 document.addEventListener('keydown', globalThis.gcksHotkeyHandler, false);
 console.log('done');
+
+// 复制日程内容
+var cpy = (ele) => {
+    ele.style.background = 'lightblue';
+    setTimeout(() => (ele.style.background = 'none'), 200);
+    return navigator.clipboard.writeText(
+        ele.innerText
+            // 把时间和summary拼到一起
+            .replace(/.*\n(.*) – (.*)\n(.*)\n.*/gim, (_, a, b, c) => a + '-' + b + ' ' + c)
+            // 删掉前2行
+            .replace(/^.*\n.*\n/, '')
+    );
+};
+const mdHandler = () => {
+    const dblClickCopyHooker = (e) => {
+        if (!e.flag_cpy_eventlistener) {
+            e.addEventListener('dblclick', () => cpy(e), false);
+        }
+        e.flag_cpy_eventlistener = 1;
+    };
+    [...document.querySelectorAll('div.L1Ysrb')]?.map(dblClickCopyHooker);
+};
+document.body.addEventListener('mousedown', mdHandler, true);
