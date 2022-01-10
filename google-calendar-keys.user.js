@@ -2,7 +2,7 @@
 // @name         [snolab] Google 日历键盘操作增强
 // @name:zh      [雪星实验室] Google Calendar with Keyboard Enhanced
 // @namespace    https://userscript.snomiao.com/
-// @version      0.0.5
+// @version      0.0.6
 // @description  【功能测试中, bug反馈：snomiao@gmail.com】Google日历键盘增强，雪星自用，功能：双击复制日程视图里的文本内容, Alt+hjkl 移动日程
 // @author       snomiao@gmail.com
 // @match        *://calendar.google.com/*
