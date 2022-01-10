@@ -2,13 +2,19 @@
 // @name         [snolab] Google 日历键盘操作增强
 // @name:zh      [雪星实验室] Google Calendar with Keyboard Enhanced
 // @namespace    https://userscript.snomiao.com/
-// @version      0.0.4
-// @description  【功能测试中, bug反馈：snomiao@gmail.com】Google日历键盘增强，雪星自用，功能：双击复制日程视图里的文本内容
+// @version      0.0.5
+// @description  【功能测试中, bug反馈：snomiao@gmail.com】Google日历键盘增强，雪星自用，功能：双击复制日程视图里的文本内容, Alt+hjkl 移动日程
 // @author       snomiao@gmail.com
 // @match        *://calendar.google.com/*
 // @grant        none
 // ==/UserScript==
 
+/* 
+    1. event move enhance
+        - date time input change
+        - event drag
+    2. journal view text copy for the day-summary
+*/
 console.clear();
 const debug = false;
 const qsa = (sel, ele = document) => [...ele.querySelectorAll(sel)];
@@ -128,10 +134,10 @@ const eventDragStart = async ([dx = 0, dy = 0] = [], { expand = false, immediate
         if (hkn === '!+k Up') eventDragMouseMove(0, -1);
         if (hkn === '!+h Up') eventDragMouseMove(-1, 0);
         if (hkn === '!+l Up') eventDragMouseMove(+1, 0);
-        if (hkn === 'alt Up') {
-            mouseup();
-            document.removeEventListener('keyup', release);
-        }
+        if (hkn === 'alt Up') mouseup();
+        if (hkn === '+alt Up') mouseup();
+        if (hkn === 'alt Up') document.removeEventListener('keyup', release);
+        if (hkn === '+alt Up') document.removeEventListener('keyup', release);
     };
     if (immediatelyRelease) {
         mouseup();
@@ -140,15 +146,6 @@ const eventDragStart = async ([dx = 0, dy = 0] = [], { expand = false, immediate
         document.addEventListener('keyup', release);
     }
 };
-// await eventDrag([-1, 0]); // move left 1 day
-// await eventDrag([0, 1],{immediatelyRelease: false}); // move down 15 min
-// await eventDrag([0, 1],{immediatelyRelease: false}); // move down 15 min
-// await eventDrag([0, 1],{immediatelyRelease: false}); // move down 15 min
-// await eventDrag([0, 1]); // move down 15 min
-// await eventDrag([0, -1], true); // expand -15 min
-// normal && !j down -> moving
-// normal && !j down -> moving
-// moving && ! up -> normal
 const movHandle = async (e) => {
     const hktb = {
         '!j': async () => {
