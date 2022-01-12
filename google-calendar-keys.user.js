@@ -27,11 +27,7 @@ const eleSearchVis = (pattern, ele = document) =>
         qsa('*', ele).filter(eleVis).reverse()
     ) || null;
 const eleSearch = (sel, ele = document) =>
-    (typeof sel === 'string' && ele.querySelector(sel)) ||
-    ((list) => list?.find((e) => e.textContent?.match(sel))?.[0] || list?.find((e) => e.innerHTML?.match(sel))?.[0])(
-        qsa('*', ele).reverse()
-    ) ||
-    null;
+    ((list) => list?.find((e) => e.textContent?.match(sel)) || list?.find((e) => e.innerHTML?.match(sel)))(qsa('*', ele).reverse()) || null;
 const hotkeyNameParse = (event) => {
     const { altKey, metaKey, ctrlKey, shiftKey, key, type } = event;
     const hkName =
@@ -43,7 +39,8 @@ const hotkeyNameParse = (event) => {
         ({ keydown: '', keypress: ' Press', keyup: ' Up' }[type] || '');
     return hkName;
 };
-const inputValueSet = (ele, value) => {
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const inputValueSet = async (ele, value) => {
     // console.log('inputValueSet', ele, value);
     if (!ele) throw new Error('no element');
     if (undefined === value) throw new Error('no value');
@@ -56,8 +53,8 @@ const inputValueSet = (ele, value) => {
             keyCode: 13 /* enter */,
         })
     );
+    await sleep(16);
 };
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const waitFor = async (fn) => {
     let re = null;
     while (!(re = fn())) await sleep(8);
@@ -105,7 +102,7 @@ const eventDragStart = async ([dx = 0, dy = 0] = [], { expand = false, immediate
         const floatingBtn = qsa('div[role="button"]').find((e) => getComputedStyle(e).zIndex === '5004');
         if (!floatingBtn) throw new Error('no event selected');
         const dragTarget = expand ? floatingBtn.querySelector('*[data-dragsource-type="3"]') : floatingBtn;
-        debugger;
+        // debugger;
         const cPos = centerGet(dragTarget); // !expand ?  : bottomGet(floatingBtn);
         console.log('cpos', cPos);
         // mousedown
@@ -183,7 +180,7 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
     // Date time: start date + start time + end date
     const startDateEleTry = eleSelVis('[aria-label="Start date"]');
     if (!startDateEleTry) {
-        const tz = eleSearchVis(/Time zone/);
+        const tz = eleSearchVis(/^Time zone$/);
         const editBtn =
             tz &&
             parentList(tz)
@@ -194,6 +191,7 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
             // return 'No editable input';
         }
         editBtn.click();
+        await sleep(16);
     }
     const startDateEle = startDateEleTry && (await waitFor(() => eleSelVis('[aria-label="Start date"]')));
     const startTimeEle = eleSelVis('[aria-label="Start time"]');
@@ -227,6 +225,10 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
         });
     debug &&
         console.table({
+            startDateEle: !!startDateEle,
+            startTimeEle: !!startTimeEle,
+            endDateEle: !!endDateEle,
+            endTimeEle: !!endTimeEle,
             originStartDate,
             originStartTime,
             originEndDate,
@@ -236,10 +238,18 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
             shiftedEndDate,
             shiftedEndTime,
         });
-    startDateEle && shiftedStartDate !== originStartDate && inputValueSet(startDateEle, shiftedStartDate);
-    startTimeEle && shiftedStartTime !== originStartTime && inputValueSet(startTimeEle, shiftedStartTime);
-    endDateEle && shiftedEndDate !== originEndDate && inputValueSet(endDateEle, shiftedEndDate);
-    endTimeEle && shiftedEndTime !== originEndTime && inputValueSet(endTimeEle, shiftedEndTime);
+    startDateEle && shiftedStartDate !== originStartDate && (await inputValueSet(startDateEle, shiftedStartDate));
+    endDateEle && shiftedEndDate !== originEndDate && (await inputValueSet(endDateEle, shiftedEndDate));
+    startTimeEle && shiftedStartTime !== originStartTime && (await inputValueSet(startTimeEle, shiftedStartTime));
+    endTimeEle && shiftedEndTime !== originEndTime && (await inputValueSet(endTimeEle, shiftedEndTime));
+};
+const timeAdd = async () => {
+    parentList(eleSearchVis(/^Add time$/))
+        ?.find((e) => e.querySelector('[role="button"]'))
+        ?.querySelector('[role="button"]')
+        .click();
+    await sleep(16);
+    return;
 };
 const gcksHotkeyHandler = (e) => {
     const isInput = ['INPUT', 'BUTTON'].includes(e.target.tagName);
@@ -250,12 +260,24 @@ const gcksHotkeyHandler = (e) => {
         e.stopPropagation();
     };
     const hkft = {
-        '!k': async () => await inputDateTimeChange(-15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: false })),
-        '!j': async () => await inputDateTimeChange(+15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: false })),
+        '!k': async () => {
+            await timeAdd();
+            return await inputDateTimeChange(-15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: false }));
+        },
+        '!j': async () => {
+            await timeAdd();
+            return await inputDateTimeChange(+15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: false }));
+        },
         '!h': async () => await inputDateTimeChange(-1 * 86400e3).catch(async () => await eventDragStart([0, 0], { expand: false })),
         '!l': async () => await inputDateTimeChange(+1 * 86400e3).catch(async () => await eventDragStart([0, 0], { expand: false })),
-        '!+k': async () => await inputDateTimeChange(0, -15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: true })),
-        '!+j': async () => await inputDateTimeChange(0, +15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: true })),
+        '!+k': async () => {
+            await timeAdd();
+            return await inputDateTimeChange(0, -15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: true }));
+        },
+        '!+j': async () => {
+            await timeAdd();
+            return await inputDateTimeChange(0, +15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: true }));
+        },
         '!+h': async () => await inputDateTimeChange(0, -1 * 86400e3).catch(async () => await eventDragStart([0, 0], { expand: true })),
         '!+l': async () => await inputDateTimeChange(0, +1 * 86400e3).catch(async () => await eventDragStart([0, 0], { expand: true })),
     };
