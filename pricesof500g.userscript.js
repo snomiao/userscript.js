@@ -8,7 +8,7 @@
 // @match        http*://order.jd.com/center/alwaysbuy.action*
 // @match        http*://*.jd.com/*.html
 // @match        http*://*.jd.com/*.html?*
-// @match        http*://search.jd.com/Search*
+// @match        http*://search.jd.com/*
 // @match        http*://*.tmall.com/*.htm*
 // @match        http*://*.taobao.com/search*
 // @match        http*://item.taobao.com/item.htm*
