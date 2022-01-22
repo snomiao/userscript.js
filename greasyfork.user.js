@@ -1,3 +1,5 @@
+// chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#url=aHR0cHM6Ly93d3cuemhpaHUuY29tL2NyZWF0b3I=&nav=dashboard
+
 // delete all matched... for example 超星
 // [...document.querySelectorAll('tr.scripttr')]
 //     .map((e) => ({
