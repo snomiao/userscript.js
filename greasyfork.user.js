@@ -1,17 +1,5 @@
 // chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#url=aHR0cHM6Ly93d3cuemhpaHUuY29tL2NyZWF0b3I=&nav=dashboard
 
-// delete all matched... for example 超星
-// [...document.querySelectorAll('tr.scripttr')]
-//     .map((e) => ({
-//         id: e.querySelector('.script_name')?.textContent,
-//         e,
-//     }))
-//     .filter(({e}) => e.textContent?.match(/超星/))
-//     .map(({ id, e }) => {
-//         console.log('Delete ' + id);
-//         e.querySelector('[title="Delete"]').click();
-//     });
-
 // delete all disabled scripts
 [...document.querySelectorAll('[title="Delete"]')]
     .filter((e) => e.parentElement.parentElement.parentElement.innerHTML.match(/title="Disabled"/))
