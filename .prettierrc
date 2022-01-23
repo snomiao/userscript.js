@@ -4,7 +4,7 @@
     "trailingComma": "es5",
     "jsxSingleQuote": true,
     "proseWrap": "always",
-    "printWidth": 140,
+    "printWidth": 80,
     "arrowParens": "always",
     "bracketSameLine": true,
     "embeddedLanguageFormatting": "auto",

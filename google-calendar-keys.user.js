@@ -19,15 +19,25 @@ console.clear();
 const debug = false;
 const qsa = (sel, ele = document) => [...ele.querySelectorAll(sel)];
 const eleVis = (ele) => (ele.getClientRects().length && ele) || null;
-const eleSelVis = (sel, ele = document) => (typeof sel === 'string' && qsa(sel, ele).filter(eleVis)[0]) || null;
+const eleSelVis = (sel, ele = document) =>
+    (typeof sel === 'string' && qsa(sel, ele).filter(eleVis)[0]) || null;
 // const nestList = (e, fn)=>e.reduce
-const parentList = (ele) => [ele?.parentElement, ...((ele?.parentElement && parentList(ele?.parentElement)) || [])].filter((e) => e);
+const parentList = (ele) =>
+    [
+        ele?.parentElement,
+        ...((ele?.parentElement && parentList(ele?.parentElement)) || []),
+    ].filter((e) => e);
 const eleSearchVis = (pattern, ele = document) =>
-    ((list) => list?.find((e) => e.textContent?.match(pattern)) || list?.find((e) => e.innerHTML?.match(pattern)))(
+    ((list) =>
+        list?.find((e) => e.textContent?.match(pattern)) ||
+        list?.find((e) => e.innerHTML?.match(pattern)))(
         qsa('*', ele).filter(eleVis).reverse()
     ) || null;
 const eleSearch = (sel, ele = document) =>
-    ((list) => list?.find((e) => e.textContent?.match(sel)) || list?.find((e) => e.innerHTML?.match(sel)))(qsa('*', ele).reverse()) || null;
+    ((list) =>
+        list?.find((e) => e.textContent?.match(sel)) ||
+        list?.find((e) => e.innerHTML?.match(sel)))(qsa('*', ele).reverse()) ||
+    null;
 const hotkeyNameParse = (event) => {
     const { altKey, metaKey, ctrlKey, shiftKey, key, type } = event;
     const hkName =
@@ -87,28 +97,52 @@ const vec2add = ([x, y], [z, w]) => [x + z, y + w];
 const vec2mul = ([x, y], [z, w]) => [x * z, y * w];
 const eventDragMouseMove = (dx, dy) => {
     // a unit size is 15 min
-    const container = document.querySelector('[role="row"][data-dragsource-type="4"]');
+    const container = document.querySelector(
+        '[role="row"][data-dragsource-type="4"]'
+    );
     const gridcells = [...container.querySelectorAll('[role="gridcell"]')];
     const containerSize = container.getBoundingClientRect();
-    const [w, h] = [containerSize.width / gridcells.length, containerSize.height / 24 / 4];
+    const [w, h] = [
+        containerSize.width / gridcells.length,
+        containerSize.height / 24 / 4,
+    ];
     const [rdx, rdy] = [dx * w, dy * h];
     globalThis.gckDraggingPos = vec2add(globalThis.gckDraggingPos, [rdx, rdy]);
-    document.dispatchEvent(new MouseEvent('mousemove', mouseEventOpt(globalThis.gckDraggingPos)));
+    document.dispatchEvent(
+        new MouseEvent('mousemove', mouseEventOpt(globalThis.gckDraggingPos))
+    );
 };
-const eventDragStart = async ([dx = 0, dy = 0] = [], { expand = false, immediatelyRelease = false } = {}) => {
+const eventDragStart = async (
+    [dx = 0, dy = 0] = [],
+    { expand = false, immediatelyRelease = false } = {}
+) => {
     console.log('eventDrag', [dx, dy], expand, immediatelyRelease);
     if (!globalThis.gckDraggingPos) {
         // console.log(eventDrag, dx, dy);
-        const floatingBtn = qsa('div[role="button"]').find((e) => getComputedStyle(e).zIndex === '5004');
+        const floatingBtn = qsa('div[role="button"]').find(
+            (e) => getComputedStyle(e).zIndex === '5004'
+        );
         if (!floatingBtn) throw new Error('no event selected');
-        const dragTarget = expand ? floatingBtn.querySelector('*[data-dragsource-type="3"]') : floatingBtn;
+        const dragTarget = expand
+            ? floatingBtn.querySelector('*[data-dragsource-type="3"]')
+            : floatingBtn;
         // debugger;
         const cPos = centerGet(dragTarget); // !expand ?  : bottomGet(floatingBtn);
         console.log('cpos', cPos);
         // mousedown
         globalThis.gckDraggingPos = cPos;
-        dragTarget.dispatchEvent(new MouseEvent('mousedown', mouseEventOpt(globalThis.gckDraggingPos)));
-        dragTarget.dispatchEvent(new MouseEvent('mousemove', mouseEventOpt(globalThis.gckDraggingPos)));
+        dragTarget.dispatchEvent(
+            new MouseEvent(
+                'mousedown',
+                mouseEventOpt(globalThis.gckDraggingPos)
+            )
+        );
+        dragTarget.dispatchEvent(
+            new MouseEvent(
+                'mousemove',
+                mouseEventOpt(globalThis.gckDraggingPos)
+            )
+        );
     }
     // mousemove
     if (globalThis.gckDraggingPos) {
@@ -117,7 +151,9 @@ const eventDragStart = async ([dx = 0, dy = 0] = [], { expand = false, immediate
     // mouseup
     const mouseup = () => {
         globalThis.gckDraggingPos = null;
-        document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+        document.dispatchEvent(
+            new MouseEvent('mouseup', { bubbles: true, cancelable: true })
+        );
     };
     const release = (event) => {
         const hkn = hotkeyNameParse(event);
@@ -165,7 +201,10 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
             .find((e) => e.getAttribute('data-ical'))
             .getAttribute('data-ical');
         const todayDate = new Date().toISOString().slice(0, 10);
-        const dateString = (dataDate || dataIcal).replace(/(\d{4})(\d{2})(\d{2})/, (_, a, b, c) => [a, b, c].join('-'));
+        const dateString = (dataDate || dataIcal).replace(
+            /(\d{4})(\d{2})(\d{2})/,
+            (_, a, b, c) => [a, b, c].join('-')
+        );
         const timeString = timeEle?.value || '00:00';
         return new Date(`${dateString} ${timeString} Z`);
     };
@@ -193,12 +232,17 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
         editBtn.click();
         await sleep(16);
     }
-    const startDateEle = startDateEleTry && (await waitFor(() => eleSelVis('[aria-label="Start date"]')));
+    const startDateEle =
+        startDateEleTry &&
+        (await waitFor(() => eleSelVis('[aria-label="Start date"]')));
     const startTimeEle = eleSelVis('[aria-label="Start time"]');
     const endDateEle = eleSelVis('[aria-label="End date"]');
     const endTimeEle = eleSelVis('[aria-label="End time"]');
     const startDateObj = await isoDateInputParse(startDateEle, startTimeEle);
-    const endDateObj = await isoDateInputParse(endDateEle || startDateEle, endTimeEle);
+    const endDateObj = await isoDateInputParse(
+        endDateEle || startDateEle,
+        endTimeEle
+    );
     const shiftedStartDateObj = new Date(+startDateObj + startDT);
     const shiftedEndDateObj = new Date(+endDateObj + endDT);
     const [
@@ -238,10 +282,18 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
             shiftedEndDate,
             shiftedEndTime,
         });
-    startDateEle && shiftedStartDate !== originStartDate && (await inputValueSet(startDateEle, shiftedStartDate));
-    endDateEle && shiftedEndDate !== originEndDate && (await inputValueSet(endDateEle, shiftedEndDate));
-    startTimeEle && shiftedStartTime !== originStartTime && (await inputValueSet(startTimeEle, shiftedStartTime));
-    endTimeEle && shiftedEndTime !== originEndTime && (await inputValueSet(endTimeEle, shiftedEndTime));
+    startDateEle &&
+        shiftedStartDate !== originStartDate &&
+        (await inputValueSet(startDateEle, shiftedStartDate));
+    endDateEle &&
+        shiftedEndDate !== originEndDate &&
+        (await inputValueSet(endDateEle, shiftedEndDate));
+    startTimeEle &&
+        shiftedStartTime !== originStartTime &&
+        (await inputValueSet(startTimeEle, shiftedStartTime));
+    endTimeEle &&
+        shiftedEndTime !== originEndTime &&
+        (await inputValueSet(endTimeEle, shiftedEndTime));
 };
 const timeAdd = async () => {
     parentList(eleSearchVis(/^Add time$/))
@@ -262,24 +314,44 @@ const gcksHotkeyHandler = (e) => {
     const hkft = {
         '!k': async () => {
             await timeAdd();
-            return await inputDateTimeChange(-15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: false }));
+            return await inputDateTimeChange(-15 * 60e3).catch(
+                async () => await eventDragStart([0, 0], { expand: false })
+            );
         },
         '!j': async () => {
             await timeAdd();
-            return await inputDateTimeChange(+15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: false }));
+            return await inputDateTimeChange(+15 * 60e3).catch(
+                async () => await eventDragStart([0, 0], { expand: false })
+            );
         },
-        '!h': async () => await inputDateTimeChange(-1 * 86400e3).catch(async () => await eventDragStart([0, 0], { expand: false })),
-        '!l': async () => await inputDateTimeChange(+1 * 86400e3).catch(async () => await eventDragStart([0, 0], { expand: false })),
+        '!h': async () =>
+            await inputDateTimeChange(-1 * 86400e3).catch(
+                async () => await eventDragStart([0, 0], { expand: false })
+            ),
+        '!l': async () =>
+            await inputDateTimeChange(+1 * 86400e3).catch(
+                async () => await eventDragStart([0, 0], { expand: false })
+            ),
         '!+k': async () => {
             await timeAdd();
-            return await inputDateTimeChange(0, -15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: true }));
+            return await inputDateTimeChange(0, -15 * 60e3).catch(
+                async () => await eventDragStart([0, 0], { expand: true })
+            );
         },
         '!+j': async () => {
             await timeAdd();
-            return await inputDateTimeChange(0, +15 * 60e3).catch(async () => await eventDragStart([0, 0], { expand: true }));
+            return await inputDateTimeChange(0, +15 * 60e3).catch(
+                async () => await eventDragStart([0, 0], { expand: true })
+            );
         },
-        '!+h': async () => await inputDateTimeChange(0, -1 * 86400e3).catch(async () => await eventDragStart([0, 0], { expand: true })),
-        '!+l': async () => await inputDateTimeChange(0, +1 * 86400e3).catch(async () => await eventDragStart([0, 0], { expand: true })),
+        '!+h': async () =>
+            await inputDateTimeChange(0, -1 * 86400e3).catch(
+                async () => await eventDragStart([0, 0], { expand: true })
+            ),
+        '!+l': async () =>
+            await inputDateTimeChange(0, +1 * 86400e3).catch(
+                async () => await eventDragStart([0, 0], { expand: true })
+            ),
     };
     const f = hkft[hkName];
     if (f) {
@@ -294,7 +366,12 @@ const gcksHotkeyHandler = (e) => {
 };
 // await inputDateTimeChange(-15 * 60e3);
 
-globalThis.gcksHotkeyHandler && document.removeEventListener('keydown', globalThis.gcksHotkeyHandler, false);
+globalThis.gcksHotkeyHandler &&
+    document.removeEventListener(
+        'keydown',
+        globalThis.gcksHotkeyHandler,
+        false
+    );
 globalThis.gcksHotkeyHandler = gcksHotkeyHandler;
 document.addEventListener('keydown', globalThis.gcksHotkeyHandler, false);
 console.log('done');
@@ -306,7 +383,10 @@ var cpy = (ele) => {
     return navigator.clipboard.writeText(
         ele.innerText
             // 把时间和summary拼到一起
-            .replace(/.*\n(.*) – (.*)\n(.*)\n.*/gim, (_, a, b, c) => a + '-' + b + ' ' + c)
+            .replace(
+                /.*\n(.*) – (.*)\n(.*)\n.*/gim,
+                (_, a, b, c) => a + '-' + b + ' ' + c
+            )
             // 删掉前2行
             .replace(/^.*\n.*\n/, '')
     );

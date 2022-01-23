@@ -1,7 +1,4 @@
-git add .
-git commit -a -m "publish"
 git push
-start "" npm version patch
 
 @REM publish
 start "" chrome --new-window https://greasyfork.org/import
