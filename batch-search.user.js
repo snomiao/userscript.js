@@ -8,4 +8,3 @@
 // @match        *://*
 // @grant        none
 // ==/UserScript==
-
