@@ -1,19 +1,22 @@
 {
-    "name": "sno-userscripts",
+    "name": "@snomiao/userscript",
     "version": "1.0.12",
     "description": "a collection of snos userscripts",
-    "main": "index.user.js",
+    "main": "dist/index.user.js",
     "directories": {
         "doc": "docs"
     },
+    "readme": "docs/README.md",
     "scripts": {
         "serve": "npx serve .",
         "patch": "npm version patch",
         "prettier": "npx prettier --write .",
-        "version": "npm run prettier",
-        "postversion": "git push --follow-tag",
         "publishHelper": "publishHelper",
-        "release": "standard-version"
+        "prerelease": "npm run prettier",
+        "release": "standard-version",
+        "postrelease": "git push --follow-tag --all",
+        "test": "",
+        "prepare": "husky install"
     },
     "repository": {
         "type": "git",
@@ -26,11 +29,20 @@
     },
     "homepage": "https://github.com/snomiao/userscript.js#readme",
     "devDependencies": {
+        "@commitlint/cli": "^16.1.0",
+        "@commitlint/config-conventional": "^16.0.0",
         "eslint": "^7.32.0",
         "eslint-config-standard": "^16.0.3",
         "eslint-plugin-import": "^2.25.4",
         "eslint-plugin-node": "^11.1.0",
         "eslint-plugin-promise": "^5.2.0",
-        "prettier": "^2.4.1"
+        "husky": "^7.0.0",
+        "prettier": "^2.4.1",
+        "standard-version": "^9.3.2"
+    },
+    "dependencies": {
+        "minify": "^8.0.3",
+        "terser": "^5.10.0",
+        "userscript-meta": "^1.0.1"
     }
 }

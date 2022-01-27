@@ -1,3 +1,13 @@
+// ==UserScript==
+// @name         Tampermonkey Clean tmclean
+// @namespace    https://userscript.snomiao.com/
+// @version      0.0.1
+// @description  Delete all disabled and duplicated scripts.
+// @author       snomiao@gmail.com
+// @match        *://calendar.google.com/*
+// @grant        none
+// ==/UserScript==
+
 // chrome-extension://dhdgffkkebhmkfjojejmpbldmpobfkfo/options.html#url=aHR0cHM6Ly93d3cuemhpaHUuY29tL2NyZWF0b3I=&nav=dashboard
 
 // delete all disabled scripts

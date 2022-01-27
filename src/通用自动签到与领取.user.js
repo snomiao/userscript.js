@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         自动点击各种页面上的“签到”按钮 / auto sign in
+// @name         [] 通用自动签到与领取
 // @namespace    snomiao@gmail.com
 // @version      0.1
 // @description  自用，rt
