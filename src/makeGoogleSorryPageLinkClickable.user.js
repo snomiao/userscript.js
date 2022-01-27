@@ -2,7 +2,7 @@
 // @name         Make Google Sorry Page Link Clickable
 // @namespace    https://userscript.snomiao.com/
 // @version      0.1.0
-// @description  Make Google Sorry Page Link Clickable
+// @description  as the name
 // @author       snomiao@gmail.com
 // @match        https://www.google.com/sorry/index?*
 // @icon         https://www.google.com/s2/favicons?domain=google.com

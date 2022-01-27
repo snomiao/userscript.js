@@ -3,7 +3,7 @@
 // @name:en          Videos default at 2x speed
 // @name:ja          2倍速でのデフォルトのビデオ再生
 // @namespace        https://userscript.snomiao.com/
-// @description      这个世界的一切都太慢了啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊
+// @description      这个世界的一切都太慢了啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊 / (20220127)* 注：B站用户请考虑其它插件
 // @description:en   Everything in this world is too sloooooooooooooooooooooooooow
 // @description:ja   この世界のすべてが遅すぎるあああああああああああああああああああああああああああああああああああああああ
 // @author           snomiao@gmail.com
@@ -11,7 +11,7 @@
 // @match            *://*/*
 // @exclude          *://mooc*.chaoxing.com/*
 // @run-at           document-end
-// @version          0.1.3
+// @version          0.1.4
 // ==/UserScript==
 // (20200422)Update: avoid chaoxing online courses (needs 1x speed to complete the task)
 
