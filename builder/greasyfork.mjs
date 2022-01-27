@@ -28,4 +28,16 @@ const sinfo = await pmap(
 );
 
 sinfo.map((e) => console.log(e.url));
-await promisify(exec)('https://greasyfork.org/en/import');
+
+const ss = sinfo
+    .map(
+        ({ filename, mincode, url }) =>
+            // `[${filename}](javascript:${encodeURIComponent(mincode)})`
+            // `<a href='javascript:${mincode.replace(/'/g,'&apos;')}'>${filename}</a>`
+            // `${filename} - ${mincode}`
+            `<a href="javascript:(function(){document.body.appendChild(Object.assign(document.createElement('script'), {src: '${url}'}))}())">${filename}</a>`
+    )
+    .join('\n');
+await fs.writeFile('./bookmarks/x.md', ss);
+
+// await promisify(exec)('chrome https://greasyfork.org/en/import');

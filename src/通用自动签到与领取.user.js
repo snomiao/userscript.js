@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         [] 通用自动签到与领取
+// @name         通用自动签到与领取
 // @namespace    snomiao@gmail.com
 // @version      0.1
 // @description  自用，rt
