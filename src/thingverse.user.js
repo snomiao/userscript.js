@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Thingverse auto download
 // @namespace    https://userscript.snomiao.com/
-// @version      0.0.1
-// @description  Thingverse auto download
+// @version      0.0.2
+// @description  Thingverse auto download (deprecated)
 // @author       snomiao@gmail.com
 // @match        https://www.thingiverse.com/search?*
 // @match        https://www.thingiverse.com/thing*
