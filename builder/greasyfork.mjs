@@ -15,9 +15,10 @@ await pmap(
         // const header2 = userscriptMeta.stringify(meta);
         const _url = `https://raw.githubusercontent.com/snomiao/userscript.js/master/src/${filename}`;
         const url = encodeURI(_url);
-        console.log('\nminifying ' + filename);
+        // console.log('\nminifying ' + filename);
         const mincode = (await minify(content, { compress: true })).code;
-        console.log(filename, meta);
+        console.log(url)
+        // console.log(filename, meta, url);
         return { filename, content, meta, url, mincode };
     }
 );
