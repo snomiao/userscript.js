@@ -1,6 +1,6 @@
 {
   "name": "@snomiao/userscript",
-  "version": "1.0.12",
+  "version": "1.1.0",
   "description": "a collection of snos userscripts",
   "main": "dist/index.user.js",
   "directories": {
