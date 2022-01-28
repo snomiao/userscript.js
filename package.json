@@ -36,11 +36,12 @@
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
+    "html-escaper": "^3.0.3",
     "husky": "^7.0.0",
     "lint-staged": "^12.3.2",
+    "minify": "^8.0.3",
     "prettier": "^2.4.1",
     "standard-version": "^9.3.2",
-    "minify": "^8.0.3",
     "terser": "^5.10.0",
     "userscript-meta": "^1.0.1"
   }

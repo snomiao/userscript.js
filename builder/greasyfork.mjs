@@ -1,26 +1,9 @@
+import { escape, unescape } from 'html-escaper';
 import fs from 'fs/promises';
-import userscriptMeta from 'userscript-meta';
-import { minify } from 'terser';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { scriptparser } from './scriptparser';
 const pmap = (ls, fn) => Promise.all(ls.map(fn));
-
-const scriptparser = async (filename) => {
-    const content = await fs.readFile('./src/' + filename, 'utf8');
-    const header =
-        content
-            .trim()
-            .match(/^(?:^\/\/.*\s?)+/gm)
-            ?.join('\n') || '';
-    const meta = userscriptMeta.parse(header);
-    // const header2 = userscriptMeta.stringify(meta);
-    const _url = `https://raw.githubusercontent.com/snomiao/userscript.js/master/src/${filename}`;
-    const url = encodeURI(_url);
-    // console.log('\nminifying ' + filename);
-    const mincode = (await minify(content, { compress: true })).code;
-    // console.log(filename, meta, url);
-    return { filename, content, meta, url, mincode };
-};
 
 const sinfo = await pmap(
     (await fs.readdir('./src/')).filter((e) => e.match(/\.user\.js$/)),
@@ -28,16 +11,19 @@ const sinfo = await pmap(
 );
 
 sinfo.map((e) => console.log(e.url));
-
+const baseJSD = 'https://cdn.jsdelivr.net/gh/snomiao/userscript.js/src/';
 const ss = sinfo
-    .map(
-        ({ filename, mincode, url }) =>
-            // `[${filename}](javascript:${encodeURIComponent(mincode)})`
-            // `<a href='javascript:${mincode.replace(/'/g,'&apos;')}'>${filename}</a>`
-            // `${filename} - ${mincode}`
-            `<a href="javascript:(function(){document.body.appendChild(Object.assign(document.createElement('script'), {src: '${url}'}))}())">${filename}</a>`
-    )
+    .map(({ filename, mincode, url }) => {
+        const md = `[${filename}](javascript:${encodeURIComponent(mincode)})`;
+        const src = baseJSD + filename;
+        const bml = `javascript:(function(){document.body.appendChild(Object.assign(document.createElement('script'), {src: '${src}'}))}())`;
+        /* `[${filename}](javascript:${encodeURIComponent(mincode)})`*/
+        /* `<a href='javascript:${mincode.replace(/'/g,'&apos;')}'>${filename}</a>`*/
+        /* `${filename} - ${mincode}`*/
+        const a = `<a href="${escape(bml)}">${filename}</a>`;
+        return a;
+    })
     .join('\n');
-await fs.writeFile('./bookmarks/x.md', ss);
+await fs.writeFile('./bookmarks/x.html', ss);
 
 // await promisify(exec)('chrome https://greasyfork.org/en/import');
