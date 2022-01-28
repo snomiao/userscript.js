@@ -30,12 +30,12 @@ Github:
 
 from:
 
--   https://github.com/snomiao/userscript.js
+- https://github.com/snomiao/userscript.js
 
 to:
 
--   [Import scripts - greasyfork](https://greasyfork.org/en/import)
--   [New Script | OpenUserJS](https://openuserjs.org/user/add/scripts)
+- [Import scripts - greasyfork](https://greasyfork.org/en/import)
+- [New Script | OpenUserJS](https://openuserjs.org/user/add/scripts)
 
 ## ref
 

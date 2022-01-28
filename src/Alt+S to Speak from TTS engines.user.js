@@ -47,4 +47,3 @@
                 ClickAndSelectAll('.ttsbutton-res', '#source');
         });
 })();
-``

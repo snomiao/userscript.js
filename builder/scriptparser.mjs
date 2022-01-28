@@ -4,10 +4,11 @@ import { minify } from 'terser';
 
 export async function scriptparser(filename) {
     const content = await fs.readFile('./src/' + filename, 'utf8');
-    const header = content
-        .trim()
-        .match(/^(?:^\/\/.*\s?)+/gm)
-        ?.join('\n') || '';
+    const header =
+        content
+            .trim()
+            .match(/^(?:^\/\/.*\s?)+/gm)
+            ?.join('\n') || '';
     const meta = userscriptMeta.parse(header);
     // const header2 = userscriptMeta.stringify(meta);
     const _url = `https://raw.githubusercontent.com/snomiao/userscript.js/master/src/${filename}`;
