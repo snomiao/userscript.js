@@ -44,5 +44,8 @@
     "standard-version": "^9.3.2",
     "terser": "^5.10.0",
     "userscript-meta": "^1.0.1"
+  },
+  "dependencies": {
+    "bookmarklet": "^3.0.0"
   }
 }

@@ -1,20 +1,21 @@
 import fs from 'fs/promises';
 import userscriptMeta from 'userscript-meta';
 import { minify } from 'terser';
-
+import bookmarklet from 'bookmarklet';
 export async function scriptparser(filename) {
-    const content = await fs.readFile('./src/' + filename, 'utf8');
+    const code = await fs.readFile('./src/' + filename, 'utf8');
     const header =
-        content
+        code
             .trim()
             .match(/^(?:^\/\/.*\s?)+/gm)
             ?.join('\n') || '';
     const meta = userscriptMeta.parse(header);
-    // const header2 = userscriptMeta.stringify(meta);
+    console.log(meta.description);
+    const headerFormatted = userscriptMeta.stringify(meta);
+    console.log(headerFormatted);
     const _url = `https://raw.githubusercontent.com/snomiao/userscript.js/master/src/${filename}`;
     const url = encodeURI(_url);
-    // console.log('\nminifying ' + filename);
-    const mincode = (await minify(content, { compress: true })).code;
-    // console.log(filename, meta, url);
-    return { filename, content, meta, url, mincode };
+    const mincode = (await minify(code, { compress: true })).code;
+    const bmlCode = await bookmarklet.convert(code, {});
+    return { filename, code, meta, url, mincode, bookmarklet: bmlCode };
 }

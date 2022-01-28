@@ -10,17 +10,19 @@ const sinfo = await pmap(
     scriptparser
 );
 
-sinfo.map((e) => console.log(e.url));
+await fs.writeFile('./bookmarks/greasyfork_import_urls.txt', sinfo.map((e) =>e.url).join('\n'))
+
 const baseJSD = 'https://cdn.jsdelivr.net/gh/snomiao/userscript.js/src/';
 const ss = sinfo
-    .map(({ filename, mincode, url }) => {
+    .map(({ filename, mincode, url, bookmarklet }) => {
         const md = `[${filename}](javascript:${encodeURIComponent(mincode)})`;
         const src = baseJSD + filename;
         const bml = `javascript:(function(){document.body.appendChild(Object.assign(document.createElement('script'), {src: '${src}'}))}())`;
         /* `[${filename}](javascript:${encodeURIComponent(mincode)})`*/
         /* `<a href='javascript:${mincode.replace(/'/g,'&apos;')}'>${filename}</a>`*/
         /* `${filename} - ${mincode}`*/
-        const a = `<a href="${escape(bml)}">${filename}</a>`;
+        const a = `<a href="${bookmarklet}">${filename}</a>`;
+        // const a = `<a href="${escape(bml)}">${filename}</a>`;
         return a;
     })
     .join('\n');

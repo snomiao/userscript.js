@@ -1,7 +1,9 @@
 # userscript.js
 
+
 snomiao's userscripts, sync to
 [snomiao - Greasy Fork](https://greasyfork.org/zh-CN/users/31387-snomiao)
+
 
 ## 脚本介绍与使用说明
 
@@ -39,6 +41,8 @@ to:
 
 ## ref
 
+- [Bookmarklet Creator with Script Includer - Peter Coles]( https://mrcoles.com/bookmarklet/ )
+
 ---
 
 <!-- markdown style -->
@@ -49,3 +53,4 @@ to:
         margin: auto;
     }
 </style>
+
