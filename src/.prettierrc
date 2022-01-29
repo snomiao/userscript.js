@@ -1,5 +1,5 @@
 {
-    "tabWidth": 4,
+    "_tabWidth": 4,
     "useTabs": false,
     "trailingComma": "es5",
     "jsxSingleQuote": true,
