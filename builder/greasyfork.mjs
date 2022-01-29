@@ -10,7 +10,10 @@ const sinfo = await pmap(
     scriptparser
 );
 
-await fs.writeFile('./bookmarks/greasyfork_import_urls.txt', sinfo.map((e) =>e.url).join('\n'))
+await fs.writeFile(
+    './bookmarks/greasyfork_import_urls.txt',
+    sinfo.map((e) => e.url).join('\n')
+);
 
 const baseJSD = 'https://cdn.jsdelivr.net/gh/snomiao/userscript.js/src/';
 const ss = sinfo
@@ -21,8 +24,9 @@ const ss = sinfo
         /* `[${filename}](javascript:${encodeURIComponent(mincode)})`*/
         /* `<a href='javascript:${mincode.replace(/'/g,'&apos;')}'>${filename}</a>`*/
         /* `${filename} - ${mincode}`*/
-        const a = `<a href="${bookmarklet}">${filename}</a>`;
-        // const a = `<a href="${escape(bml)}">${filename}</a>`;
+        const style =
+            'background: lightblue; border: solid 1px grey; decoration: none';
+        const a = `<a style="${style}" href="${bookmarklet}">${filename}</a>`;
         return a;
     })
     .join('\n');
