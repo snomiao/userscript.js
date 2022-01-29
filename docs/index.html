@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tomato Life</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Description" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0"
+    />
+    <link
+      rel="stylesheet"
+      href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css"
+    />
+    <script src="//cdn.jsdelivr.net/npm/docsify-edit-on-github"></script>
+    <script src="https://greasyfork.org/scripts/436203-super-preloaderplus-one-new/code/Super_preloaderPlus_one_New.user.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.$docsify = {
+        name: "Userscript.js by snomiao",
+        repo: "https://github.com/snomiao/userscript.js.git",
+        plugins: [
+          EditOnGithubPlugin.create(
+            "https://github.com/snomiao/userscript.js/blob/master/docs/",
+            null,
+            function (file) {
+              if (file.indexOf("en") + 1) {
+                return "edit on git";
+              } else {
+                return "编辑";
+              }
+            }
+          ),
+        ],
+      };
+    </script>
+    <!-- Docsify v4 -->
+    <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  </body>
+</html>

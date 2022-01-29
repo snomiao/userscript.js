@@ -1,24 +1,13 @@
-# userscript.js
-
+# Userscript.js by snomiao
 
 snomiao's userscripts, sync to
 [snomiao - Greasy Fork](https://greasyfork.org/zh-CN/users/31387-snomiao)
 
+## Script Docs
 
-## 脚本介绍与使用说明
+[要查看脚本介绍，请见文档](https://snomiao.github.io/userscript.js/)
 
-### pricesof500g.userscript.js
-
-提供购物车的相对重量（或容积）的价格标签并自动排序，常用于挑选相对重量（或容积）
-价格比最高的商品。使用场景包括但不限于例如购买廉价耗材、食品、按数据容积购买数据
-存储设备等。
-
-| 场景         | 例图                        |
-| ------------ | --------------------------- |
-| 淘宝购物车   | ![](media/prices-cart.png)  |
-| 京东搜索页面 | ![](media/京东搜索页面.png) |
-
-## See me at:
+## List of scripts
 
 Greasy Fork:
 [snomiao - Greasy Fork](https://greasyfork.org/zh-CN/users/31387-snomiao) (Sync
@@ -28,20 +17,17 @@ Github:
 [snomiao/userscript.js: sync to greasyfork.com](https://github.com/snomiao/userscript.js#readme)
 (Source)
 
-## Sync By github
+### Sync By github
 
-from:
+- from:
+  - https://github.com/snomiao/userscript.js
+- to:
+  - [Import scripts - greasyfork](https://greasyfork.org/en/import)
+  - [New Script - OpenUserJS](https://openuserjs.org/user/add/scripts)
 
-- https://github.com/snomiao/userscript.js
+## Refences
 
-to:
-
-- [Import scripts - greasyfork](https://greasyfork.org/en/import)
-- [New Script | OpenUserJS](https://openuserjs.org/user/add/scripts)
-
-## ref
-
-- [Bookmarklet Creator with Script Includer - Peter Coles]( https://mrcoles.com/bookmarklet/ )
+- [Bookmarklet Creator with Script Includer - Peter Coles](https://mrcoles.com/bookmarklet/)
 
 ---
 
@@ -53,4 +39,3 @@ to:
         margin: auto;
     }
 </style>
-

@@ -27,7 +27,7 @@
   "bugs": {
     "url": "https://github.com/snomiao/userscript.js/issues"
   },
-  "homepage": "https://github.com/snomiao/userscript.js#readme",
+  "homepage": "https://snomiao.github.io/userscript.js/",
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
