@@ -28,6 +28,7 @@ Github:
 ## Refences
 
 - [Bookmarklet Creator with Script Includer - Peter Coles](https://mrcoles.com/bookmarklet/)
+- [Easy multi-language, multi-version documentation with Docsify, Git, and GitHub Actions — Martian Chronicles, Evil Martians’ team blog](https://evilmartians.com/chronicles/easy-multi-language-multi-version-documentation-with-docsify-git-and-github-actions)
 
 ---
 
