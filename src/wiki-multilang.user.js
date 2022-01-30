@@ -3,10 +3,11 @@
 // @name:zh            Wikipedia 多语言浏览
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.0.1
+// @version            0.0.2
 // @description        View wiki in multi-language at parallel for multi-language learner.
 // @description:zh     以并列多语言视角浏览维基百科
 // @match              https://*.wikipedia.org/wiki/*
+// @match              https://zh.wikipedia.org/zh-*/*
 // @grant              none
 // @run-at             document-start
 // @license            GPL-3.0+
