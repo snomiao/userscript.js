@@ -39,8 +39,8 @@ const ss =
             const h3 = `### ${name}`;
             const gfurlRaw = `https://greasyfork.org/en/scripts?filter_locale=0&q=${name}`;
             const gfurl = encodeURI(gfurlRaw);
-            const a1 = `<p>GreasyFork安装：<a style="${aStyle1}" href="${gfurl}" title="${description}">GreasyFork</a></p>`;
-            const a2 = `<p><a style="${aStyle2}" href="${bookmarklet}" title="${description}">${name}</a></p>`;
+            const a1 = `<a style="${aStyle1}" href="${gfurl}" title="${description}">GreasyFork</a>`;
+            const a2 = `<a style="${aStyle2}" href="${bookmarklet}" title="${description}">${name}</a>`;
             const desc = `<p>描述：${description}</p>`;
             const element = [h3, a1, a2, desc, ''].join('\n');
             return element;
