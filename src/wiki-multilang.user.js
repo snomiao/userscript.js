@@ -1,15 +1,17 @@
 // ==UserScript==
-// @name             Wiki multi language
-// @namespace        https://userscript.snomiao.com/
-// @version          0.0.1
-// @description      View wiki in multi-language at parallel for multi-language learner.
-// @author           snomiao@gmail.com
-// @match            https://*.wikipedia.org/wiki/*
-// @grant            none
-// @run-at           document-start
-// @license          GPL-3.0+
-// @supportURL       https://github.com/snomiao/userscript.js/issues
-// @contributionURL  https://www.paypal.com/donate/?cmd=_donations&business=snomiao@gmail.com&item_name=Greasy+Fork+donation
+// @name               Wikipedia multi language view
+// @name:zh            Wikipedia 多语言浏览
+// @namespace          snomiao@gmail.com
+// @author             snomiao@gmail.com
+// @version            0.0.1
+// @description        View wiki in multi-language at parallel for multi-language learner.
+// @description:zh     以并列多语言视角浏览维基百科
+// @match              https://*.wikipedia.org/wiki/*
+// @grant              none
+// @run-at             document-start
+// @license            GPL-3.0+
+// @supportURL         https://github.com/snomiao/userscript.js/issues
+// @contributionURL    https://www.paypal.com/donate/?cmd=_donations&business=snomiao@gmail.com&item_name=Greasy+Fork+donation
 // ==/UserScript==
 //
 // ref:
