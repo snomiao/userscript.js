@@ -2,17 +2,16 @@
   "name": "@snomiao/userscript",
   "version": "1.1.0",
   "description": "a collection of snos userscripts",
-  "main": "dist/index.user.js",
+  "type": "module",
   "directories": {
     "doc": "docs"
   },
   "readme": "docs/README.md",
   "scripts": {
+    "serve:docs": "npx docsify-cli serve docs",
     "serve": "npx serve .",
     "patch": "npm version patch",
-    "prettier": "npx prettier --write .",
     "publishHelper": "publishHelper",
-    "prerelease": "npm run prettier",
     "release": "standard-version",
     "postrelease": "git push --follow-tag --all",
     "test": "",

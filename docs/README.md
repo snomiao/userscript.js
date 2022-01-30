@@ -5,7 +5,7 @@ snomiao's userscripts, sync to
 
 ## Script Docs
 
-[要查看脚本介绍，请见文档](https://snomiao.github.io/userscript.js/script-intro.md)
+[要查看脚本介绍，请见文档](https://snomiao.github.io/userscript.js/#/script-intro.md)
 
 ## List of scripts
 
