@@ -3,9 +3,11 @@
 snomiao's userscripts, sync to
 [snomiao - Greasy Fork](https://greasyfork.org/zh-CN/users/31387-snomiao)
 
+[English](/) | [简体中文](/zh-cn/)
+
 ## Script Docs
 
-[要查看脚本介绍，请见文档](https://snomiao.github.io/userscript.js/#/script-intro.md)
+[All Userscripts](/script-intro.md)
 
 ## List of scripts
 
