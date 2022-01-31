@@ -3,8 +3,8 @@
 // @name:zh            Wikipedia 多语言浏览
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.0.2
-// @description        View wiki in multi-language at parallel for multi-language learner.
+// @version            0.0.3
+// @description        View a Wikipedia entry with two (or more?) languages side by side for comparison and language learning.
 // @description:zh     以并列多语言视角浏览维基百科
 // @match              https://*.wikipedia.org/wiki/*
 // @match              https://zh.wikipedia.org/zh-*/*
