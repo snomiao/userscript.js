@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YoutubeAllResultsPushToQueuePlay
 // @namespace    snomiao@gmail.com
-// @version      0.0.3
+// @version      0.0.4
 // @description  Youtube Search Results Pages Push To Queue To Play Button
 // @author       snomiao
 // @copyright    2021, snomiao (snomiao.com)
@@ -79,5 +79,5 @@ function btnAdd() {
   filterBtn.AllResultsPushToQueuePlay = e;
   filterBtn.parentElement.append(e);
 }
-
+window.addEventListener('load', btnAdd, false);
 btnAdd();
