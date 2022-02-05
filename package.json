@@ -1,6 +1,6 @@
 {
   "name": "@snomiao/userscript",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "a collection of snos userscripts",
   "type": "module",
   "directories": {
@@ -10,11 +10,11 @@
   "scripts": {
     "serve:docs": "npx docsify-cli serve docs",
     "serve": "npx serve .",
-    "patch": "npm version patch",
     "build": "node --experimental-specifier-resolution=node --experimental-modules --no-warnings ./builder/build.mjs",
+    "prerelease": "npm run build",
     "release": "standard-version",
     "postrelease": "git push --follow-tag --all",
-    "test": "npm run build",
+    "test": "",
     "prepare": "husky install"
   },
   "repository": {

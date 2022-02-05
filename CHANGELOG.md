@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/snomiao/userscript.js/compare/v1.2.0...v1.2.1) (2022-02-05)
+
+
+### Bug Fixes
+
+* match zh- ([892b976](https://github.com/snomiao/userscript.js/commit/892b976aeec1bea8584c751ca713843c84a0436d))
+* run onload ([9b79510](https://github.com/snomiao/userscript.js/commit/9b79510208b393e5536e204e6a5226e5af4d0dad))
+
 ## [1.2.0](https://github.com/snomiao/userscript.js/compare/v1.1.0...v1.2.0) (2022-01-30)
 
 
