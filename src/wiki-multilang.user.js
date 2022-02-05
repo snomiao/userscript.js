@@ -20,54 +20,54 @@
 //
 
 if (location.hash.match('#langIfr')) {
-  // iframe code send height
-  const sendHeight = () =>
-    parent.postMessage?.(
-      { langIfr: { height: document.body.scrollHeight } },
-      '*'
-    );
-  window.addEventListener('resize', sendHeight, false);
-  window.addEventListener('load', sendHeight, false);
-  sendHeight();
+    // iframe code send height
+    const sendHeight = () =>
+        parent.postMessage?.(
+            { langIfr: { height: document.body.scrollHeight } },
+            '*'
+        );
+    window.addEventListener('resize', sendHeight, false);
+    window.addEventListener('load', sendHeight, false);
+    sendHeight();
 } else {
-  // parent code recv iframe's height
-  const msgHandler = (e) => {
-    const setHeight = (height) =>
-      height &&
-      document.querySelector('#langIfr')?.setAttribute('height', height);
-    setHeight(e.data?.langIfr?.height);
-  };
-  window.addEventListener('message', msgHandler, false);
-  // load iframe
-  const langLnksGet = () =>
-    Object.fromEntries(
-      [...document.querySelectorAll('a.interlanguage-link-target')]
-        .map((e) => ({
-          lang: e.getAttribute('lang'),
-          href: e.href,
-          language: e.textContent,
-        }))
-        .map((e) => [e.lang, e])
-    );
-  const exlangFrameLoad = () => {
-    const langLnks = langLnksGet();
-    const langIframeLoad = (lang = 'en') => {
-      if (!langLnks[lang]) return false;
-      document.body.setAttribute('style', 'width: 50vw');
-      document.body.querySelector('#langIfr')?.remove();
-      document.querySelector('#sidebarCollapse')?.click();
-      const langIfr = Object.assign(document.createElement('iframe'), {
-        id: 'langIfr',
-        src: langLnks[lang].href + '#langIfr',
-      });
-      langIfr.setAttribute(
-        'style',
-        'border: none; position:absolute; left: 50vw; top: 0vh; width: 50vw'
-      );
-      document.body.appendChild(langIfr);
-      return true;
+    // parent code recv iframe's height
+    const msgHandler = (e) => {
+        const setHeight = (height) =>
+            height &&
+            document.querySelector('#langIfr')?.setAttribute('height', height);
+        setHeight(e.data?.langIfr?.height);
     };
-    langIframeLoad('en') || langIframeLoad('zh') || langIframeLoad('ja');
-  };
-  window.addEventListener('load', exlangFrameLoad, false);
+    window.addEventListener('message', msgHandler, false);
+    // load iframe
+    const langLnksGet = () =>
+        Object.fromEntries(
+            [...document.querySelectorAll('a.interlanguage-link-target')]
+                .map((e) => ({
+                    lang: e.getAttribute('lang'),
+                    href: e.href,
+                    language: e.textContent,
+                }))
+                .map((e) => [e.lang, e])
+        );
+    const exlangFrameLoad = () => {
+        const langLnks = langLnksGet();
+        const langIframeLoad = (lang = 'en') => {
+            if (!langLnks[lang]) return false;
+            document.body.setAttribute('style', 'width: 50vw');
+            document.body.querySelector('#langIfr')?.remove();
+            document.querySelector('#sidebarCollapse')?.click();
+            const langIfr = Object.assign(document.createElement('iframe'), {
+                id: 'langIfr',
+                src: langLnks[lang].href + '#langIfr',
+            });
+            langIfr.setAttribute(
+                'style',
+                'border: none; position:absolute; left: 50vw; top: 0vh; width: 50vw'
+            );
+            document.body.appendChild(langIfr);
+            return true;
+        };
+        langIframeLoad('en') || langIframeLoad('zh') || langIframeLoad('ja');
+    };
+    window.addEventListener('load', exlangFrameLoad, false);
 }
