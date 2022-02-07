@@ -1,15 +1,16 @@
 // ==UserScript==
-// @name         YoutubeAllResultsPushToQueuePlay
-// @namespace    snomiao@gmail.com
-// @version      0.0.4
-// @description  Youtube Search Results Pages Push To Queue To Play Button
-// @author       snomiao
-// @copyright    2021, snomiao (snomiao.com)
-// @match        https://www.youtube.com/results*
+// @name             YoutubeAllResultsPushToQueuePlay
+// @namespace        snomiao@gmail.com
+// @version          0.0.5
+// @description      Youtube Search Results Pages Push To Queue To Play Button
+// @author           snomiao
+// @copyright        2021, snomiao (snomiao.com)
+// @match            *://www.youtube.com/results*
+// @match            *://youtube.com/results*
 // @supportURL       https://github.com/snomiao/userscript.js/issues
-// @noframes
 // @contributionURL  https://www.paypal.com/donate/?cmd=_donations&business=snomiao@gmail.com&item_name=Greasy+Fork+donation
-// @grant        none
+// @grant            none
+// @noframes
 // ==/UserScript==
 
 const qsa = (sel) => [...document.querySelectorAll(sel)];
@@ -79,5 +80,6 @@ function btnAdd() {
     filterBtn.AllResultsPushToQueuePlay = e;
     filterBtn.parentElement.append(e);
 }
+document.addEventListener('load', btnAdd, false);
 window.addEventListener('load', btnAdd, false);
 btnAdd();
