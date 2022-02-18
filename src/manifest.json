@@ -1,0 +1,26 @@
+{
+    "name": "SNOREAD",
+    "version": "1.1.0",
+    "manifest_version": 2,
+    "description": "Read more, wider and deeper.",
+    "icons": {
+        "128": "SNOREAD.png"
+    },
+    "browser_action": {
+        "default_icon": "SNOREAD.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*/*"
+            ],
+            "js": [
+                "snoread.user.js"
+            ]
+        }
+    ],
+    "permissions": [
+        "activeTab"
+    ],
+    "homepage_url": "https://greasyfork.org/zh-CN/scripts/392213-%E9%9B%AA%E9%98%85%E6%A8%A1%E5%BC%8F-snoread"
+}
