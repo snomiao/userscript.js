@@ -1,0 +1,5 @@
+# Query: @namespace(?![\\n\\s\\S]+@supportURL)
+# Flags: RegExp
+# ContextLines: 1
+
+No Results

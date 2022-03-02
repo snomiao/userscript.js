@@ -16,7 +16,7 @@
     "release": "standard-version",
     "postrelease": "git push --follow-tag --all",
     "test": "",
-    "subtree": "subtree",
+    "subtree": "cmd /c start \"\" subtree",
     "prepare": "husky install"
   },
   "repository": {

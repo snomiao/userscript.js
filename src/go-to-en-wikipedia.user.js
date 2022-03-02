@@ -7,6 +7,7 @@
 // @match        https://zh.wikipedia.org/wiki/*
 // @grant        none
 // @run-at       document-end
+// @supportURL       https://github.com/snomiao/userscript.js/issues
 // ==/UserScript==
 
 document?.querySelector('.interlanguage-link-target[lang="en"]')?.click();
