@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/snomiao/userscript.js/compare/v1.2.1...v1.2.2) (2022-03-02)
+
+
+### Bug Fixes
+
+* youtube-queue document.addEventListener('load', btnAdd, false); ([ac3d16b](https://github.com/snomiao/userscript.js/commit/ac3d16b48da29c0aa17be5f49513a87aa1c18c08))
+
 ### [1.2.1](https://github.com/snomiao/userscript.js/compare/v1.2.0...v1.2.1) (2022-02-05)
 
 ### Bug Fixes
