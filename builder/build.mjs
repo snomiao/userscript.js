@@ -10,11 +10,6 @@ const sinfo = await pmap(
     scriptparser
 );
 
-await fs.writeFile(
-    './bookmarks/greasyfork_import_urls.txt',
-    sinfo.map((e) => e.url).join('\n')
-);
-
 const jsDelivrPath = 'https://cdn.jsdelivr.net/gh/snomiao/userscript.js/src/';
 const aStyle1 =
     'display:inline-block;background:#32eb00;padding:0.1rem 0.5rem;border-radius:0.2rem;text-decoration:none;color:black;';
