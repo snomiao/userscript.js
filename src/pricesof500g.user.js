@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
 // @namespace    snomiao@gmail.com
-// @version      1.1.9
+// @version      1.1.10
 // @description  注：淘宝的价格和商品标题上写的重量通常对不上，点进商品页面，选择分类即可了解商品小分类的价格、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算。( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
 // @author       snomiao@gmail.com
 // @match        http*://cart.jd.com/cart*
@@ -107,8 +107,6 @@ const 中文数字替换 = (串) =>
     `四万万 四亿 四亿亿 二万二千 二百二 三十三 四百 六十四 五百亿 两个亿 十一`
 );
 const 范围映射 = (x, [a, b], [c, d]) => ((x - a) / (b - a)) * (d - c) + c;
-// 调试
-const 查看 = (e) => (console.log(e), e);
 // 流程控制
 function 节流(间隔, 函数, 提示函数 = () => null, 上次执行 = 0) {
     return async (...参数) =>
@@ -119,7 +117,7 @@ function 节流(间隔, 函数, 提示函数 = () => null, 上次执行 = 0) {
 function 防抖(间隔, 函数, 提示函数 = () => null, timerId = null) {
     return (...参数) =>
         new Promise(
-            (resolve, reject) => (
+            (resolve) => (
                 timerId && (clearTimeout(timerId), resolve(提示函数(...参数))),
                 (timerId = setTimeout(() => resolve(函数(...参数)), 间隔))
             )
@@ -132,7 +130,7 @@ const 质量千克自标题解析 = (标题) => {
     const 质量表述列 =
         (中文数字替换(标题) + 标题).match(RegExp(质量正则.source, 'ig')) || [];
     const 质量列 = 质量表述列.map((串) => {
-        const [_, 前乘数串, 质量串, 单位串, 后乘数串] = 串.match(质量正则);
+        const [, 前乘数串, 质量串, 单位串, 后乘数串] = 串.match(质量正则);
         const [前乘数, 后乘数] = [前乘数串, 后乘数串].map(
             (e) => parseFloat(e) || 1
         );
@@ -173,9 +171,10 @@ const 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) =>
         .filter((e) => e);
 const 抽取并在末尾插入 = (元素) =>
     元素.parentNode.appendChild(元素.parentNode.removeChild(元素));
-const 新元素 = (innerHTML, attributes = {}) =>
+const 新元素 = (HTML, attributes = {}) =>
     Object.assign(
-        Object.assign(document.createElement('div'), { innerHTML }).children[0],
+        Object.assign(document.createElement('div'), { innerHTML: HTML })
+            .children[0],
         attributes
     );
 // 商品计算
@@ -206,7 +205,7 @@ const 商品列每斤价格排序显示 = (新增商品列) => {
             每千克价格
         )}\n\n © 2016 - 2021 雪星实验室 \n  ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )`;
         const 价格标签 = 新元素(`
-<span class="priceof500g" style="background: ${颜色}; color: white" title="${描述}">
+<span class="priceof500g" style="background: ${颜色}; color: white; text-indent: 0;" title="${描述}">
   ${每千克价格按每斤解释(每千克价格)}
 </span>`);
 
@@ -343,3 +342,25 @@ globalThis?.pricesof500g_unload?.();
 globalThis.pricesof500g_unload = unload;
 // return unload;
 // })();
+
+const UnreachedClick = () => {
+    const e = [
+        ...document.querySelectorAll('ul[data-property="颜色分类"]>li'),
+    ].filter((e) => !e.className.match(/pricesof500g/))[0];
+    if (!e) return 'done';
+    e?.querySelector('a')?.click();
+    setTimeout(页面商品列商品列每斤价格排序显示, 1);
+    setTimeout(UnreachedClick, 1024);
+};
+
+const UnreachedButtonAdd = () => {
+    [...document.querySelectorAll('.tb-metatit')]
+        ?.filter((e) => e.textContent.match(/^颜色分类$/))
+        ?.map((e) =>
+            e.appendChild(
+                新元素('<button>探索</button>', { onclick: UnreachedClick })
+            )
+        ).length || setTimeout(UnreachedButtonAdd, 2048);
+};
+
+UnreachedButtonAdd();

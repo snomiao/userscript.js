@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             YoutubeAllResultsPushToQueuePlay
 // @namespace        snomiao@gmail.com
-// @version          0.0.5
+// @version          0.0.6
 // @description      Youtube Search Results Pages Push To Queue To Play Button
 // @author           snomiao
 // @copyright        2021, snomiao (snomiao.com)
@@ -77,10 +77,11 @@ function btnAdd() {
     const filterBtn = qsa('ytd-toggle-button-renderer').filter((e) =>
         e.textContent.match('过滤')
     )[0];
+    if (!filterBtn) return setTimeout(btnAdd, 1000);
     filterBtn.AllResultsPushToQueuePlay?.remove();
     filterBtn.AllResultsPushToQueuePlay = e;
     filterBtn.parentElement.append(e);
 }
-document.addEventListener('load', btnAdd, false);
-window.addEventListener('load', btnAdd, false);
+// document.addEventListener('load', btnAdd, false);
+// window.addEventListener('load', btnAdd, false);
 btnAdd();
