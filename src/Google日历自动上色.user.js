@@ -3,7 +3,7 @@
 // @name:zh         [雪星实验室] Google Calendar 谷歌日历自动上色
 // @name:en         [SNOLAB] Google Calendar Colorize
 // @namespace       https://userscript.snomiao.com/
-// @version         0.1.1
+// @version         0.1.2
 // @description    【功能测试中, bug反馈：snomiao@gmail.com】Google日历自动上色、根据匹配到的关键词显示特定颜色，例如： 休|睡、洗漱|收拾|整理|日记|日志、研究|学习|探索|背词|了解、上学|上班|上课、健身|锻练|热身、路上|通勤、料理|做饭、仪式|典礼|祭祀、紧急|重要|考试|测验、群聊|交流|玩|游戏|知乎、电影|看书|阅书|影评，(20210709)加入英文支持
 // @description:zh 【功能测试中, bug反馈：snomiao@gmail.com】Google日历自动上色、根据匹配到的关键词显示特定颜色，例如： 休|睡、洗漱|收拾|整理|日记|日志、研究|学习|探索|背词|了解、上学|上班|上课、健身|锻练|热身、路上|通勤、料理|做饭、仪式|典礼|祭祀、紧急|重要|考试|测验、群聊|交流|玩|游戏|知乎、电影|看书|阅书|影评，(20210709)加入英文支持
 // @description:en 【Functional testing, bug feedback: snomiao@gmail.com】Google Calendar automatically color, according to the keywords matched to show specific colors, such as: rest|sleep, wash|pack|organize|diary|journal, research|study|explore|recite words|understand, school|work|class, fitness|workout|warm-up, on the road|commute, cooking|cooking ritual|ceremony|sacrifice, urgent|important|exam|quiz, group chat|communicate|play|game|know, movie|watch|read|review, (20210709) Add English support
@@ -115,7 +115,10 @@ var 更新颜色 = () => {
                 (正则1, 正则2) =>
                     文本.match(正则1).index - 文本.match(正则2).index
             )
-            .map((正则) => (元素.style.backgroundColor = 深色事件[正则]))
+            .map((正则) => {
+                元素.style.backgroundColor = 深色事件[正则];
+                元素.style.color = 'white';
+            })
     );
 };
 
