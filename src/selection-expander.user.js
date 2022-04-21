@@ -2,7 +2,7 @@
 // @name            [SNOLAB] Selection expander
 // @name:zh         [SNOLAB] 选区扩展器
 // @namespace       snomiao@gmail.com
-// @version         0.0.2
+// @version         0.0.3
 // @description     Shift+Alt+Right to Expand Selection to parent elements. (vise versa)
 // @description:zh  Shift+Alt+Right to 扩大文字选区，常用于代码复制等操作（反之也可）。
 // @author          snomiao
