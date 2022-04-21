@@ -1,7 +1,4 @@
-import { escape, unescape } from 'html-escaper';
 import fs from 'fs/promises';
-import { exec } from 'child_process';
-import { promisify } from 'util';
 import { scriptparser } from './scriptparser';
 const pmap = (ls, fn) => Promise.all(ls.map(fn));
 
@@ -78,5 +75,3 @@ const ssZhCn =
         .join('\n') +
     '\n---';
 await fs.writeFile('./docs/zh-cn/script-intro.md', ssZhCn);
-
-// await promisify(exec)('chrome https://greasyfork.org/en/import');
