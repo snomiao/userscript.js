@@ -11,7 +11,7 @@
 // @match           *://calendar.google.com/*
 // @grant           none
 // ==/UserScript==
-// 
+//
 // updates:
 // (20220421) set the text color on dark background to white.
 //
@@ -109,7 +109,8 @@ const 更新颜色 = () => {
             .filter((正则) => 文本.match(new RegExp(正则, 'i')))
             .sort(
                 (正则1, 正则2) =>
-                    文本.match(正则1).index - 文本.match(正则2).index
+                    文本.match(new RegExp(正则1, 'i')).index -
+                    文本.match(new RegExp(正则2, 'i')).index
             )
             .forEach((正则) => (元素.style.backgroundColor = 浅色事件[正则]))
     );
@@ -118,7 +119,8 @@ const 更新颜色 = () => {
             .filter((正则) => 文本.match(new RegExp(正则, 'i')))
             .sort(
                 (正则1, 正则2) =>
-                    文本.match(正则1).index - 文本.match(正则2).index
+                    文本.match(new RegExp(正则1, 'i')).index -
+                    文本.match(new RegExp(正则2, 'i')).index
             )
             .forEach((正则) => {
                 // console.log(元素);
