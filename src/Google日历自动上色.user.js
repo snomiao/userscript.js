@@ -3,7 +3,7 @@
 // @name:zh         [雪星实验室] Google Calendar 谷歌日历自动上色
 // @name:en         [SNOLAB] Google Calendar Colorize
 // @namespace       https://userscript.snomiao.com/
-// @version         0.1.3
+// @version         0.1.4
 // @description    【功能测试中, bug反馈：snomiao@gmail.com】Google日历自动上色、根据匹配到的关键词显示特定颜色，例如： 休|睡、洗漱|收拾|整理|日记|日志、研究|学习|探索|背词|了解、上学|上班|上课、健身|锻练|热身、路上|通勤、料理|做饭、仪式|典礼|祭祀、紧急|重要|考试|测验、群聊|交流|玩|游戏|知乎、电影|看书|阅书|影评，(20210709)加入英文支持
 // @description:zh 【功能测试中, bug反馈：snomiao@gmail.com】Google日历自动上色、根据匹配到的关键词显示特定颜色，例如： 休|睡、洗漱|收拾|整理|日记|日志、研究|学习|探索|背词|了解、上学|上班|上课、健身|锻练|热身、路上|通勤、料理|做饭、仪式|典礼|祭祀、紧急|重要|考试|测验、群聊|交流|玩|游戏|知乎、电影|看书|阅书|影评，(20210709)加入英文支持
 // @description:en 【Functional testing, bug feedback: snomiao@gmail.com】Google Calendar automatically color, according to the keywords matched to show specific colors, such as: rest|sleep, wash|pack|organize|diary|journal, research|study|explore|recite words|understand, school|work|class, fitness|workout|warm-up, on the road|commute, cooking|cooking ritual|ceremony|sacrifice, urgent|important|exam|quiz, group chat|communicate|play|game|know, movie|watch|read|review, (20210709) Add English support
@@ -69,8 +69,8 @@ const 深色事件 = {
     'groupchat|communication|know|blog|little red book|video|jitter|bilibili|B station|群聊|交流|知乎|微博|小红书|视频|抖音|bilibili|B站':
         '',
     'play|games|玩|游戏': '',
-    'bill|payment|finance|economic|账单|还款|金融|经济': '',
-    'Study|Memorize|Understand|Read|Movies|Watch|Read|Books|Reviews|The|学习|背词|了解|阅读|电影|看书|阅书|影评|《':
+    'bill|payment|economic|账单|还款|经济': '',
+    'Study|Memorize|Understand|Read|Movies|Watch|Read|Reviews|学习|背词|了解|阅读|电影|看书|阅书|影评|《':
         '',
     'Think|Research|R&D|Develop|Research|Explore|思考|科研|研发|开发|研究|探索':
         '',
@@ -79,7 +79,7 @@ const 浅色事件 = {
     // 从浅红到天蓝
     'shop|buy|购物|购买': '',
     'rest|sleep|休|睡': '',
-    'shower|wash|clean|organize|clean up|洗澡|洗漱|收拾|整理|大扫除': '',
+    'shower|wash|clean|organizing|clean up|洗澡|洗漱|收拾|整理|大扫除': '',
     'workout|body building|warm up|cook|cook|eat|exercise|健身|锻练|热身|料理|做饭|吃|运动':
         '',
     'diary|schedule|journal|jour|日记|日程|日志': '',
@@ -101,7 +101,7 @@ const 更新颜色 = () => {
     const 事件元素列 = [...document.querySelectorAll('div[data-eventid]')];
     const 颜色分析 = 事件元素列.map((e) => ({
         元素: e,
-        文本: e.textContent,
+        文本: e.textContent.replace(/Organizer/g, ''),
         颜色: window.getComputedStyle(e).getPropertyValue('background-color'),
     }));
     颜色分析.forEach(({ 元素, 文本 }) =>
@@ -112,7 +112,13 @@ const 更新颜色 = () => {
                     文本.match(new RegExp(正则1, 'i')).index -
                     文本.match(new RegExp(正则2, 'i')).index
             )
-            .forEach((正则) => (元素.style.backgroundColor = 浅色事件[正则]))
+            .forEach((正则) => {
+                元素.googleCalendarColorizeFlags = { 正则 };
+                元素.style.backgroundColor = 浅色事件[正则];
+                [...元素.querySelectorAll('span,div')].map(
+                    (e) => (e.style.color = 'black')
+                );
+            })
     );
     颜色分析.forEach(({ 元素, 文本 }) =>
         Object.keys(深色事件)
@@ -124,6 +130,7 @@ const 更新颜色 = () => {
             )
             .forEach((正则) => {
                 // console.log(元素);
+                元素.googleCalendarColorizeFlags = { 正则 };
                 元素.style.backgroundColor = 深色事件[正则];
                 [...元素.querySelectorAll('span,div')].map(
                     (e) => (e.style.color = 'white')
