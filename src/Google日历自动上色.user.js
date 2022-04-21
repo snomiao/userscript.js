@@ -3,7 +3,7 @@
 // @name:zh         [雪星实验室] Google Calendar 谷歌日历自动上色
 // @name:en         [SNOLAB] Google Calendar Colorize
 // @namespace       https://userscript.snomiao.com/
-// @version         0.1.2
+// @version         0.1.3
 // @description    【功能测试中, bug反馈：snomiao@gmail.com】Google日历自动上色、根据匹配到的关键词显示特定颜色，例如： 休|睡、洗漱|收拾|整理|日记|日志、研究|学习|探索|背词|了解、上学|上班|上课、健身|锻练|热身、路上|通勤、料理|做饭、仪式|典礼|祭祀、紧急|重要|考试|测验、群聊|交流|玩|游戏|知乎、电影|看书|阅书|影评，(20210709)加入英文支持
 // @description:zh 【功能测试中, bug反馈：snomiao@gmail.com】Google日历自动上色、根据匹配到的关键词显示特定颜色，例如： 休|睡、洗漱|收拾|整理|日记|日志、研究|学习|探索|背词|了解、上学|上班|上课、健身|锻练|热身、路上|通勤、料理|做饭、仪式|典礼|祭祀、紧急|重要|考试|测验、群聊|交流|玩|游戏|知乎、电影|看书|阅书|影评，(20210709)加入英文支持
 // @description:en 【Functional testing, bug feedback: snomiao@gmail.com】Google Calendar automatically color, according to the keywords matched to show specific colors, such as: rest|sleep, wash|pack|organize|diary|journal, research|study|explore|recite words|understand, school|work|class, fitness|workout|warm-up, on the road|commute, cooking|cooking ritual|ceremony|sacrifice, urgent|important|exam|quiz, group chat|communicate|play|game|know, movie|watch|read|review, (20210709) Add English support
@@ -11,7 +11,10 @@
 // @match           *://calendar.google.com/*
 // @grant           none
 // ==/UserScript==
-
+// 
+// updates:
+// (20220421) set the text color on dark background to white.
+//
 // [颜色名 — HTML颜色代码](https://htmlcolorcodes.com/zh/yanse-ming/)
 // input: h in [0,360] and s,v in [0,1] - output: r,g,b in [0,1]
 // [LCH colors in CSS: what, why, and how? – Lea Verou](https://lea.verou.me/2020/04/lch-colors-in-css-what-why-and-how/)
@@ -19,17 +22,19 @@
 // [rgb-lab/color.js at master · antimatter15/rgb-lab](https://github.com/antimatter15/rgb-lab/blob/master/color.js)
 // [Color math and programming code examples](https://www.easyrgb.com/en/math.php)
 
-var D65_2deg = [95.047, 100.0, 108.883];
-var rad = (deg) => (deg / 180) * Math.PI;
-var 向向内积 = (a, b) => a.map((_, i) => a[i] * b[i]).reduce((a, b) => a + b);
-var 向向乘 = (a, b) => a.map((_, i) => a[i] * b[i]);
-var 向数除 = (a, b) => a.map((_, i) => a[i] / b);
-var lch2lab = (l, c, h_deg) => [
+globalThis.googleCalendarColorize?.unload?.();
+
+const D65_2deg = [95.047, 100.0, 108.883];
+const rad = (deg) => (deg / 180) * Math.PI;
+const 向向内积 = (a, b) => a.map((_, i) => a[i] * b[i]).reduce((a, b) => a + b);
+const 向向乘 = (a, b) => a.map((_, i) => a[i] * b[i]);
+const 向数除 = (a, b) => a.map((_, i) => a[i] / b);
+const lch2lab = (l, c, h_deg) => [
     l,
     Math.cos(rad(h_deg)) * c,
     Math.sin(rad(h_deg)) * c,
 ];
-var lab2xyz = (l, a, b) => {
+const lab2xyz = (l, a, b) => {
     let vy = (l + 16) / 116;
     let vx = a / 500 + vy;
     let vz = vy - b / 200;
@@ -38,7 +43,7 @@ var lab2xyz = (l, a, b) => {
     );
     return 向向乘(xyz, D65_2deg);
 };
-var xyz2srgb = (x, y, z) => {
+const xyz2srgb = (x, y, z) => {
     let vxyz = 向数除([x, y, z], 100);
     let vr = 向向内积(vxyz, [3.2406, -1.5372, -0.4986]);
     let vg = 向向内积(vxyz, [-0.9689, 1.8758, 0.0415]);
@@ -49,16 +54,16 @@ var xyz2srgb = (x, y, z) => {
         )
         .map((v) => v * 255);
 };
-var srgb2str = (r, g, b) =>
+const srgb2str = (r, g, b) =>
     `rgb(${[r, g, b].map((e) => Math.min(Math.max(0, e | 0), 255)).join(',')})`;
-var lch2str = (l, c, h) =>
-    srgb2str(...xyz2srgb(...lab2xyz(...lch2lab(l, c, h))));
-var sslch2str = (l, c, h) =>
+// const lch2str = (l, c, h) =>
+//     srgb2str(...xyz2srgb(...lab2xyz(...lch2lab(l, c, h))));
+const ss_lch2rgba_str = (l, c, h) =>
     srgb2str(...xyz2srgb(...lab2xyz(...lch2lab(l, c, h ** 1.2 * 300 + 30))));
 // document.body.style.background = lch2str(100, 80, 30)
-var 深色事件 = {
+const 深色事件 = {
     // 一般红到青，如果写了就用写的颜色
-    'urgent|important|exam|quiz|quarrel|accident紧急|重要|考试|测验|吵架|事故':
+    'urgent|important|exam|quiz|quarrel|accident|紧急|重要|考试|测验|吵架|事故':
         'red',
     'ritual|ceremony|sacrifice|仪式|典礼|祭祀': '',
     'groupchat|communication|know|blog|little red book|video|jitter|bilibili|B station|群聊|交流|知乎|微博|小红书|视频|抖音|bilibili|B站':
@@ -70,7 +75,7 @@ var 深色事件 = {
     'Think|Research|R&D|Develop|Research|Explore|思考|科研|研发|开发|研究|探索':
         '',
 };
-var 浅色事件 = {
+const 浅色事件 = {
     // 从浅红到天蓝
     'shop|buy|购物|购买': '',
     'rest|sleep|休|睡': '',
@@ -82,19 +87,19 @@ var 浅色事件 = {
     'On the road|commute|school|work|class|course|路上|通勤|上学|上班|上课|课程':
         '',
 };
-const 表值色带转换 = (预设颜色表, s, e) =>
+const lch表值色带转换 = (预设颜色表, s, e) =>
     Object.fromEntries(
         Object.entries(预设颜色表).map(([k, v], i, a) => [
             k,
-            v || sslch2str(s, e, i / a.length),
+            v || ss_lch2rgba_str(s, e, i / a.length),
         ])
     );
-深色事件 = 表值色带转换(深色事件, 90, 100);
-浅色事件 = 表值色带转换(浅色事件, 100, 20);
+Object.assign(深色事件, lch表值色带转换(深色事件, 70, 80));
+Object.assign(浅色事件, lch表值色带转换(浅色事件, 100, 20));
 
-var 更新颜色 = () => {
-    var 事件元素列 = [...document.querySelectorAll('div[data-eventid]')];
-    var 颜色分析 = 事件元素列.map((e) => ({
+const 更新颜色 = () => {
+    const 事件元素列 = [...document.querySelectorAll('div[data-eventid]')];
+    const 颜色分析 = 事件元素列.map((e) => ({
         元素: e,
         文本: e.textContent,
         颜色: window.getComputedStyle(e).getPropertyValue('background-color'),
@@ -106,7 +111,7 @@ var 更新颜色 = () => {
                 (正则1, 正则2) =>
                     文本.match(正则1).index - 文本.match(正则2).index
             )
-            .map((正则) => (元素.style.backgroundColor = 浅色事件[正则]))
+            .forEach((正则) => (元素.style.backgroundColor = 浅色事件[正则]))
     );
     颜色分析.forEach(({ 元素, 文本 }) =>
         Object.keys(深色事件)
@@ -115,16 +120,19 @@ var 更新颜色 = () => {
                 (正则1, 正则2) =>
                     文本.match(正则1).index - 文本.match(正则2).index
             )
-            .map((正则) => {
+            .forEach((正则) => {
+                // console.log(元素);
                 元素.style.backgroundColor = 深色事件[正则];
-                元素.style.color = 'white';
+                [...元素.querySelectorAll('span,div')].map(
+                    (e) => (e.style.color = 'white')
+                );
             })
     );
 };
 
 更新颜色();
 
-var 节流 =
+const 节流 =
     (
         间隔,
         函数 = async () => null,
@@ -135,7 +143,7 @@ var 节流 =
         +new Date() - 上次执行 > 间隔
             ? ((上次执行 = +new Date()), await 函数(...参数))
             : await 提示函数(...参数);
-var 防抖 =
+const 防抖 =
     (
         间隔,
         函数 = async () => null,
@@ -144,37 +152,43 @@ var 防抖 =
     ) =>
     (...参数) =>
         new Promise(
-            (resolve, reject) => (
+            (resolve) => (
                 timerId && (clearTimeout(timerId), resolve(提示函数(...参数))),
                 (timerId = setTimeout(() => resolve(函数(...参数)), 间隔))
             )
         );
-var 节流防抖 = (间隔, 函数 = async () => null, 提示函数 = async () => null) =>
+const 节流防抖 = (间隔, 函数 = async () => null, 提示函数 = async () => null) =>
     节流(间隔, 函数, 防抖(间隔, 函数, 提示函数));
-var 刷新函数 = 节流防抖(10e3 /* 10s */, () => !document.hidden && 更新颜色());
-var 主动刷新函数 = 节流防抖(200, () => !document.hidden && 更新颜色());
+const 刷新函数 = 节流防抖(10e3 /* 10s */, () => !document.hidden && 更新颜色());
+const 主动刷新函数 = 节流防抖(200, () => !document.hidden && 更新颜色());
 
 // オブザーバインスタンスを作成
-var 目标 = document.documentElement || document.body;
-var 监视配置 = { attributes: false, childList: true, characterData: false };
-if (typeof 页面变动监视器 !== 'undefined') 页面变动监视器.disconnect();
-var 页面变动监视器 = new MutationObserver((mutations) => {
+const 目标 = document.documentElement || document.body;
+const 监视配置 = { attributes: false, childList: true, characterData: false };
+const 页面变动监视器 = new MutationObserver((mutations) => {
     if (!mutations.some((record) => record.addedNodes.length)) return;
     页面变动监视器.disconnect();
     刷新函数();
     目标 && 页面变动监视器.observe(目标, 监视配置);
 });
 页面变动监视器.observe(目标, 监视配置);
-document.addEventListener(
-    'visibilitychange',
-    () => setTimeout(刷新函数, 100),
-    false
-);
-document.addEventListener(
-    'mouseup',
-    () => setTimeout(主动刷新函数, 100),
-    false
-);
+const onvisibilitychange = () => setTimeout(刷新函数, 100);
+const onmouseup = () => setTimeout(主动刷新函数, 100);
+document.addEventListener('visibilitychange', onvisibilitychange, false);
+document.addEventListener('mouseup', onmouseup, false);
 document.addEventListener('keyup', () => setTimeout(主动刷新函数, 100), false);
 window.addEventListener('load', 刷新函数, false);
+
 刷新函数();
+const unload = () => {
+    页面变动监视器.disconnect();
+    document.removeEventListener('visibilitychange', onvisibilitychange, false);
+    document.removeEventListener('mouseup', onmouseup, false);
+    document.removeEventListener(
+        'keyup',
+        () => setTimeout(主动刷新函数, 100),
+        false
+    );
+    window.removeEventListener('load', 刷新函数, false);
+};
+globalThis.googleCalendarColorize = { unload };
