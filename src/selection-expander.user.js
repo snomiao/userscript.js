@@ -2,9 +2,9 @@
 // @name            [SNOLAB] Selection expander
 // @name:zh         [SNOLAB] 选区扩展器
 // @namespace       snomiao@gmail.com
-// @version         0.0.3
-// @description     Shift+Alt+Right to Expand Selection to parent elements. (vise versa)
-// @description:zh  Shift+Alt+Right to 扩大文字选区，常用于代码复制等操作（反之也可）。
+// @version         0.0.4
+// @description     Shift+Alt+Right/Left to Expand/Shirink Selection to parent elements. (vise versa) just like vscode
+// @description:zh  Shift+Alt+Right/Left to 扩大/缩小 文字选区，常用于代码复制等操作（反之也可）。 just like vscode
 // @author          snomiao
 // @match           *://*/*
 // @grant           none
@@ -43,7 +43,7 @@ const expanderLister = ([a, b]) => {
     return fnLister(expander, [a, b]);
 };
 
-function updateCoreStateAndGetSel(){
+function updateCoreStateAndGetSel() {
     const sel = globalThis.getSelection();
     const { anchorNode, focusNode, anchorOffset, focusOffset } = sel;
     if (!coreState.sel) {
@@ -53,10 +53,10 @@ function updateCoreStateAndGetSel(){
     if (!coreNodes.every((node) => sel.containsNode(node))) {
         coreState.sel = { anchorNode, focusNode, anchorOffset, focusOffset };
     }
-    return {sel, coreNodes}
+    return { sel, coreNodes };
 }
 function selectionExpand() {
-    const {sel} = updateCoreStateAndGetSel()
+    const { sel } = updateCoreStateAndGetSel();
     // expand
     const expand = expander([sel.anchorNode, sel.focusNode]);
     if (!expand) return; // can't expand anymore
@@ -64,11 +64,13 @@ function selectionExpand() {
     sel.setBaseAndExtent(anc, 0, foc, foc.childNodes.length);
 }
 function selectionShirink() {
-    const {sel, coreNodes} = updateCoreStateAndGetSel()
+    const { sel, coreNodes } = updateCoreStateAndGetSel();
     const list = expanderLister(coreNodes);
     const rangeNodes = list
         .reverse()
-        .find((rangeNodes) => rangeNodes.every((node) => sel.containsNode(node)));
+        .find((rangeNodes) =>
+            rangeNodes.every((node) => sel.containsNode(node))
+        );
     if (rangeNodes) {
         const [a, b] = rangeNodes;
         sel.setBaseAndExtent(a, 0, b, b.childNodes.length);
