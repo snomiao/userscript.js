@@ -6,6 +6,8 @@
 // @version            0.0.4
 // @description        View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google
 // @description:zh     以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google
+// @match              https://*.google.com/search?*
+// @match              https://*.bing.com/search?*
 // @match              https://*/search*
 // @grant              none
 // @run-at             document-start
