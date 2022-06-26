@@ -1,4 +1,6 @@
+import { exec } from 'child_process';
 import { globby } from 'globby';
+import { promisify } from 'util';
 
 const scripts = await globby('**/*.user.js');
 // | clip
@@ -11,4 +13,4 @@ const out = await Promise.all(
     })
 );
 console.log(out.join('\n'));
-// await promisify(exec)('chrome https://greasyfork.org/en/import');
+await promisify(exec)('cmd /c start chrome https://greasyfork.org/en/import');

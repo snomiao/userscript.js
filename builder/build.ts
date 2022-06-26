@@ -1,5 +1,5 @@
 import fs from 'fs/promises';
-import { scriptparser } from './scriptparser';
+import { scriptparser } from './bookmarklets';
 const pmap = (ls, fn) => Promise.all(ls.map(fn));
 
 const sinfo = await pmap(
