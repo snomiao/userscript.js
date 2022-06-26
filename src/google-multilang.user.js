@@ -3,13 +3,10 @@
 // @name:zh            谷歌多语言搜索 en/zh
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.0.2
+// @version            0.0.4
 // @description        View a google search result in two languages side by side for comparison and language learning.
 // @description:zh     以并列多语言视角浏览谷歌搜索结果
-// @match              https://*.google.com/search?*
-// @match              https://*.google.com*/search?*
-// @match              https://*.google.com.hk/search?*
-// @match              https://*.google.com.tw/search?*
+// @match              https://*/search*
 // @grant              none
 // @run-at             document-start
 // @license            GPL-3.0+
@@ -20,24 +17,24 @@
 // ==/UserScript==
 const introURL =
     'https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text/';
-const intro = `
-[Microsoft Translator Text API Documentation (microsoft-azure-org-microsoft-cognitive-services) | RapidAPI]( ${introURL} )
-1. Open ${introURL}
+// [Microsoft Translator Text API Documentation (microsoft-azure-org-microsoft-cognitive-services) | RapidAPI]( ${introURL} )
+const introPrompt = `
+1. I will open ${introURL} for you.
 2. Sign up or login
 3. Click Subscribe to Test
 4. Copy your API key
-4. Come back and paste here
+4. Come back and paste in prompt
 5. OK
 `.trim();
 
 (async function () {
-    if (parent !== window) return iframeHeightSenderSetup();
+    if (parent !== window) return iframeSetup();
     iframeHeightReceiverSetup();
     //
     const rapidAPIKey = (globalThis.rapidAPIKey = await rapidAPIKeyLoad());
     if (!rapidAPIKey) throw new Error('no rapid api key');
     const searchLinks = await getMultiLangSearchLinks();
-    replacePageWIthMultiLang(searchLinks);
+    searchLinks.length && replacePageWIthMultiLang(searchLinks);
 })();
 
 function replacePageWIthMultiLang(searchLinks) {
@@ -62,13 +59,21 @@ function iframeHeightReceiverSetup() {
         );
     window.addEventListener('message', (e) => setHeight(e.data?.height), false);
 }
-function iframeHeightSenderSetup() {
+function iframeSetup() {
     iframeScrollbarRemove();
+
     const sendHeight = () =>
         parent.postMessage?.({ height: document.body.scrollHeight }, '*');
     window.addEventListener('resize', sendHeight, false);
     window.addEventListener('load', sendHeight, false);
     sendHeight();
+    window.addEventListener('load', iframeLinksSetup, false);
+}
+
+function iframeLinksSetup() {
+    return [...document.querySelectorAll('a[href]')]
+        .filter(({ href }) => new URL(href).origin === location.origin)
+        .map((e) => (e.target = '_parent'));
 }
 
 function iframeScrollbarRemove() {
@@ -78,6 +83,7 @@ function iframeScrollbarRemove() {
 async function getMultiLangSearchLinks() {
     const url = new URL(location.href);
     const query = url.searchParams.get('q') || '';
+    if (!query) return [];
     const result = await bingTranslate(query);
     const searchLinks = result.flatMap((e) =>
         e.translations.map((t) => {
@@ -131,9 +137,19 @@ async function rapidAPIKeyLoad() {
     return (await rakGet()) || (await rapidAPIKeyLoadNew());
 }
 async function rapidAPIKeyLoadNew(msg = '') {
+    alert(introPrompt);
+    const w = window.open(
+        introURL,
+        'google-multilang-user-js-rapidAPIKey',
+        'width=1024,height=768'
+    );
+    await new Promise((r) => {
+        let id = setInterval(() => w.closed && (r(), clearInterval(id)));
+    });
     return (
-        window.open(introURL, '_blank'),
-        await rakSet(prompt((msg + '\n' + intro).trim(), await rakGet()) || ''),
+        await rakSet(
+            prompt((msg + '\n' + introPrompt).trim(), await rakGet()) || ''
+        ),
         await rakGet()
     );
 }
