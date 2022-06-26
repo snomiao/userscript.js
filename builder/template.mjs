@@ -9,7 +9,7 @@
 // @license          GPL-3.0+
 // @noframes
 // @supportURL       https://github.com/snomiao/userscript.js/issues
-// @contributionURL  https://www.paypal.com/donate/?cmd=_donations&business=snomiao@gmail.com&item_name=Greasy+Fork+donation
+// @contributionURL  https://snomiao.com/donate
 // ==/UserScript==
 
 // CODE
