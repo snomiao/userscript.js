@@ -3,7 +3,7 @@
 // @name:zh            谷歌多语言搜索 en/zh
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.0.5
+// @version            0.0.6
 // @description        [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
 // @description:zh     [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
 // @match              https://*.google.com/search?*
@@ -30,6 +30,7 @@ const introPrompt = `
 `.trim();
 
 (async function () {
+    if (!location.hostname.match(/google|bing/)) return;
     if (parent !== window) return iframeSetup();
     iframeHeightReceiverSetup();
     //
