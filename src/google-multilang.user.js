@@ -151,7 +151,7 @@ async function rapidAPIKeyLoadNew(msg = '') {
     });
     return (
         await rakSet(
-            prompt((msg + '\n' + introPrompt).trim(), await rakGet()) || ''
+            prompt((msg + '\n' + introPrompt).trim(), await rakGet()) || await rakGet() || ''
         ),
         await rakGet()
     );
