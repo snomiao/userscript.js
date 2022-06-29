@@ -3,7 +3,7 @@
 // @name:zh            谷歌多语言搜索 en/zh
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.0.6
+// @version            0.0.7
 // @description        [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
 // @description:zh     [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
 // @match              https://*.google.com/search?*
@@ -22,11 +22,14 @@ const introURL =
 // [Microsoft Translator Text API Documentation (microsoft-azure-org-microsoft-cognitive-services) | RapidAPI]( ${introURL} )
 const introPrompt = `
 1. I will open ${introURL} for you.
-2. Sign up or login
-3. Click Subscribe to Test
-4. Copy your API key
-4. Come back and paste in prompt
-5. OK
+    1. Sign up or login
+    2. Go to Endpoints tab
+    3. Click Subscribe to Test
+2. Copy your API key
+    5. Close the page
+    3. Come back
+3. paste API Key in prompt
+4. OK
 `.trim();
 
 (async function () {
