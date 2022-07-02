@@ -2,7 +2,7 @@
 // @name         [snolab] Google 日历键盘操作增强
 // @name:zh      [雪星实验室] Google Calendar with Keyboard Enhanced
 // @namespace    https://userscript.snomiao.com/
-// @version      0.0.6
+// @version      0.0.7
 // @description  【功能测试中, bug反馈：snomiao@gmail.com】Google日历键盘增强，雪星自用，功能：双击复制日程视图里的文本内容, Alt+hjkl 移动日程
 // @author       snomiao@gmail.com
 // @match        *://calendar.google.com/*
@@ -17,85 +17,102 @@
 */
 console.clear();
 const debug = false;
-const qsa = (sel, ele = document) => [...ele.querySelectorAll(sel)];
-const eleVis = (ele) => (ele.getClientRects().length && ele) || null;
-const eleSelVis = (sel, ele = document) =>
-    (typeof sel === 'string' && qsa(sel, ele).filter(eleVis)[0]) || null;
+function qsa(sel, ele = document) {
+    return [...ele.querySelectorAll(sel)];
+}
+function eleVis(ele) {
+    return (ele.getClientRects().length && ele) || null;
+}
+function eleSelVis(sel, ele = document) {
+    return (typeof sel === "string" && qsa(sel, ele).filter(eleVis)[0]) || null;
+}
 // const nestList = (e, fn)=>e.reduce
-const parentList = (ele) =>
-    [
+function parentList(ele) {
+    return [
         ele?.parentElement,
         ...((ele?.parentElement && parentList(ele?.parentElement)) || []),
     ].filter((e) => e);
-const eleSearchVis = (pattern, ele = document) =>
-    ((list) =>
-        list?.find((e) => e.textContent?.match(pattern)) ||
-        list?.find((e) => e.innerHTML?.match(pattern)))(
-        qsa('*', ele).filter(eleVis).reverse()
-    ) || null;
-const eleSearch = (sel, ele = document) =>
-    ((list) =>
-        list?.find((e) => e.textContent?.match(sel)) ||
-        list?.find((e) => e.innerHTML?.match(sel)))(qsa('*', ele).reverse()) ||
-    null;
-const hotkeyNameParse = (event) => {
+}
+function eleSearchVis(pattern, ele = document) {
+    return (
+        ((list) =>
+            list?.find((e) => e.textContent?.match(pattern)) ||
+            list?.find((e) => e.innerHTML?.match(pattern)))(
+            qsa("*", ele).filter(eleVis).reverse()
+        ) || null
+    );
+}
+// function eleSearch(sel, ele = document) {
+//     return ((list) => list?.find((e) => e.textContent?.match(sel)) ||
+//         list?.find((e) => e.innerHTML?.match(sel)))(qsa("*", ele).reverse()) ||
+//         null;
+// }
+function hotkeyNameParse(event) {
     const { altKey, metaKey, ctrlKey, shiftKey, key, type } = event;
     const hkName =
-        ((altKey && '!') || '') +
-        ((ctrlKey && '^') || '') +
-        ((metaKey && '#') || '') +
-        ((shiftKey && '+') || '') +
+        ((altKey && "!") || "") +
+        ((ctrlKey && "^") || "") +
+        ((metaKey && "#") || "") +
+        ((shiftKey && "+") || "") +
         key?.toLowerCase() +
-        ({ keydown: '', keypress: ' Press', keyup: ' Up' }[type] || '');
+        ({ keydown: "", keypress: " Press", keyup: " Up" }[type] || "");
     return hkName;
-};
-const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const inputValueSet = async (ele, value) => {
+}
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+async function inputValueSet(ele, value) {
     // console.log('inputValueSet', ele, value);
-    if (!ele) throw new Error('no element');
-    if (undefined === value) throw new Error('no value');
+    if (!ele) throw new Error("no element");
+    if (undefined === value) throw new Error("no value");
     ele.value = value;
-    ele.dispatchEvent(new InputEvent('input', { bubbles: true }));
-    ele.dispatchEvent(new Event('change', { bubbles: true }));
+    ele.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    ele.dispatchEvent(new Event("change", { bubbles: true }));
     ele.dispatchEvent(
-        new KeyboardEvent('keydown', {
+        new KeyboardEvent("keydown", {
             bubbles: true,
             keyCode: 13 /* enter */,
         })
     );
     await sleep(16);
-};
-const waitFor = async (fn) => {
+}
+async function waitFor(fn) {
     let re = null;
     while (!(re = fn())) await sleep(8);
     return re;
-};
+}
 
-const mouseEventOpt = ([x, y]) => ({
-    isTrusted: true,
-    bubbles: true,
-    button: 0,
-    buttons: 1,
-    cancelBubble: false,
-    cancelable: true,
-    clientX: x,
-    clientY: y,
-    movementX: 0,
-    movementY: 0,
-    x: x,
-    y: y,
-});
-const centerGet = (元素) => {
+function mouseEventOpt([x, y]) {
+    return {
+        isTrusted: true,
+        bubbles: true,
+        button: 0,
+        buttons: 1,
+        cancelBubble: false,
+        cancelable: true,
+        clientX: x,
+        clientY: y,
+        movementX: 0,
+        movementY: 0,
+        x: x,
+        y: y,
+    };
+}
+function centerGet(元素) {
     const { x, y, width: w, height: h } = 元素.getBoundingClientRect();
     return [x + w / 2, y + h / 2];
-};
-const bottomGet = (元素) => {
-    const { x, y, width: w, height: h } = 元素.getBoundingClientRect();
-    return [x + w / 2, y + h - 2];
-};
-const vec2add = ([x, y], [z, w]) => [x + z, y + w];
-const vec2mul = ([x, y], [z, w]) => [x * z, y * w];
-const eventDragMouseMove = (dx, dy) => {
+}
+// function bottomGet(元素) {
+//     const { x, y, "width": w, "height": h } = 元素.getBoundingClientRect();
+//     return [x + w / 2, y + h - 2];
+// }
+function vec2add([x, y], [z, w]) {
+    return [x + z, y + w];
+}
+// function vec2mul([x, y], [z, w]) {
+//     return [x * z, y * w];
+// }
+function eventDragMouseMove(dx, dy) {
     // a unit size is 15 min
     const container = document.querySelector(
         '[role="row"][data-dragsource-type="4"]'
@@ -106,40 +123,42 @@ const eventDragMouseMove = (dx, dy) => {
         containerSize.width / gridcells.length,
         containerSize.height / 24 / 4,
     ];
+    console.log(w, h);
+
     const [rdx, rdy] = [dx * w, dy * h];
     globalThis.gckDraggingPos = vec2add(globalThis.gckDraggingPos, [rdx, rdy]);
     document.dispatchEvent(
-        new MouseEvent('mousemove', mouseEventOpt(globalThis.gckDraggingPos))
+        new MouseEvent("mousemove", mouseEventOpt(globalThis.gckDraggingPos))
     );
-};
-const eventDragStart = async (
+}
+async function eventDragStart(
     [dx = 0, dy = 0] = [],
     { expand = false, immediatelyRelease = false } = {}
-) => {
-    console.log('eventDrag', [dx, dy], expand, immediatelyRelease);
+) {
+    console.log("eventDrag", [dx, dy], expand, immediatelyRelease);
     if (!globalThis.gckDraggingPos) {
         // console.log(eventDrag, dx, dy);
         const floatingBtn = qsa('div[role="button"]').find(
-            (e) => getComputedStyle(e).zIndex === '5004'
+            (e) => getComputedStyle(e).zIndex === "5004"
         );
-        if (!floatingBtn) throw new Error('no event selected');
+        if (!floatingBtn) throw new Error("no event selected");
         const dragTarget = expand
             ? floatingBtn.querySelector('*[data-dragsource-type="3"]')
             : floatingBtn;
         // debugger;
         const cPos = centerGet(dragTarget); // !expand ?  : bottomGet(floatingBtn);
-        console.log('cpos', cPos);
+        console.log("cpos", cPos);
         // mousedown
         globalThis.gckDraggingPos = cPos;
         dragTarget.dispatchEvent(
             new MouseEvent(
-                'mousedown',
+                "mousedown",
                 mouseEventOpt(globalThis.gckDraggingPos)
             )
         );
         dragTarget.dispatchEvent(
             new MouseEvent(
-                'mousemove',
+                "mousemove",
                 mouseEventOpt(globalThis.gckDraggingPos)
             )
         );
@@ -149,72 +168,72 @@ const eventDragStart = async (
         eventDragMouseMove(dx, dy);
     }
     // mouseup
-    const mouseup = () => {
+    function mouseup() {
         globalThis.gckDraggingPos = null;
         document.dispatchEvent(
-            new MouseEvent('mouseup', { bubbles: true, cancelable: true })
+            new MouseEvent("mouseup", { bubbles: true, cancelable: true })
         );
-    };
-    const release = (event) => {
+    }
+    function release(event) {
         const hkn = hotkeyNameParse(event);
-        console.log('hkn', hkn);
-        // ;
-        if (hkn === '!j Up') eventDragMouseMove(0, +1);
-        if (hkn === '!k Up') eventDragMouseMove(0, -1);
-        if (hkn === '!h Up') eventDragMouseMove(-1, 0);
-        if (hkn === '!l Up') eventDragMouseMove(+1, 0);
-        if (hkn === '!+j Up') eventDragMouseMove(0, +1);
-        if (hkn === '!+k Up') eventDragMouseMove(0, -1);
-        if (hkn === '!+h Up') eventDragMouseMove(-1, 0);
-        if (hkn === '!+l Up') eventDragMouseMove(+1, 0);
-        if (hkn === 'alt Up') mouseup();
-        if (hkn === '+alt Up') mouseup();
-        if (hkn === 'alt Up') document.removeEventListener('keyup', release);
-        if (hkn === '+alt Up') document.removeEventListener('keyup', release);
-    };
+        console.log("hkn", hkn);
+        if (hkn === "!j Up") eventDragMouseMove(0, +1);
+        if (hkn === "!k Up") eventDragMouseMove(0, -1);
+        if (hkn === "!h Up") eventDragMouseMove(-1, 0);
+        if (hkn === "!l Up") eventDragMouseMove(+1, 0);
+        if (hkn === "!+j Up") eventDragMouseMove(0, +1);
+        if (hkn === "!+k Up") eventDragMouseMove(0, -1);
+        if (hkn === "!+h Up") eventDragMouseMove(-1, 0);
+        if (hkn === "!+l Up") eventDragMouseMove(+1, 0);
+        if (hkn === "alt Up") mouseup();
+        if (hkn === "+alt Up") mouseup();
+        if (hkn === "alt Up") document.removeEventListener("keyup", release);
+        if (hkn === "+alt Up") document.removeEventListener("keyup", release);
+        document.removeEventListener("keyup", release);
+    }
     if (immediatelyRelease) {
         mouseup();
-        document.removeEventListener('keyup', release);
+        document.removeEventListener("keyup", release);
     } else {
-        document.addEventListener('keyup', release);
+        document.addEventListener("keyup", release);
     }
-};
-const movHandle = async (e) => {
-    const hktb = {
-        '!j': async () => {
-            let pos = bottomGet(floatingBtn);
-            document.addEventListener('keyup');
-        },
-    };
-    const f = hktb[hkName];
-    if (f) f();
-};
+}
+// const movHandle = async (e) => {
+//     const hktb = {
+//         "!j": async () => {
+//             const pos = bottomGet(floatingBtn);
+//             document.addEventListener("keyup");
+//         },
+//     };
+//     const f = hktb[hkName];
+//     if (f) f();
+// };
 // useHotkey('!j', () => {});
 // document.onkeydown = movHandle;
 // document.addEventListener('keydown', globalThis.movHandle , false)
 
-const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
-    const isoDateInputParse = async (dateEle, timeEle) => {
+async function inputDateTimeChange(startDT = 0, endDT = 0) {
+    async function isoDateInputParse(dateEle, timeEle) {
         // const dateEle = eleSelVis('[aria-label="Start date"]');
-        const dataDate = dateEle.getAttribute('data-date');
+        const dataDate = dateEle.getAttribute("data-date");
         const dataIcal = parentList(dateEle)
-            .find((e) => e.getAttribute('data-ical'))
-            .getAttribute('data-ical');
-        const todayDate = new Date().toISOString().slice(0, 10);
+            .find((e) => e.getAttribute("data-ical"))
+            .getAttribute("data-ical");
+        // const todayDate = new Date().toISOString().slice(0, 10);
         const dateString = (dataDate || dataIcal).replace(
             /(\d{4})(\d{2})(\d{2})/,
-            (_, a, b, c) => [a, b, c].join('-')
+            (_, a, b, c) => [a, b, c].join("-")
         );
-        const timeString = timeEle?.value || '00:00';
+        const timeString = timeEle?.value || "00:00";
         return new Date(`${dateString} ${timeString} Z`);
-    };
-    const dateObjParse = (dateObj) => {
+    }
+    function dateObjParse(dateObj) {
         const [date, time] = dateObj
             .toISOString()
             .match(/(\d\d\d\d-\d\d-\d\d)T(\d\d:\d\d):\d\d\.\d\d\dZ/)
             .slice(1);
         return [date, time];
-    };
+    }
     // All day: both dates, no time
     // Date time: start date + start time + end date
     const startDateEleTry = eleSelVis('[aria-label="Start date"]');
@@ -226,7 +245,7 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
                 ?.find((e) => e.querySelector('[role="button"]'))
                 ?.querySelector('[role="button"]');
         if (!editBtn) {
-            throw new Error('No editable input');
+            throw new Error("No editable input");
             // return 'No editable input';
         }
         editBtn.click();
@@ -294,61 +313,61 @@ const inputDateTimeChange = async (startDT = 0, endDT = 0) => {
     endTimeEle &&
         shiftedEndTime !== originEndTime &&
         (await inputValueSet(endTimeEle, shiftedEndTime));
-};
-const timeAdd = async () => {
+}
+async function timeAdd() {
     parentList(eleSearchVis(/^Add time$/))
         ?.find((e) => e.querySelector('[role="button"]'))
         ?.querySelector('[role="button"]')
         .click();
     await sleep(16);
     return;
-};
-const gcksHotkeyHandler = (e) => {
-    const isInput = ['INPUT', 'BUTTON'].includes(e.target.tagName);
+}
+function gcksHotkeyHandler(e) {
+    // const isInput = ["INPUT", "BUTTON"].includes(e.target.tagName);
     const hkName = hotkeyNameParse(e);
     console.log(hkName);
-    const okay = () => {
+    function okay() {
         e.preventDefault();
         e.stopPropagation();
-    };
+    }
     const hkft = {
-        '!k': async () => {
+        "!k": async () => {
             await timeAdd();
             return await inputDateTimeChange(-15 * 60e3).catch(
                 async () => await eventDragStart([0, 0], { expand: false })
             );
         },
-        '!j': async () => {
+        "!j": async () => {
             await timeAdd();
             return await inputDateTimeChange(+15 * 60e3).catch(
                 async () => await eventDragStart([0, 0], { expand: false })
             );
         },
-        '!h': async () =>
+        "!h": async () =>
             await inputDateTimeChange(-1 * 86400e3).catch(
                 async () => await eventDragStart([0, 0], { expand: false })
             ),
-        '!l': async () =>
+        "!l": async () =>
             await inputDateTimeChange(+1 * 86400e3).catch(
                 async () => await eventDragStart([0, 0], { expand: false })
             ),
-        '!+k': async () => {
+        "!+k": async () => {
             await timeAdd();
             return await inputDateTimeChange(0, -15 * 60e3).catch(
                 async () => await eventDragStart([0, 0], { expand: true })
             );
         },
-        '!+j': async () => {
+        "!+j": async () => {
             await timeAdd();
             return await inputDateTimeChange(0, +15 * 60e3).catch(
                 async () => await eventDragStart([0, 0], { expand: true })
             );
         },
-        '!+h': async () =>
+        "!+h": async () =>
             await inputDateTimeChange(0, -1 * 86400e3).catch(
                 async () => await eventDragStart([0, 0], { expand: true })
             ),
-        '!+l': async () =>
+        "!+l": async () =>
             await inputDateTimeChange(0, +1 * 86400e3).catch(
                 async () => await eventDragStart([0, 0], { expand: true })
             ),
@@ -360,44 +379,51 @@ const gcksHotkeyHandler = (e) => {
         // .then(okay());
         // .catch((e) => console.error(e));
     } else {
-        debug && console.log(hkName + ' pressed on ', e.target.tagName, e);
+        debug && console.log(`${hkName} pressed on `, e.target.tagName, e);
     }
-    console.log('rd');
-};
+    console.log("rd");
+}
 // await inputDateTimeChange(-15 * 60e3);
 
-globalThis.gcksHotkeyHandler &&
+if (globalThis.gcksHotkeyHandler)
     document.removeEventListener(
-        'keydown',
+        "keydown",
         globalThis.gcksHotkeyHandler,
         false
     );
 globalThis.gcksHotkeyHandler = gcksHotkeyHandler;
-document.addEventListener('keydown', globalThis.gcksHotkeyHandler, false);
-console.log('done');
+document.addEventListener("keydown", globalThis.gcksHotkeyHandler, false);
+console.log("done");
 
 // 复制日程内容
-var cpy = (ele) => {
-    ele.style.background = 'lightblue';
-    setTimeout(() => (ele.style.background = 'none'), 200);
+function cpy(ele) {
+    ele.style.background = "lightblue";
+    setTimeout(() => (ele.style.background = "none"), 200);
     return navigator.clipboard.writeText(
         ele.innerText
             // 把时间和summary拼到一起
             .replace(
                 /.*\n(.*) – (.*)\n(.*)\n.*/gim,
-                (_, a, b, c) => a + '-' + b + ' ' + c
+                (_, a, b, c) => `${a}-${b} ${c}`
             )
             // 删掉前2行
-            .replace(/^.*\n.*\n/, '')
+            .replace(/^.*\n.*\n/, "")
     );
-};
-const mdHandler = () => {
-    const dblClickCopyHooker = (e) => {
+}
+function mdHandler() {
+    function dblClickCopyHooker(e) {
         if (!e.flag_cpy_eventlistener) {
-            e.addEventListener('dblclick', () => cpy(e), false);
+            e.addEventListener("dblclick", () => cpy(e), false);
         }
         e.flag_cpy_eventlistener = 1;
-    };
-    [...document.querySelectorAll('div.L1Ysrb')]?.map(dblClickCopyHooker);
-};
-document.body.addEventListener('mousedown', mdHandler, true);
+    }
+    [...document.querySelectorAll("div.L1Ysrb")]?.map(dblClickCopyHooker);
+}
+document.body.addEventListener("mousedown", mdHandler, true);
+
+// function once(target, eventName, handler, capture = false) {
+//     const cb = (e) => (
+//         target.removeEventListener(eventName, cb, capture), handler(e)
+//     );
+//     target.addEventListener(eventName, cb, capture);
+// }

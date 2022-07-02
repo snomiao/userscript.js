@@ -9,7 +9,6 @@
     "bracketSameLine": true,
     "embeddedLanguageFormatting": "auto",
     "semi": true,
-    "singleQuote": true,
     "endOfLine": "lf",
     "bracketSpacing": true,
     "quoteProps": "as-needed"
