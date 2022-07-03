@@ -3,7 +3,7 @@
 // @name:zh            谷歌多语言搜索 en/zh
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.0.7
+// @version            0.0.8
 // @description        [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
 // @description:zh     [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
 // @match              https://*.google.com/search?*
@@ -39,11 +39,11 @@ const introPrompt = `
     //
     const rapidAPIKey = (globalThis.rapidAPIKey = await rapidAPIKeyLoad());
     if (!rapidAPIKey) throw new Error('no rapid api key');
-    const searchLinks = await getMultiLangSearchLinks();
-    searchLinks.length && replacePageWIthMultiLang(searchLinks);
+    const searchLinks = await mulangoSearchLinksFetch();
+    searchLinks.length && mulangoPageReplace(searchLinks);
 })();
 
-function replacePageWIthMultiLang(searchLinks) {
+function mulangoPageReplace(searchLinks) {
     const iframes = searchLinks.map((src) => `<iframe src="${src}"></iframe>`);
     const style = `<style>
         body{margin: 0; display: flex; flex-direction: row;}
@@ -86,7 +86,7 @@ function iframeScrollbarRemove() {
     document.body.style.margin = '-18px auto 0';
 }
 
-async function getMultiLangSearchLinks() {
+async function mulangoSearchLinksFetch() {
     const url = new URL(location.href);
     const query = url.searchParams.get('q') || '';
     if (!query) return [];
@@ -120,15 +120,15 @@ async function bingTranslate(text = 'hello, world') {
             ],
         },
     ];
-    const ak = await rakGet();
-    if (!ak) throw new Error('no rapid api key is found');
+    const rak = await rakGet();
+    if (!rak) throw new Error('no rapid api key is found');
     const response = await fetch(
         'https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=zh%2Cen&api-version=3.0&profanityAction=NoAction&textType=plain',
         {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
-                'X-RapidAPI-Key': ak,
+                'X-RapidAPI-Key': rak,
                 'X-RapidAPI-Host': 'microsoft-translator-text.p.rapidapi.com',
             },
             body,
@@ -136,7 +136,7 @@ async function bingTranslate(text = 'hello, world') {
     )
         .then((r) => r.json())
         .catch(async (e) => await rapidAPIKeyLoadNew('error: ' + e.message));
-    return response;
+    return response /* as exampleResponse */;
 }
 
 async function rapidAPIKeyLoad() {
