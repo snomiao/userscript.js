@@ -276,8 +276,6 @@
         "prefer-rest-params": "error",
         "prefer-spread": "error",
         "prefer-template": "warn",
-        "quote-props": "warn",
-        "quotes": "warn",
         "radix": [
             "error",
             "as-needed"
