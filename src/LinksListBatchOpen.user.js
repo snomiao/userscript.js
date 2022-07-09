@@ -15,6 +15,12 @@
 // @grant           none
 // ==/UserScript==
 
+/*
+TODO 修复列表识别算法于Google学术搜索的错误
+错误例子
+	[中国能源统计年鉴 - Google 学术搜索]( https://scholar.google.com/scholar?q=%E4%B8%AD%E5%9B%BD%E8%83%BD%E6%BA%90%E7%BB%9F%E8%AE%A1%E5%B9%B4%E9%89%B4&hl=zh-CN&as_sdt=0&as_vis=1&oi=scholart )
+*/
+
 const 最长共列阵输出 = (矩阵, a, b, x, y) =>
     !x || !y
         ? ''
