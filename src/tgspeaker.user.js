@@ -3,7 +3,7 @@
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
 // @version            0.0.1
-// @description        [Additional ]Speak latest telegram
+// @description        Speak latest telegram message
 // @match              https://*.telegram.org/z/
 // @grant              none
 // @run-at             document-start
