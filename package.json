@@ -44,7 +44,7 @@
     "minify": "^8.0.3",
     "prettier": "^2.4.1",
     "standard-version": "^9.3.2",
-    "terser": "^5.10.0",
+    "terser": "^5.14.2",
     "userscript-meta": "^1.0.1"
   },
   "dependencies": {
