@@ -2,8 +2,8 @@
 // @name               Telegram Speaker
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.1.1
-// @description        Speak latest telegram message With TTS technology just in your browser.
+// @version            0.1.2
+// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser.
 // @match              https://*.telegram.org/z/
 // @grant              none
 // @run-at             document-start
@@ -43,7 +43,7 @@ async function say(s) {
 const lastMsg = ()=>[...document.querySelectorAll('.Message:not(.own) .text-content')].map(e=>e.textContent).reverse()[0]
 const chagnedFilterMaker = (init)=>(e )=> e !== init? (init =e): undefined
 const changedFilter = chagnedFilterMaker('')
-const looper = ()=>(say(changedFilter(lastMsg())), 1)
+const looper = ()=>(say(changedFilter(lastMsg())), 1);
 
 (async function() {
     while(looper()) await new Promise(r=>setTimeout(r,1000))
