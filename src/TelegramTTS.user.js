@@ -2,8 +2,8 @@
 // @name               Telegram Speaker
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.1.2
-// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser.
+// @version            0.1.3
+// @descriptiodn        [SNOLAB] Speak latest telegram message With TTS technology just in your browser.
 // @match              https://*.telegram.org/z/
 // @grant              none
 // @run-at             document-start

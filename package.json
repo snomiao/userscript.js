@@ -16,9 +16,7 @@
     "release": "standard-version",
     "gf-import": "tsx builder/greasyfork.ts | clip && echo userscript links copied, please open import page to paste https://greasyfork.org/en/import",
     "postrelease": "git push --follow-tag --all",
-    "test": "",
-    "subtree": "cmd /c start \"\" subtree",
-    "prepare": "husky install"
+    "test": ""
   },
   "repository": {
     "type": "git",
