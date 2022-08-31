@@ -10,6 +10,7 @@
 // @license            GPL-3.0+
 // @supportURL         https://github.com/snomiao/userscript.js/issues
 // @contributionURL    https://snomiao.com/donate
+// @deprecated         Use my new script [SNOLAB] I Heard Telegram Speaking
 // ==/UserScript==
 
 /*
