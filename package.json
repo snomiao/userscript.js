@@ -14,7 +14,7 @@
     "format": "npx -y -- prettier --write .",
     "prerelease": "npm run build && git add .",
     "release": "standard-version",
-    "gf-import": "tsx builder/greasyfork.ts | clip && echo userscript links copied, please open import page to paste https://greasyfork.org/en/import",
+    "gf-import": "tsx builder/greasyfork.ts",
     "postrelease": "git push --follow-tag --all",
     "test": ""
   },
@@ -49,6 +49,7 @@
     "userscript-meta": "^1.0.1"
   },
   "dependencies": {
-    "bookmarklet": "^3.0.0"
+    "bookmarklet": "^3.0.0",
+    "clipboardy": "^3.0.0"
   }
 }
