@@ -45,6 +45,7 @@
     "prettier": "^2.4.1",
     "standard-version": "^9.3.2",
     "terser": "^5.14.2",
+    "tsx": "^3.9.0",
     "userscript-meta": "^1.0.1"
   },
   "dependencies": {

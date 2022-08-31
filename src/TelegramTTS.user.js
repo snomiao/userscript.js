@@ -3,7 +3,7 @@
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
 // @version            0.1.3
-// @descriptiodn        [SNOLAB] Speak latest telegram message With TTS technology just in your browser.
+// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. @deprecated Use my new script [SNOLAB] I Heard Telegram Speaking
 // @match              https://*.telegram.org/z/
 // @grant              none
 // @run-at             document-start
