@@ -16,7 +16,7 @@
     "release": "standard-version",
     "gf-import": "tsx builder/greasyfork.ts",
     "postrelease": "git push --follow-tag --all",
-    "test": "
+    "test": ""
   },
   "repository": {
     "type": "git",

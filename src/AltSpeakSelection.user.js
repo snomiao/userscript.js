@@ -8,4 +8,6 @@
 // @grant           none
 // ==/UserScript==
 
-window.addEventListener('keyup', (e)=>e.key ==='Alt' && (speechSynthesis.cancel(), speechSynthesis.speak(new SpeechSynthesisUtterance(window.getSelection().toString()))))
+window.addEventListener('keyup', (e)=>
+    e.key ==='Alt' && (speechSynthesis.cancel(), speechSynthesis.speak(new SpeechSynthesisUtterance(window.getSelection().toString())))
+)
