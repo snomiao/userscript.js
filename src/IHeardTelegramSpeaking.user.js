@@ -2,7 +2,7 @@
 // @name               [SNOLAB] I Heard Telegram Speaking
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.3.0
+// @version            0.3.1
 // @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message your received 2. Speak what you just send. 3. Send what you saying
 // @match              https://*.telegram.org/z/
 // @grant              none
@@ -61,12 +61,13 @@ async function heard(lang = 'en-US') {
         sr.start();
     });
     console.log("heard", result);
+    if( tgMessageEmptyQ()) await tgMessageInput(result+' //heard')
     await new Promise(r => setTimeout(r, 64));
     return result;
 }
 
 async function messageSendingConfirmed(s = ''){
-    const r = (s.match(/^(?:那就是說|话说|話說|说起来|說起來|你看|呼叫呼叫|CQ CQ|もしもし)(?<msg>.*)$/i)?.groups?.msg)
+    const r = (s.match(/^(话说|話說|你看|呼叫|CQ |もし)(?:\1)(?<msg>.*)$/i)?.groups?.msg)
     if(!r) return;
     await speak('发送 ' + r)
     return r
@@ -115,11 +116,20 @@ function edgeFilter(init) {
 
 async function tgSend(s) {
     if(!s) return;
+    await tgMessageInput(s);
+    await new Promise(r => setTimeout(r, 1e3));
+    document.querySelector('#editable-message-text').dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancellable: true, composed: true, key: "Enter", code: "Enter" }));
+}
+
+function tgMessageEmptyQ() {
+    const content = document.querySelector('#editable-message-text').innerHTML;
+    return content === '' || content.endsWith(' //heard');
+}
+
+async function tgMessageInput(s) {
     document.querySelector('#editable-message-text').innerHTML = s;
     await new Promise(r => setTimeout(r, 1e3));
     document.querySelector('#editable-message-text').dispatchEvent(new InputEvent('input', { bubbles: true, cancellable: false, inputType: 'insertText', composed: true }));
-    await new Promise(r => setTimeout(r, 1e3));
-    document.querySelector('#editable-message-text').dispatchEvent(new KeyboardEvent('keydown', { bubbles: true, cancellable: true, composed: true, key: "Enter", code: "Enter" }));
 }
 
 async function waitFor(cond) {
