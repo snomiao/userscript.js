@@ -3,7 +3,7 @@
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
 // @version            0.4.1
-// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message your received 2. Speak what you just send. 3. Send what you saying
+// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received 2. Speak what you just send. 3. Send what you saying
 // @match              https://*.telegram.org/z/
 // @grant              none
 // @run-at             document-start
