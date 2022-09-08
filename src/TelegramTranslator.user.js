@@ -2,8 +2,8 @@
 // @name               [SNOLAB] Telegram Translator
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.4.1
-// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received 2. Speak what you just send. 3. Send what you saying
+// @version            0.4.2
+// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received in your learning language 2. Speak what you just send in your learning language. 3. Send what you saying in your learning language (for example saying something start with CQ CQ ...).
 // @match              https://*.telegram.org/z/
 // @grant              none
 // @run-at             document-start
@@ -59,9 +59,10 @@
      setCORS('https://cors-google-translate-3whumkxidzs1.runkit.sh/gt/?url=')
      const re = await translate(s, {to: (await userLangGet()).replace(/-.*/g, '')})
      const text = re?.text;
-     state.partnerLang = re?.from?.language?.iso || state.partnerLang // it's zh-CN usually
+     state.partnerLang = re?.from?.language?.iso || state.partnerLang // it's zh-CN for me
      if(!text ) return s
      if(text!==s) console.log('translated from ' + s )
+     if( tgMessageEmptyQ()) await tgMessageInput(text+' //translated')
      return text
  }
  // async function titleLooper(){
@@ -147,7 +148,7 @@
  
  function tgMessageEmptyQ() {
      const content = document.querySelector('#editable-message-text').innerHTML;
-     return content === '' || content.endsWith(' //heard');
+     return content === '' || content.endsWith(' //heard' )  || content.endsWith(' //translated');
  }
  
  async function tgMessageInput(s) {
