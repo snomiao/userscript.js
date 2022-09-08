@@ -59,7 +59,9 @@
      setCORS('https://cors-google-translate-3whumkxidzs1.runkit.sh/gt/?url=')
      const re = await translate(s, {to: (await userLangGet()).replace(/-.*/g, '')})
      const text = re?.text;
-     state.partnerLang = re?.from?.language?.iso || state.partnerLang // it's zh-CN for me
+     const recognizedLang = re?.from?.language?.iso;
+     if(recognizedLang !== state.partnerLang)
+        state.partnerLang = recognizedLang || state.partnerLang // it's zh-CN for me
      if(!text ) return s
      if(text!==s) console.log('translated from ' + s )
      if( tgMessageEmptyQ()) await tgMessageInput(text+' //translated')
