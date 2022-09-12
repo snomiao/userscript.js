@@ -2,7 +2,7 @@
 // @name               [SNOLAB] Telegram Translator
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            0.5.0
+// @version            1.6.0
 // @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received in your learning language 2. Speak what you just send in your learning language. 3. Send what you saying in your learning language (for example saying something start with CQ CQ ...).
 // @match              https://*.telegram.org/z/
 // @grant              none
@@ -26,186 +26,238 @@
  * Feel free to chat with [@snomiao](t.me/snomiao)
  *
  */
-const useTelegramTranslatorState = (initState) => {
-    const got = ((e) => e && JSON.parse(e))(
-        localStorage.getItem("tgTranslatorState")
-    );
-    const state = { ...initState, ...got };
-    return [
-        state,
-        (newState) => {
-            Object.assign(state, newState);
-            localStorage.setItem("tgTranslatorState", JSON.stringify(state));
-            return state;
-        },
-    ];
-};
-const [state, setState] = useTelegramTranslatorState({
-    partnerLang: null,
-    learningLang: null,
-});
-main();
-
-async function main() {
-    if (!globalThis.speechSynthesis)
-        return alert(
-            "unable to access speechSynthesis service, please update your browser"
-        );
-    // polyfill and error detect
-    globalThis.SpeechRecognition =
-        globalThis.SpeechRecognition ||
-        globalThis.webkitSpeechRecognition ||
-        globalThis.mozillaSpeechRecognition;
-    if (!globalThis.SpeechRecognition)
-        return alert(
-            "unable to access speechSynthesis service, please update your browser"
-        );
-    // listeningLooper().then()
-    speakingLooper().then();
-    // speakingMySelfLooper().then()
-    setTimeout(()=> translateLooper().then(), 1e3)
-    // alt+d translate any to learning language
-    window.addEventListener("keydown", async (e) => {
-        if (!AltD(e)) return;
-        e.preventDefault(), e.stopPropagation();
-        const raw = document.querySelector("#editable-message-text").innerHTML;
-        const text = await translated(raw);
-        // translate to learning language
-        await speak(text);
-        await tgMessageInput(text);
+(async function () {
+    const speakingChanged = edgeFilter("");
+    const learningLangs = navigator.languages.slice(0, 2);
+    const transcriptCache = await transcriptCacheCreate();
+    const [state, setState] = useTelegramTranslatorState({
+        partnerLang: null,
+        learningLang: null,
     });
-    // alt+f listen...
-    window.addEventListener("keydown", async (e) => {
-        if (!AltF(e)) return;
-        e.preventDefault(), e.stopPropagation();
-        const text = await new Promise(async (resolve, reject) => {
-            const r = new globalThis.SpeechRecognition();
-            r.lang = await userLangGet();
-            r.onresult = (e) => resolve(e?.results?.[0]?.[0]?.transcript || "");
-            r.onerror = () => setTimeout(() => resolve("/"), 64);
-            r.onaudiostart = async () =>
-                await tgMessageInput(
-                    "Listening... (" + new Date().toISOString() + ")"
-                );
-            r.start();
+
+    main();
+
+    async function main() {
+        if (!globalThis.speechSynthesis)
+            return alert(
+                "unable to access speechSynthesis service, please update your browser"
+            );
+        // polyfill and error detect
+        globalThis.SpeechRecognition =
+            globalThis.SpeechRecognition ||
+            globalThis.webkitSpeechRecognition ||
+            globalThis.mozillaSpeechRecognition;
+        if (!globalThis.SpeechRecognition)
+            return alert(
+                "unable to access speechSynthesis service, please update your browser"
+            );
+        // listeningLooper().then()
+        speakingLooper().then();
+        // speakingMySelfLooper().then()
+        setTimeout(() => translateLooper().then(), 1e3);
+        // alt+d translate any to learning language
+        window.addEventListener("keydown", async (e) => {
+            if (!AltD(e)) return;
+            e.preventDefault(), e.stopPropagation();
+            const raw = document.querySelector(
+                "#editable-message-text"
+            ).innerHTML;
+            const text = await translated(raw);
+            // translate to learning language
+            await tgMessageInput(text);
+            await speak(text);
         });
-        await speak(text);
-        await tgMessageInput(text);
-        const text2 = await translated(text, state.partnerLang);
-        await tgMessageInput(text2 + " (" + text);
-    });
-    // alt+s translate any to partner lang
-    window.addEventListener("keydown", async (e) => {
-        if (!AltS(e)) return;
-        e.preventDefault(), e.stopPropagation();
-        const raw = document.querySelector("#editable-message-text").innerHTML;
-        const text = await translated(raw, state.partnerLang);
-        await tgMessageInput(text);
-    });
-}
+        // alt+f listen...
+        window.addEventListener("keydown", async (e) => {
+            if (!AltF(e)) return;
+            e.preventDefault(), e.stopPropagation();
+            const text = await new Promise(async (resolve, reject) => {
+                const r = new globalThis.SpeechRecognition();
+                r.lang = await userLangGet();
+                r.onresult = (e) =>
+                    resolve(e?.results?.[0]?.[0]?.transcript || "");
+                r.onerror = () => setTimeout(() => resolve("/"), 64);
+                r.onaudiostart = async () =>
+                    await tgMessageInput(
+                        "Listening... (" + new Date().toISOString() + ")"
+                    );
+                r.start();
+            });
+            await tgMessageInput(text);
+            await speak(text);
+            const text2 = await translated(text, state.partnerLang);
+            await tgMessageInput(text2 + " (" + text);
+        });
+        // alt+s translate any to partner lang
+        window.addEventListener("keydown", async (e) => {
+            if (!AltS(e)) return;
+            e.preventDefault(), e.stopPropagation();
+            const raw = document.querySelector(
+                "#editable-message-text"
+            ).innerHTML;
+            const text = await translated(raw, state.partnerLang);
+            await tgMessageInput(text);
+        });
+    }
 
-function AltS(e) {
-    return (
-        e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === "KeyS"
-    );
-}
-function AltF(e) {
-    return (
-        e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === "KeyF"
-    );
-}
-
-function AltD(e) {
-    return (
-        e.altKey && !e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === "KeyD"
-    );
-}
-
-async function listeningLooper() {
-    while (1)
-        await tgSend(
-            await messageSendingConfirmed(await heard(await userLangGet()))
+    function AltS(e) {
+        return (
+            e.altKey &&
+            !e.shiftKey &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            e.code === "KeyS"
         );
-}
-async function speakingLooper() {
-    const changed = edgeFilter("");
-    while (1) {
-        await speak(await translated(changed(latestMessage())));
-        await delay1s();
     }
-}
-// async function speakingMySelfLooper() {
-//    const changed = edgeFilter('')
-//    while (1) {await speak2nd(await translated(changed(latestMyMessage()))); await delay1s()}
-//}
-async function translateLooper() {
-    // const changed = edgeFilter("");
-    while (1) {
-        await messageTranslateNext();
-        await delay100ms();
-        await delay100ms();
-        await delay100ms();
+    function AltF(e) {
+        return (
+            e.altKey &&
+            !e.shiftKey &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            e.code === "KeyF"
+        );
     }
-}
-function isScrolledIntoView(el) {
-    var rect = el.getBoundingClientRect();
-    var elemTop = rect.top;
-    var elemBottom = rect.bottom;
 
-    // Only completely visible elements return true:
-    var isVisible = elemTop >= 0 && elemBottom <= window.innerHeight;
-    // Partially visible elements return true:
-    //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
-    return isVisible;
-}
-async function messageTranslateNext() {
-    const ls = [
-        ...document.querySelectorAll(".Message .text-content"),
-    ].reverse();
-    for await (const e of ls) {
-        if (!e) continue;
-        // console.log('isScrolledIntoView(e)', e.childNodes[0].textContent, isScrolledIntoView(e))
-        if (!isScrolledIntoView(e)) {
-            continue;
+    function AltD(e) {
+        return (
+            e.altKey &&
+            !e.shiftKey &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            e.code === "KeyD"
+        );
+    }
+
+    async function listeningLooper() {
+        while (1)
+            await tgSend(
+                await messageSendingConfirmed(await heard(await userLangGet()))
+            );
+    }
+    async function speakingLooper() {
+        const changed = edgeFilter("");
+        while (1) {
+            await speak(await translated(changed(latestMessage())));
+            await delay1s();
         }
-        if (e.childNodes[0].textContent?.match("\t")) continue;
-        e.childNodes[0].textContent =
-            "\t" +
-            (await translated(e.childNodes[0].textContent)) +
-            "//" +
-            e.childNodes[0].textContent;
-        // await delay1s();
-        break;
     }
-}
+    // async function speakingMySelfLooper() {
+    //    const changed = edgeFilter('')
+    //    while (1) {await speak2nd(await translated(changed(latestMyMessage()))); await delay1s()}
+    //}
+    async function translateLooper() {
+        // const changed = edgeFilter("");
+        while (1) {
+            await messageTranslateNext();
+            await delay1s();
+        }
+    }
+    function isScrolledIntoView(el) {
+        if (!el) return false;
+        var rect = el.getBoundingClientRect();
+        var elemTop = rect.top;
+        var elemBottom = rect.bottom;
 
-async function translated(s, lang = null) {
-    if (!s) return;
-    setState({ learningLang: await userLangGet() });
-    const { translate, setCORS } = await import(
-        "https://cdn.skypack.dev/google-translate-api-browser"
-    );
-    setCORS("https://cors-google-translate-3whumkxidzs1.runkit.sh/gt/?url=");
-    const re = await translate(s, {
-        to: (lang || state.learningLang).replace(/-.*/g, ""),
-    });
-    const text = re?.text;
-    const recognizedLang = re?.from?.language?.iso;
-    const partnerLangIsNotLearningLang = !state.learningLang.startsWith(
-        state.partnerLang
-    );
-    if (recognizedLang !== state.partnerLang && partnerLangIsNotLearningLang) {
-        setState({
-            ...state,
-            partnerLang: recognizedLang || state.partnerLang,
-        }); // it's zh-CN for me
-        console.log("got partner language: ", state.partnerLang);
+        // Only completely visible elements return true:
+        var isVisible = elemTop >= 0 && elemBottom <= window.innerHeight;
+        // Partially visible elements return true:
+        //isVisible = elemTop < window.innerHeight && elemBottom >= 0;
+        return isVisible;
     }
-    if (!text) return s;
-    if (text !== s) console.log("translated from " + s);
-    // if( tgMessageEmptyQ()) await tgMessageInput(text+' //translated')
-    return text;
-}
+    async function messageTranslateNext() {
+        const ls = [
+            document.querySelector(
+                ".EmbeddedMessage.inside-input .message-text p"
+            ),
+            ...[
+                ,
+                ...document.querySelectorAll(".Message .text-content"),
+            ].reverse(),
+        ].filter((e) => e);
+        for await (const e of ls) {
+            if (!e) continue;
+            if (!isScrolledIntoView(e)) continue;
+            if (e.childNodes[0].textContent?.match("\t")) continue;
+            const transcript = await translated(e.childNodes[0].textContent);
+            e.childNodes[0].textContent =
+                "\t" + transcript + " (" + e.childNodes[0].textContent;
+            await speak(transcript);
+            // await delay1s();
+            break;
+        }
+    }
+
+    async function translated(s, lang = null) {
+        if (!s) return;
+
+        setState({ learningLang: await userLangGet() });
+
+        const to = (lang || state.learningLang).replace(/-.*/g, "");
+        const cachedTranscript = await transcriptCache?.getItem(
+            JSON.stringify({ s, to })
+        );
+        if (cachedTranscript) return cachedTranscript;
+
+        const { translate, setCORS } = await import(
+            "https://cdn.skypack.dev/google-translate-api-browser"
+        );
+        setCORS(
+            "https://cors-google-translate-3whumkxidzs1.runkit.sh/gt/?url="
+        );
+        return await translate(s, { to })
+            .then(async (re) => {
+                const text = re?.text;
+                const recognizedLang = re?.from?.language?.iso;
+                const partnerLangIsNotLearningLang =
+                    !state.learningLang.startsWith(recognizedLang);
+                if (
+                    recognizedLang !== state.partnerLang &&
+                    partnerLangIsNotLearningLang
+                ) {
+                    setState({
+                        ...state,
+                        partnerLang: recognizedLang || state.partnerLang,
+                    }); // it's zh-CN for me
+                    console.log("got partner language: ", state.partnerLang);
+                }
+                if (!text) return s;
+                if (text !== s) console.log("translated from " + s);
+                // if( tgMessageEmptyQ()) await tgMessageInput(text+' //translated')
+                await transcriptCache?.setItem(JSON.stringify({ s, to }), text);
+                return text;
+            })
+            .catch((error) => console.error(error));
+    }
+    async function speak(s, { lang = null, wait = true, force = true } = {}) {
+        if (!s) return; // console.error('say empty msg')
+    
+        s = s.replace(/https?:\S*/g, ""); // remove links
+        console.log("saying " + s);
+        await waitFor(voicesAvailiable);
+    
+        if (speechSynthesis.speaking && force) speechSynthesis.cancel();
+        return await new Promise(async (resolve, reject) => {
+            const utter = new SpeechSynthesisUtterance(s);
+            if (lang) {
+                utter.lang = lang;
+            } else {
+                utter.voice = await userVoiceGet();
+            }
+            const slow = !Boolean(speakingChanged(s));
+    
+            utter.rate = slow
+                ? 0.6
+                : Math.min(Math.max(0.6, 60 / (s.length + 1)), 1);
+    
+            utter.onend = resolve;
+            utter.onerror = reject;
+            speechSynthesis.speak(utter);
+            if (!wait) resolve();
+        });
+    }
+    
+})();
 // async function titleLooper(){
 //     const titleGet = ()=>document.querySelector('.selected h3').innerHTML
 //     const titleUpdate = (t)=>t&&
@@ -241,18 +293,6 @@ async function messageSendingConfirmed(s = "") {
     return r;
 }
 
-async function speak(s) {
-    if (!s) return; // console.error('say empty msg')
-
-    console.log("saying " + s);
-    await waitFor(voicesAvailiable);
-
-    const utter = new SpeechSynthesisUtterance(s);
-    utter.voice = await userVoiceGet();
-    utter.rate = Math.min(Math.max(1, s.length / 60), 4);
-    if (speechSynthesis.speaking) speechSynthesis.cancel();
-    speechSynthesis.speak(utter);
-}
 
 async function speak2nd(s) {
     if (!s) return; // console.error('say empty msg')
@@ -314,7 +354,7 @@ function tgMessageEmptyQ() {
     );
 }
 
-async function tgMessageInput(s='') {
+async function tgMessageInput(s = "") {
     document.querySelector("#editable-message-text").innerHTML = s;
     await new Promise((r) => setTimeout(r, 1e3));
     document.querySelector("#editable-message-text").dispatchEvent(
@@ -361,4 +401,30 @@ async function voicesForUserLang() {
         )
         .flat();
     // return globalThis.speechSynthesis.getVoices().filter(({ lang }) => navigator.languages.find(nlang => lang.startsWith(nlang))).reverse();
+}
+
+function useTelegramTranslatorState(initState) {
+    const got = ((e) => e && JSON.parse(e))(
+        localStorage.getItem("tgTranslatorState")
+    );
+    const state = { ...initState, ...got };
+    return [
+        state,
+        (newState) => {
+            console.log("useTelegramTranslatorState - setState", newState);
+            Object.assign(state, newState);
+            localStorage.setItem("tgTranslatorState", JSON.stringify(state));
+            return state;
+        },
+    ];
+}
+async function transcriptCacheCreate() {
+    const { default: cache } = await import(
+        "https://cdn.skypack.dev/@luudjanssen/localforage-cache"
+    );
+    const transcriptCache = cache.createInstance({
+        name: "tg-msg-transcripts",
+        defaultExpiration: 86400e3 * 3, // 3 day
+    });
+    return transcriptCache;
 }
