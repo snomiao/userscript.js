@@ -2,7 +2,7 @@
 // @name         [SNOLAB] [Mulango] myTyping Game Translator
 // @namespace    https://userscript.snomiao.com/
 // @author       snomiao@gmail.com
-// @version      0.1.0
+// @version      0.1.1
 // @description  [SNOLAB] [Mulango] Translate Japenese to the second language of your browser.
 // @match        https://typing.twi1.me/game/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=twi1.me
@@ -41,7 +41,7 @@ while (1) {
         e.appendChild(
             Object.assign(document.createElement("div"), {
                 innerHTML: await translate(
-                    e.childNodes[0].textContent,
+                    e?.childNodes?.[0]?.textContent,
                     navigator.languages[1]
                 ),
                 style,
