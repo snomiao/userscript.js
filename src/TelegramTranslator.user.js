@@ -11,7 +11,7 @@
 // @supportURL         https://github.com/snomiao/userscript.js/issues
 // @contributionURL    https://snomiao.com/donate
 // ==/UserScript==
-
+// TODO 写份使用说明
 /**
  *
  * Set your browser lang to your learning language.
@@ -231,11 +231,11 @@
     }
     async function speak(s, { lang = null, wait = true, force = true } = {}) {
         if (!s) return; // console.error('say empty msg')
-    
+
         s = s.replace(/https?:\S*/g, ""); // remove links
         console.log("saying " + s);
         await waitFor(voicesAvailiable);
-    
+
         if (speechSynthesis.speaking && force) speechSynthesis.cancel();
         return await new Promise(async (resolve, reject) => {
             const utter = new SpeechSynthesisUtterance(s);
@@ -245,18 +245,17 @@
                 utter.voice = await userVoiceGet();
             }
             const slow = !Boolean(speakingChanged(s));
-    
+
             utter.rate = slow
                 ? 0.6
                 : Math.min(Math.max(0.6, 60 / (s.length + 1)), 1);
-    
+
             utter.onend = resolve;
             utter.onerror = reject;
             speechSynthesis.speak(utter);
             if (!wait) resolve();
         });
     }
-    
 })();
 // async function titleLooper(){
 //     const titleGet = ()=>document.querySelector('.selected h3').innerHTML
@@ -292,7 +291,6 @@ async function messageSendingConfirmed(s = "") {
     await speak("发送 " + r);
     return r;
 }
-
 
 async function speak2nd(s) {
     if (!s) return; // console.error('say empty msg')
