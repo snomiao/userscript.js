@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         [SNOLAB] myTyping Game Translator
+// @name         [SNOLAB] [Mulango] myTyping Game Translator
 // @namespace    https://userscript.snomiao.com/
 // @author       snomiao@gmail.com
 // @version      0.1.0
-// @description  Translate Japenese to the second language of your browser.
+// @description  [SNOLAB] [Mulango] Translate Japenese to the second language of your browser.
 // @match        https://typing.twi1.me/game/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=twi1.me
 // @grant        none
