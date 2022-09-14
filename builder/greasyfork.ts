@@ -4,7 +4,7 @@ import { globby } from 'globby';
 import { promisify } from 'util';
 
 const scripts = await globby('**/*.user.js');
-// | clip
+
 const out = await Promise.all(
     scripts.map((path) => {
         return encodeURI(
