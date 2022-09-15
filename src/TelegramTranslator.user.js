@@ -310,17 +310,17 @@ function voicesAvailiable() {
 }
 function latestMessage() {
     return [...document.querySelectorAll(".Message .text-content")]
-        .map((e) => e.textContent)
+        .map((e) => e.childNodes[0].textContent) // text node
         .reverse()[0];
 }
 function latestPartnerMessage() {
     return [...document.querySelectorAll(".Message:not(.own) .text-content")]
-        .map((e) => e.textContent)
+        .map((e) => e.childNodes[0].textContent) // text node
         .reverse()[0];
 }
 function latestMyMessage() {
     return [...document.querySelectorAll(".Message.own .text-content")]
-        .map((e) => e.textContent)
+        .map((e) => e.childNodes[0].textContent) // text node
         .reverse()[0];
 }
 
