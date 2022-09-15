@@ -34,21 +34,26 @@
     while (1) {
         const e = document.querySelector(".mtjGmSc-kanji");
         if (e && changed(e.childNodes[0].textContent)) {
+            document.querySelector(".mtjGmSc-kana").style = "color: #DDD";
+            document.querySelector(".mtjGmSc-roma").style = "display: none";
             const style =
-                "width: 100%;text-align: center;margin-bottom: -1.1em;background: white;position: relative;z-index: 1;";
+                "width: 100%;text-align: center;background: white;position: relative;z-index: 1;";
+            // margin-bottom: -1.1em;
             e.children[0] && e.removeChild(e.children[0]);
             e.appendChild(
                 Object.assign(document.createElement("div"), {
                     innerHTML: e.childNodes[0].textContent,
+                    style,
                 })
+            );
+            const transcript = await translate(
+                e?.childNodes?.[0]?.textContent,
+                navigator.languages[1]
             );
             e.children[0] && e.removeChild(e.children[0]);
             e.appendChild(
                 Object.assign(document.createElement("div"), {
-                    innerHTML: await translate(
-                        e?.childNodes?.[0]?.textContent,
-                        navigator.languages[1]
-                    ),
+                    innerHTML: transcript,
                     style,
                 })
             );
