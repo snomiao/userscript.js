@@ -14,9 +14,9 @@
  */
 
 (async function () {
-    const edgeFilter = (init) => (e) => e !== init ? (init = e) : undefined;
+    const cached = await localforageCache("transcript");
     const translate = await translator(navigator.languages[1]);
-
+    const cachedTranslate = async (s) => await cached(s, translate);
     questionsLoop().then();
     typingLoop().then();
 
@@ -26,7 +26,7 @@
                 ".questions .kanji:not(.translated)"
             );
             if (e) {
-                const transcript = await translate(e.textContent);
+                const transcript = await cachedTranslate(e.textContent);
                 e.classList.add("translated");
                 e.textContent = transcript;
             }
@@ -43,7 +43,7 @@
                 document.querySelector(".mtjGmSc-roma").style = "display: none";
                 const textContent = e?.childNodes?.[0]?.textContent;
                 kanjiAppend(e, textContent);
-                const transcript = await translate(textContent);
+                const transcript = await cachedTranslate(textContent);
                 kanjiAppend(e, transcript);
             }
             await new Promise((r) => setTimeout(r, 32)); // TODO: upgrade this into Observer Object
@@ -80,14 +80,18 @@ async function localforageCache(name = "cache") {
         return result;
     }
 }
-async function translator(lang = navigator.language) {
+async function translator(initLang = navigator.language) {
     const { translate, setCORS } = await import(
         "https://cdn.skypack.dev/google-translate-api-browser"
     );
     setCORS("https://cors-google-translate-3whumkxidzs1.runkit.sh/gt/?url=");
-    return async (s) =>
+    return async (s, lang = initLang) =>
         s &&
         (await translate(s, { to: lang.replace(/-.*/, "") })
             .then((e) => e.text)
             .catch((e) => console.error(e)));
+}
+
+function edgeFilter(init) {
+    return (e) => (e !== init ? (init = e) : undefined);
 }
