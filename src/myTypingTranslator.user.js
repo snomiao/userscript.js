@@ -74,7 +74,7 @@ async function localforageCache(name = "cache") {
     return cached;
     async function cached(key, fn) {
         const result =
-            (await transcriptCache?.getItem(JSON.stringify(key))) ||
+            (await cacheInstance?.getItem(JSON.stringify(key))) ||
             (await fn(key));
         await cacheInstance?.setItem(JSON.stringify(key), result); //refresh cache
         return result;
