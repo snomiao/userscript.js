@@ -29,7 +29,7 @@
 (async function () {
     const speakingChanged = edgeFilter("");
     const learningLangs = navigator.languages.slice(0, 2);
-    const transcriptCache = await transcriptCacheCreate();
+    const transcriptCache = await localforageCache();
     const [state, setState] = useTelegramTranslatorState({
         partnerLang: null,
         learningLang: null,
@@ -416,7 +416,7 @@ function useTelegramTranslatorState(initState) {
         },
     ];
 }
-async function transcriptCacheCreate() {
+async function localforageCache() {
     const { default: cache } = await import(
         "https://cdn.skypack.dev/@luudjanssen/localforage-cache"
     );
