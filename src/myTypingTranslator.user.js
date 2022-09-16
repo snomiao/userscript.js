@@ -28,7 +28,7 @@
             if (e) {
                 const transcript = await cachedTranslate(e.textContent);
                 e.classList.add("translated");
-                e.textContent = transcript;
+                e.textContent = e.textContent + " (" + transcript;
             }
             await new Promise((r) => setTimeout(r, 2e3)); // TODO: upgrade this into Observer Object
         }
