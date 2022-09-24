@@ -113,16 +113,20 @@ async function localforageCache(name = "cache") {
 }
 async function translator(initLang = navigator.language) {
     const translate = (
-        await import("https://cdn.skypack.dev/google-translate-api-browser")
-    ).setCORS("https://google-translate-cors.vercel.app/api?url=");
-    let t = 0;
+        await import(
+            "https://cdn.skypack.dev/@snomiao/google-translate-api-browser"
+        )
+    ).setCORS("https://google-translate-cors.vercel.app/api?url=", {
+        encode: true,
+    });
 
+    let lastTranslate = 0;
     return async (s, lang = initLang) => {
         if (!s) return;
         // wait 1s since last translate
-        while (+new Date() - t < 1e3)
+        while (+new Date() - lastTranslate < 1e3)
             await new Promise((r) => setTimeout(r, 2e3));
-        t = +new Date();
+        lastTranslate = +new Date();
         return await translate(s, { to: lang.replace(/-.*/, "") })
             .then((e) => e.text)
             .catch((e) => console.error(e));

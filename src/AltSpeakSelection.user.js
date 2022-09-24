@@ -23,9 +23,13 @@
             return;
         e.preventDefault(), e.stopPropagation();
 
-        const googleTranslate = (
-            await import("https://cdn.skypack.dev/google-translate-api-browser")
-        ).setCORS("https://google-translate-cors.vercel.app/api?url=");
+        const translate = (
+            await import(
+                "https://cdn.skypack.dev/@snomiao/google-translate-api-browser"
+            )
+        ).setCORS("https://google-translate-cors.vercel.app/api?url=", {
+            encode: true,
+        });
 
         const text = window.getSelection().toString();
         if (!text) return; // no selection
@@ -35,7 +39,7 @@
                 (await transcriptCache.getItem(
                     JSON.stringify({ text, lang })
                 )) ||
-                (await googleTranslate(text, {
+                (await translate(text, {
                     to: lang.replace(/-.*/g, ""),
                 })
                     .then((e) => e.text)

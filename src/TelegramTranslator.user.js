@@ -200,8 +200,12 @@
         if (cachedTranscript) return cachedTranscript;
 
         const translate = (
-            await import("https://cdn.skypack.dev/google-translate-api-browser")
-        ).setCORS("https://google-translate-cors.vercel.app/api?url=");
+            await import(
+                "https://cdn.skypack.dev/@snomiao/google-translate-api-browser"
+            )
+        ).setCORS("https://google-translate-cors.vercel.app/api?url=", {
+            encode: true,
+        });
         return await translate(s, { to })
             .then(async (re) => {
                 const text = re?.text;
