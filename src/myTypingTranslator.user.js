@@ -112,11 +112,9 @@ async function localforageCache(name = "cache") {
     }
 }
 async function translator(initLang = navigator.language) {
-    const { translate, setCORS } = await import(
-        "https://cdn.skypack.dev/google-translate-api-browser"
-    );
-    // setCORS("https://cors-google-translate-3whumkxidzs1.runkit.sh/gt/?url=");
-    setCORS("https://google-translate-cors.vercel.app/api?url=");
+    const translate = (
+        await import("https://cdn.skypack.dev/google-translate-api-browser")
+    ).setCORS("https://google-translate-cors.vercel.app/api?url=");
     let t = 0;
 
     return async (s, lang = initLang) => {

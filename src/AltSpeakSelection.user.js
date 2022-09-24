@@ -23,12 +23,9 @@
             return;
         e.preventDefault(), e.stopPropagation();
 
-        const { translate: googleTranslate, setCORS } = await import(
-            "https://cdn.skypack.dev/google-translate-api-browser"
-        );
-        setCORS(
-            "https://cors-google-translate-3whumkxidzs1.runkit.sh/gt/?url="
-        );
+        const googleTranslate = (
+            await import("https://cdn.skypack.dev/google-translate-api-browser")
+        ).setCORS("https://google-translate-cors.vercel.app/api?url=");
 
         const text = window.getSelection().toString();
         if (!text) return; // no selection
