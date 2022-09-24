@@ -3,7 +3,7 @@
 // @name:zh            谷歌多语言搜索 en/zh
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            1.0.0
+// @version            1.0.1
 // @description        [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
 // @description:zh     [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
 // @match              https://*.google.com/search?*
@@ -18,28 +18,10 @@
 // @grant   GM_setValue
 // ==/UserScript==
 
-// const introURL =
-//     'https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text/';
-// // [Microsoft Translator Text API Documentation (microsoft-azure-org-microsoft-cognitive-services) | RapidAPI]( ${introURL} )
-// const introPrompt = `
-// 1. I will open ${introURL} for you.
-//     1. Sign up or login
-//     2. Go to Endpoints tab
-//     3. Click Subscribe to Test
-// 2. Copy your API key
-//     5. Close the page
-//     3. Come back
-// 3. paste API Key in prompt
-// 4. OK
-// `.trim();
-
 (async function () {
     if (!location.hostname.match(/google|bing/)) return;
     if (parent !== window) return iframeSetup();
     iframeHeightReceiverSetup();
-    //
-    // const rapidAPIKey = (globalThis.rapidAPIKey = await rapidAPIKeyLoad());
-    // if (!rapidAPIKey) throw new Error('no rapid api key');
     const searchLinks = await mulangoSearchLinksFetch();
     searchLinks.length && mulangoPageReplace(searchLinks);
 })();
@@ -91,12 +73,11 @@ async function mulangoSearchLinksFetch() {
     const query = url.searchParams.get("q") || "";
     if (!query) return [];
     const result = await bilangTranslate(query);
-    const searchLinks = result.flatMap((e) =>
-        e.translations.map((t) => {
-            const u2 = new URL(url.href);
-            return u2.searchParams.set("q", t.text), u2.href;
-        })
-    );
+    const searchLinks = result.map((t) => {
+        const u2 = new URL(url.href);
+        u2.searchParams.set("q", t);
+        return u2.href;
+    });
     return searchLinks;
 }
 async function bilangTranslate(s) {
@@ -107,10 +88,6 @@ async function bilangTranslate(s) {
     ).setCORS("https://google-translate-cors.vercel.app/api?url=", {
         encode: true,
     });
-    // const { translate } = await import("https://cdn.skypack.dev/snotran");
-    await translate('give me a try', { to: "zh" })
-            .then((e) => e.text)
-            .catch(console.error)
     return [
         await translate(s, { to: "zh" })
             .then((e) => e.text)
@@ -120,79 +97,3 @@ async function bilangTranslate(s) {
             .catch(console.error),
     ].filter((e) => e);
 }
-
-// async function bingTranslate(text = 'hello, world') {
-//     const body = JSON.stringify([{ Text: text }]);
-//     const exampleResponse = [
-//         {
-//             detectedLanguage: {
-//                 language: 'en',
-//                 score: 1,
-//             },
-//             translations: [
-//                 {
-//                     text: '我真的很想把你的车开几个圈。',
-//                     to: 'zh-Hans',
-//                 },
-//                 {
-//                     text: 'I would really like to drive your car around the block a few times.',
-//                     to: 'en',
-//                 },
-//             ],
-//         },
-//     ];
-//     const rak = await rakGet();
-//     if (!rak) throw new Error('no rapid api key is found');
-//     const response = await fetch(
-//         'https://microsoft-translator-text.p.rapidapi.com/translate?to%5B0%5D=zh%2Cen&api-version=3.0&profanityAction=NoAction&textType=plain',
-//         {
-//             method: 'POST',
-//             headers: {
-//                 'content-type': 'application/json',
-//                 'X-RapidAPI-Key': rak,
-//                 'X-RapidAPI-Host': 'microsoft-translator-text.p.rapidapi.com',
-//             },
-//             body,
-//         }
-//     )
-//         .then((r) => r.json())
-//         .catch(async (e) => await rapidAPIKeyLoadNew('error: ' + e.message));
-//     return response /* as exampleResponse */;
-// }
-
-// async function rapidAPIKeyLoad() {
-//     return (await rakGet()) || (await rapidAPIKeyLoadNew());
-// }
-// async function rapidAPIKeyLoadNew(msg = '') {
-//     alert(introPrompt);
-//     const w = window.open(
-//         introURL,
-//         'google-multilang-user-js-rapidAPIKey',
-//         'width=1024,height=768'
-//     );
-//     await new Promise((r) => {
-//         let id = setInterval(() => w.closed && (r(), clearInterval(id)));
-//     });
-//     return (
-//         await rakSet(
-//             prompt((msg + '\n' + introPrompt).trim(), await rakGet()) || await rakGet() || ''
-//         ),
-//         await rakGet()
-//     );
-// }
-
-// async function rakGet() {
-//     return (
-//         (await globalThis.GM_getValue?.('rapidAPIKey', '')) ||
-//         localStorage.getItem('rapidAPIKey')
-//     )?.replace(/^null$/, '');
-// }
-// async function rakSet(v = '') {
-//     return (
-//         (await (globalThis.GM_setValue &&
-//             ((await globalThis.GM_setValue('rapidAPIKey', v || '')) ||
-//                 true))) ||
-//         localStorage.setItem('rapidAPIKey', v || '') ||
-//         true
-//     );
-// }
