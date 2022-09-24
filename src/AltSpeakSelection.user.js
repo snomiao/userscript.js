@@ -10,7 +10,6 @@
 
 (async function () {
     const transcriptCache = await transcriptCacheCreate();
-
     window.addEventListener("keyup", async (e) => {
         if (
             !(
