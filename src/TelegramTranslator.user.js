@@ -1,9 +1,10 @@
 // ==UserScript==
-// @name               [SNOLAB] Telegram Translator
+// @name               [SNOLAB] [Mulango] Telegram Translator
+// @name:zh            [SNOLAB] [Mulango] 电报译者
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            1.6.0
-// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received in your learning language 2. Speak what you just send in your learning language. 3. Send what you saying in your learning language (for example saying something start with CQ CQ ...).
+// @version            1.6.1
+// @description        [SNOLAB] [Mulango] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received in your learning language 2. Speak what you just send in your learning language. 3. Send what you saying in your learning language (for example saying something start with CQ CQ ...).
 // @match              https://*.telegram.org/z/
 // @grant              none
 // @run-at             document-start
@@ -29,7 +30,7 @@
 (async function () {
     const speakingChanged = edgeFilter("");
     const learningLangs = navigator.languages.slice(0, 2);
-    const transcriptCache = await localforageCache();
+    const transcriptCache = await localforageCached();
     const [state, setState] = useTelegramTranslatorState({
         partnerLang: null,
         learningLang: null,
@@ -417,7 +418,7 @@ function useTelegramTranslatorState(initState) {
         },
     ];
 }
-async function localforageCache() {
+async function localforageCached() {
     const { default: cache } = await import(
         "https://cdn.skypack.dev/@luudjanssen/localforage-cache"
     );

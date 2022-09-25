@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name            Alt Speak Translator
-// @description     Press Alt to Speak currently Selection.
+// @name            [SNOLAB] [Mulango] Alt Speak Translator
+// @description     [SNOLAB] [Mulango] Press Alt to Speak currently Selection.
 // @namespace       https://userscript.snomiao.com/
-// @version         0.1.2
+// @version         0.1.3
 // @author          snomiao@gmail.com
 // @match           *://*/*
 // @grant           none

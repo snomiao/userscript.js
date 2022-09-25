@@ -14,27 +14,10 @@
  */
 
 (async function () {
-    const cached = await localforageCache("transcript");
-    const translate = await translator(navigator.languages[1]);
-    const speaked = async (text) => (
-        speechSynthesis.speak(
-            Object.assign(new SpeechSynthesisUtterance(), { text })
-        ),
-        text
-    );
-    const speakAndTranslate = async (s) =>
-        await cachedTranslate(await speaked(s));
+    const translate = await useTranslator(navigator.languages[1]);
     questionsLoop().then();
+    questionsLoopZhAlt().then();
     typingLoop().then();
-
-    async function cachedTranslate(s) {
-        return await cached(s, translate);
-    }
-    async function cachedTranslateEx({ s, lang }) {
-        return lang
-            ? await cached({ s, lang }, ({ s, lang }) => translate(s, lang))
-            : await cached(s, translate);
-    }
 
     async function questionsLoop() {
         while (1) {
@@ -42,17 +25,26 @@
                 ".questions .kanji:not(.translated)"
             );
             if (e) {
-                const transcript = await cachedTranslate(e.textContent);
+                e.classList.add("translated");
+                const transcript = await translate(e.textContent);
                 e.innerHTML = e.innerHTML + "\t(" + transcript;
-                // const ts2 = await cachedTranslateEx({
-                //     s: e.textContent,
-                //     lang: "zh-CN",
-                // });
-                // e.classList.add("translated");
-                // e.setAttribute("title", ts2);
                 continue;
             }
             await new Promise((r) => setTimeout(r, 32)); // TODO: upgrade this into Observer Object
+        }
+    }
+    async function questionsLoopZhAlt() {
+        while (1) {
+            const e = document.querySelector(
+                ".questions .kanji.translated:not(.translatedzh)" // translate users' lang first
+            );
+            if (e) {
+                e.classList.add("translatedzh");
+                const ts2 = await translate(e.textContent, "zh");
+                e.setAttribute("title", ts2);
+                continue;
+            }
+            await new Promise((r) => setTimeout(r, 48)); // TODO: upgrade this into Observer Object
         }
     }
     async function typingLoop() {
@@ -94,45 +86,69 @@ async function kanjiSuffixReplace(e, transcript) {
     await new Promise((r) => setTimeout(r, 1));
 }
 
-async function localforageCache(name = "cache") {
-    const { default: cache } = await import(
-        "https://cdn.skypack.dev/@luudjanssen/localforage-cache"
-    );
-    const cacheInstance = cache.createInstance({
-        name,
-        defaultExpiration: 86400e3 * 3, // 3 day
-    });
-    return cached;
-    async function cached(key, fn) {
-        const result =
-            (await cacheInstance?.getItem(JSON.stringify(key))) ||
-            (await fn(key));
-        await cacheInstance?.setItem(JSON.stringify(key), result); //refresh cache
-        return result;
-    }
-}
-async function translator(initLang = navigator.language) {
-    const translate = (
+async function useTranslator(initLang = navigator.language) {
+    const translateAPI = (
         await import(
             "https://cdn.skypack.dev/@snomiao/google-translate-api-browser"
         )
     ).setCORS("https://google-translate-cors.vercel.app/api?url=", {
         encode: true,
     });
-
-    let lastTranslate = 0;
-    return async (s, lang = initLang) => {
+    const translate = async (s, lang = initLang) => {
         if (!s) return;
-        // wait 1s since last translate
-        while (+new Date() - lastTranslate < 1e3)
-            await new Promise((r) => setTimeout(r, 2e3));
-        lastTranslate = +new Date();
-        return await translate(s, { to: lang.replace(/-.*/, "") })
+        return await translateAPI(s, { to: lang.replace(/-.*/, "") })
             .then((e) => e.text)
-            .catch((e) => console.error(e));
+            .catch(console.error);
+    };
+    return localforageCached(limiter(translate, 1e3));
+}
+function validPipor(fn) {
+    // requires the first param is not undefined otherwise return the undefined
+    return (s, ...args) => (s === undefined ? undefined : fn(s, ...args));
+}
+function limiter(fn, wait = 1e3, last = 0) {
+    return async (...args) => {
+        const remain = last + wait - +new Date();
+        while (remain > 0) await new Promise((r) => setTimeout(r, remain));
+        const r = await fn(...args);
+        last = +new Date();
+        return r;
     };
 }
-
 function edgeFilter(init) {
     return (e) => (e !== init ? (init = e) : undefined);
+}
+
+async function localforageCached(fn) {
+    const hash = (s) => s.slice(0, 16) + s.slice(-16);
+    const { default: cache } = await import(
+        "https://cdn.skypack.dev/@luudjanssen/localforage-cache"
+    );
+    const in3day = 86400e3 * 3;
+    const cacheName = hash(String(fn));
+    const cacheInstance = cache.createInstance({
+        name: cacheName,
+        defaultExpiration: in3day,
+    });
+    return validPipor(cachedFn);
+    async function cachedFn(...args) {
+        const result =
+            (await cacheInstance?.getItem(JSON.stringify(args))) ||
+            (await fn(...args));
+        await cacheInstance?.setItem(JSON.stringify(args), result); //refresh cache
+        return result;
+    }
+}
+
+async function speaked(text) {
+    return (
+        speechSynthesis.speak(
+            Object.assign(new SpeechSynthesisUtterance(), { text, lang: "ja" })
+        ),
+        text
+    );
+}
+
+async function speakAndTranslate(s) {
+    return await translate(await speaked(s));
 }
