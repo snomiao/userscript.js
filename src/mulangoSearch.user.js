@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name               [SNOLAB] Mulango Search
-// @name:zh            [SNOLAB] Mulango 多语言搜索
+// @name               [SNOLAB] [Mulango] Search
+// @name:zh            [SNOLAB] [Mulango] 多语言搜索
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
 // @version            1.0.2

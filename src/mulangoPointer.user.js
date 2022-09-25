@@ -3,7 +3,7 @@
 // @name:zh            [SNOLAB] [Mulango] 点读笔
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            1.0.2
+// @version            1.0.3
 // @description        [SNOLAB] Mulango Point Speaker, 按 alt+t 翻译鼠标所在元素到浏览器第二语言
 // @description:zh     [SNOLAB] Mulango 点读笔, 按 alt+t 翻译鼠标所在元素到浏览器第二语言
 // @match              https://*.google.com/search?*
@@ -94,8 +94,8 @@ function validPipor(fn) {
 }
 function limiter(fn, wait = 1e3, last = 0) {
     return async (...args) => {
-        const remain = last + wait - +new Date();
-        while (remain > 0) await new Promise((r) => setTimeout(r, remain));
+        const remain = () => last + wait - +new Date();
+        while (remain() > 0) await new Promise((r) => setTimeout(r, remain()));
         const r = await fn(...args);
         last = +new Date();
         return r;

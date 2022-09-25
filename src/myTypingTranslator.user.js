@@ -2,7 +2,7 @@
 // @name         [SNOLAB] [Mulango] myTyping Game Translator
 // @namespace    https://userscript.snomiao.com/
 // @author       snomiao@gmail.com
-// @version      0.1.1
+// @version      0.2.1
 // @description  [SNOLAB] [Mulango] Translate Japenese to the second language of your browser.
 // @match        https://typing.twi1.me/game/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=twi1.me
@@ -16,14 +16,13 @@
 (async function () {
     const translate = await useTranslator(navigator.languages[1]);
     questionsLoop().then();
-    questionsLoopZhAlt().then();
+    questionsLoopZh().then();
     typingLoop().then();
 
     async function questionsLoop() {
         while (1) {
-            const e = document.querySelector(
-                ".questions .kanji:not(.translated)"
-            );
+            const cls = ".questions .kanji:not(.translated)";
+            const e = document.querySelector(cls);
             if (e) {
                 e.classList.add("translated");
                 const transcript = await translate(e.textContent);
@@ -33,11 +32,10 @@
             await new Promise((r) => setTimeout(r, 32)); // TODO: upgrade this into Observer Object
         }
     }
-    async function questionsLoopZhAlt() {
+    async function questionsLoopZh() {
         while (1) {
-            const e = document.querySelector(
-                ".questions .kanji.translated:not(.translatedzh)" // translate users' lang first
-            );
+            const sel = ".questions .kanji.translated:not(.translatedzh)"; // translate users' lang first
+            const e = document.querySelector(sel);
             if (e) {
                 e.classList.add("translatedzh");
                 const ts2 = await translate(e.textContent, "zh");
@@ -108,8 +106,8 @@ function validPipor(fn) {
 }
 function limiter(fn, wait = 1e3, last = 0) {
     return async (...args) => {
-        const remain = last + wait - +new Date();
-        while (remain > 0) await new Promise((r) => setTimeout(r, remain));
+        const remain = () => last + wait - +new Date();
+        while (remain() > 0) await new Promise((r) => setTimeout(r, remain()));
         const r = await fn(...args);
         last = +new Date();
         return r;
