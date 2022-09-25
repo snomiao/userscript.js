@@ -4,8 +4,8 @@
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
 // @version            1.0.2
-// @description        [SNOLAB] Mulango Point Speaker
-// @description:zh     [SNOLAB] Mulango 点读笔
+// @description        [SNOLAB] Mulango Point Speaker, 按 alt+t 翻译鼠标所在元素到浏览器第二语言
+// @description:zh     [SNOLAB] Mulango 点读笔, 按 alt+t 翻译鼠标所在元素到浏览器第二语言
 // @match              https://*.google.com/search?*
 // @match              https://*.bing.com/search?*
 // @match              https://*/search*
