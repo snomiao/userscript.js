@@ -42,41 +42,40 @@
                 e.setAttribute("title", ts2);
                 continue;
             }
-            await new Promise((r) => setTimeout(r, 48)); // TODO: upgrade this into Observer Object
+            await new Promise((r) => setTimeout(r, 100)); // TODO: upgrade this into Observer Object
         }
     }
     async function typingLoop() {
         const changed = edgeFilter("");
         while (1) {
             const e = document.querySelector(".mtjGmSc-kanji");
-            if (e && changed(e.childNodes[0].textContent)) {
+            if (e && !translated(e) && changed(e.textContent)) {
                 document.querySelector(".mtjGmSc-kana").style = "color: #DDD";
                 document.querySelector(".mtjGmSc-roma").style = "display: none";
                 const textContent = e?.childNodes?.[0]?.textContent;
-                await kanjiSuffixReplace(e, textContent);
+                await kanjiTranscriptReplace(e, textContent);
                 const transcript = await speakAndTranslate(textContent);
-                await kanjiSuffixReplace(e, transcript);
-                // const transcript2 = await cachedTranslateEx({
-                //     s: textContent,
-                //     lang: "zh-CN",
-                // });
-                // await kanjiSuffixReplace(
-                //     e,
-                //     transcript + "<br />" + transcript2
-                // );
+                await kanjiTranscriptReplace(e, transcript);
             }
-            await new Promise((r) => setTimeout(r, 32)); // TODO: upgrade this into Observer Object
+            await new Promise((r) => setTimeout(r, 100)); // TODO: upgrade this into Observer Object
         }
+
+        function translated(e) {
+            return e.querySelector(".kanji-transcript");
+        }
+    }
+    async function speakAndTranslate(s) {
+        return await translate(await speaked(s));
     }
 })();
 
-async function kanjiSuffixReplace(e, transcript) {
+async function kanjiTranscriptReplace(e, transcript) {
     const style =
         "width: 100%;text-align: center;background: white;position: relative;z-index: 1;";
     e.children[0] && e.removeChild(e.children[0]);
     e.appendChild(
         Object.assign(document.createElement("div"), {
-            className: "kanji-suffix",
+            className: "kanji-transcript",
             innerHTML: transcript,
             style,
         })
@@ -145,8 +144,4 @@ async function speaked(text) {
         ),
         text
     );
-}
-
-async function speakAndTranslate(s) {
-    return await translate(await speaked(s));
 }
