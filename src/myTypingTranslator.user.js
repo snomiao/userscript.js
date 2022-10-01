@@ -18,6 +18,7 @@
     questionsLoop().then();
     questionsLoopZh().then();
     typingLoop().then();
+    speakingLoop().then();
 
     async function questionsLoop() {
         while (1) {
@@ -45,17 +46,29 @@
             await new Promise((r) => setTimeout(r, 100)); // TODO: upgrade this into Observer Object
         }
     }
+    async function speakingLoop() {
+        const changed = edger("");
+        while (1) {
+            const e = document.querySelector(".mtjGmSc-kana");
+            if (e && changed(e.textContent)) {
+                document.querySelector(".mtjGmSc-kana").style = "color: #DDD";
+                await speak(e.textContent);
+            }
+            await new Promise((r) => setTimeout(r, 100)); // TODO: upgrade this into Observer Object
+        }
+    }
     async function typingLoop() {
-        const changed = edgeFilter("");
+        const changed = edger("");
         while (1) {
             const e = document.querySelector(".mtjGmSc-kanji");
             if (e && !translated(e) && changed(e.textContent)) {
-                document.querySelector(".mtjGmSc-kana").style = "color: #DDD";
                 document.querySelector(".mtjGmSc-roma").style = "display: none";
-                const textContent = e?.childNodes?.[0]?.textContent;
+                const textContent = e.textContent;
                 await kanjiTranscriptReplace(e, textContent);
-                const transcript = await speakAndTranslate(textContent);
+                const transcript = await translate(textContent);
                 await kanjiTranscriptReplace(e, transcript);
+                const transcriptZH = await translate(textContent, "zh");
+                await kanjiTranscriptReplace(e, transcript, transcriptZH);
             }
             await new Promise((r) => setTimeout(r, 100)); // TODO: upgrade this into Observer Object
         }
@@ -66,20 +79,20 @@
     }
     async function speakAndTranslate(s) {
         return await translate(await speaked(s));
+        k;
     }
 })();
 
-async function kanjiTranscriptReplace(e, transcript) {
+async function kanjiTranscriptReplace(e, transcript, title) {
     const style =
         "width: 100%;text-align: center;background: white;position: relative;z-index: 1;";
-    e.children[0] && e.removeChild(e.children[0]);
-    e.appendChild(
-        Object.assign(document.createElement("div"), {
-            className: "kanji-transcript",
-            innerHTML: transcript,
-            style,
-        })
-    );
+    e.querySelector(".kanji-transcript")?.remove();
+    const div = document.createElement("div");
+    div.className = "kanji-transcript";
+    div.innerHTML = transcript;
+    div.style = style;
+    title && div.setAttribute("title", title);
+    e.appendChild(div);
     await new Promise((r) => setTimeout(r, 1));
 }
 
@@ -112,9 +125,19 @@ function limiter(fn, wait = 1e3, last = 0) {
         return r;
     };
 }
-function edgeFilter(init) {
+function edger(init) {
     return (e) => (e !== init ? (init = e) : undefined);
 }
+function watcher(fetcher, listener, interval = 16) {
+    const changed = edger();
+    return async () => {
+        while (1) {
+            await validPipor(listener)(changed(await fetcher()));
+            await new Promise((r) => setTimeout(r, interval));
+        }
+    };
+}
+
 
 async function localforageCached(fn) {
     const hash = (s) => s.slice(0, 16) + s.slice(-16);

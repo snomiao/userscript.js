@@ -3,7 +3,7 @@
 // @name:zh            [SNOLAB] [Mulango] 电报译者
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            1.6.1
+// @version            1.7.0
 // @description        [SNOLAB] [Mulango] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received in your learning language 2. Speak what you just send in your learning language. 3. Send what you saying in your learning language (for example saying something start with CQ CQ ...).
 // @match              https://*.telegram.org/z/
 // @grant              none
@@ -13,6 +13,7 @@
 // @contributionURL    https://snomiao.com/donate
 // ==/UserScript==
 // TODO 写份使用说明
+
 /**
  *
  * Set your browser lang to your learning language.
@@ -27,10 +28,11 @@
  * Feel free to chat with [@snomiao](t.me/snomiao)
  *
  */
+const langsDedupe = uniqueBy((lang) => lang.split("-")[0]);
+const learningLangs = langsDedupe(navigator.languages).slice(0, 2);
+
 (async function () {
-    const speakingChanged = edgeFilter("");
-    const learningLangs = navigator.languages.slice(0, 2);
-    const transcriptCache = await localforageCached();
+    const speakingChanged = edger("");
     const [state, setState] = useTelegramTranslatorState({
         partnerLang: null,
         learningLang: null,
@@ -39,19 +41,8 @@
     main();
 
     async function main() {
-        if (!globalThis.speechSynthesis)
-            return alert(
-                "unable to access speechSynthesis service, please update your browser"
-            );
-        // polyfill and error detect
-        globalThis.SpeechRecognition =
-            globalThis.SpeechRecognition ||
-            globalThis.webkitSpeechRecognition ||
-            globalThis.mozillaSpeechRecognition;
-        if (!globalThis.SpeechRecognition)
-            return alert(
-                "unable to access speechSynthesis service, please update your browser"
-            );
+        speechSynthesisMissingAlert();
+        speechRecognitionPolyfill();
         // listeningLooper().then()
         speakingLooper().then();
         // speakingMySelfLooper().then()
@@ -137,7 +128,7 @@
             );
     }
     async function speakingLooper() {
-        const changed = edgeFilter("");
+        const changed = edger("");
         while (1) {
             await speak(await translated(changed(latestMessage())));
             await delay1s();
@@ -194,19 +185,12 @@
 
         setState({ learningLang: await userLangGet() });
 
-        const to = (lang || state.learningLang).replace(/-.*/g, "");
+        const to = (lang || state.learningLang).split("-")[0];
         const cachedTranscript = await transcriptCache?.getItem(
             JSON.stringify({ s, to })
         );
         if (cachedTranscript) return cachedTranscript;
 
-        const translate = (
-            await import(
-                "https://cdn.skypack.dev/@snomiao/google-translate-api-browser"
-            )
-        ).setCORS("https://google-translate-cors.vercel.app/api?url=", {
-            encode: true,
-        });
         return await translate(s, { to })
             .then(async (re) => {
                 const text = re?.text;
@@ -259,6 +243,24 @@
         });
     }
 })();
+function speechRecognitionPolyfill() {
+    globalThis.SpeechRecognition =
+        globalThis.SpeechRecognition ||
+        globalThis.webkitSpeechRecognition ||
+        globalThis.mozillaSpeechRecognition;
+    if (!globalThis.SpeechRecognition)
+        throw alert(
+            "unable to access speechSynthesis service, please update your browser"
+        );
+}
+
+function speechSynthesisMissingAlert() {
+    if (!globalThis.speechSynthesis)
+        throw alert(
+            "unable to access speechSynthesis service, please update your browser"
+        );
+}
+
 // async function titleLooper(){
 //     const titleGet = ()=>document.querySelector('.selected h3').innerHTML
 //     const titleUpdate = (t)=>t&&
@@ -326,7 +328,7 @@ function latestMyMessage() {
         .reverse()[0];
 }
 
-function edgeFilter(init) {
+function edger(init) {
     return (e) => (e !== init ? (init = e) : undefined);
 }
 
@@ -418,13 +420,58 @@ function useTelegramTranslatorState(initState) {
         },
     ];
 }
-async function localforageCached() {
+
+async function useTranslator(initLang = navigator.language) {
+    const translateAPI = (
+        await import(
+            "https://cdn.skypack.dev/@snomiao/google-translate-api-browser"
+        )
+    ).setCORS("https://google-translate-cors.vercel.app/api?url=", {
+        encode: true,
+    });
+    const translate = async (s, lang = initLang) => {
+        if (!s) return;
+        return await translateAPI(s, { to: lang.replace(/-.*/, "") })
+            .then((e) => e.text)
+            .catch(console.error);
+    };
+    return localforageCached(limiter(translate, 1e3));
+}
+function validPipor(fn) {
+    // requires the first param is not undefined otherwise return the undefined
+    return (s, ...args) => (s === undefined ? undefined : fn(s, ...args));
+}
+function limiter(fn, wait = 1e3, last = 0) {
+    return async (...args) => {
+        const remain = () => last + wait - +new Date();
+        while (remain() > 0) await new Promise((r) => setTimeout(r, remain()));
+        const r = await fn(...args);
+        last = +new Date();
+        return r;
+    };
+}
+
+async function localforageCached(fn) {
+    const hash = (s) => s.slice(0, 16) + s.slice(-16);
     const { default: cache } = await import(
         "https://cdn.skypack.dev/@luudjanssen/localforage-cache"
     );
-    const transcriptCache = cache.createInstance({
-        name: "tg-msg-transcripts",
-        defaultExpiration: 86400e3 * 3, // 3 day
+    const in3day = 86400e3 * 3;
+    const cacheName = hash(String(fn));
+    const cacheInstance = cache.createInstance({
+        name: cacheName,
+        defaultExpiration: in3day,
     });
-    return transcriptCache;
+    return validPipor(cachedFn);
+    async function cachedFn(...args) {
+        const result =
+            (await cacheInstance?.getItem(JSON.stringify(args))) ||
+            (await fn(...args));
+        await cacheInstance?.setItem(JSON.stringify(args), result); //refresh cache
+        return result;
+    }
+}
+async function uniqueBy(fn, a) {
+    if (!a) (a) => uniqueBy(fn, a);
+    return Object.values(Object.fromEntries(array.map((e) => [fn(e), e])));
 }
