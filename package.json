@@ -10,7 +10,8 @@
   "scripts": {
     "serve:docs": "npx docsify-cli serve docs",
     "serve": "npx serve .",
-    "build": "node --experimental-specifier-resolution=node --experimental-modules --no-warnings ./builder/build.mjs",
+    "build:docs": "tsx builder/buildDocs.ts",
+    "build:ts": "tsx builder/buildTS.ts",
     "format": "npx -y -- prettier --write .",
     "prerelease": "npm run build && git add .",
     "release": "standard-version",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@commitlint/cli": "^16.1.0",
     "@commitlint/config-conventional": "^16.0.0",
+    "esbuild": "^0.15.10",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
