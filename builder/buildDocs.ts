@@ -1,7 +1,6 @@
 import fs from 'fs/promises';
 import { scriptparser } from './bookmarklets';
 const pmap = (ls, fn) => Promise.all(ls.map(fn));
-
 const sinfo = await pmap(
     (await fs.readdir('./src/')).filter((e) => e.match(/\.user\.js$/)),
     scriptparser
