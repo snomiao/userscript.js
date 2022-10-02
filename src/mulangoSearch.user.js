@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name               google multilang search view en/zh
-// @name:zh            谷歌多语言搜索 en/zh
+// @name               [SNOLAB] [Mulango] Search
+// @name:zh            [SNOLAB] [Mulango] 多语言搜索
 // @namespace          snomiao@gmail.com
 // @author             snomiao@gmail.com
-// @version            1.0.1
+// @version            1.0.2
 // @description        [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
 // @description:zh     [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
 // @match              https://*.google.com/search?*
@@ -14,13 +14,14 @@
 // @license            GPL-3.0+
 // @supportURL         https://github.com/snomiao/userscript.js/issues
 // @contributionURL    https://snomiao.com/donate
-// @grant   GM_getValue
-// @grant   GM_setValue
+// @grant              GM_getValue
+// @grant              GM_setValue
 // ==/UserScript==
 
 (async function () {
     if (!location.hostname.match(/google|bing/)) return;
-    if (parent !== window) return iframeSetup();
+    const isIframe = parent !== window;
+    if (isIframe) return iframeSetup();
     iframeHeightReceiverSetup();
     const searchLinks = await mulangoSearchLinksFetch();
     searchLinks.length && mulangoPageReplace(searchLinks);
@@ -28,10 +29,12 @@
 
 function mulangoPageReplace(searchLinks) {
     const iframes = searchLinks.map((src) => `<iframe src="${src}"></iframe>`);
-    const style = `<style>
-        body{margin: 0; display: flex; flex-direction: row; }
-        iframe{flex: auto; height: 100vh; overflow: hidden;border: none; }
-    </style>`;
+    const style = `
+        <style>
+            body{margin: 0; display: flex; flex-direction: row; }
+            iframe{flex: auto; height: 100vh; overflow: hidden; border: none; }
+        </style>
+    `;
     document.body.innerHTML = `${style}${iframes}`;
 }
 
@@ -72,28 +75,35 @@ async function mulangoSearchLinksFetch() {
     const url = new URL(location.href);
     const query = url.searchParams.get("q") || "";
     if (!query) return [];
-    const result = await bilangTranslate(query);
-    const searchLinks = result.map((t) => {
-        const u2 = new URL(url.href);
-        u2.searchParams.set("q", t);
-        return u2.href;
-    });
-    return searchLinks;
+    const langs = [
+        ...new Set(navigator.languages.map((e) => e.replace(/-.*/, ""))),
+    ].slice(0, 2);
+    
+    const translate = await useTranslator();
+    return await Promise.all(
+        langs.map(async (lang) => {
+            const u2 = new URL(url.href);
+            const transcript = (await translate(query, { to: lang })).text;
+            if(transcript === query) return location.href // try use cache
+            u2.searchParams.set("q", transcript);
+            u2.searchParams.set("lr", "lang_" + lang); // for google search
+            return u2.href;
+        })
+    );
 }
-async function bilangTranslate(s) {
-    const translate = (
+async function useTranslator() {
+    return (
         await import(
             "https://cdn.skypack.dev/@snomiao/google-translate-api-browser"
         )
     ).setCORS("https://google-translate-cors.vercel.app/api?url=", {
         encode: true,
     });
-    return [
-        await translate(s, { to: "zh" })
-            .then((e) => e.text)
-            .catch(console.error),
-        await translate(s, { to: "en" })
-            .then((e) => e.text)
-            .catch(console.error),
-    ].filter((e) => e);
+}
+
+async function amap(fn, a) {
+    const r = [];
+    let i = 0;
+    for await (const v of a) r.push(await fn(v, i++, a));
+    return r;
 }
