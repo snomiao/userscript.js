@@ -51,25 +51,24 @@ function hotkeys(mapping) {
     Object.entries(mapping).map(([hotkey, handler]) =>
         window.addEventListener("keydown", hotkeyHandler(hotkey, handler))
     );
-}
-
-function hotkeyHandler(hotkey, fn) {
-    return (e) => {
-        e[e.key + "Key"] = true;
-        const falseKeys = "meta+alt+shift+ctrl";
-        const conds = (falseKeys + "+" + hotkey)
-            .replace(/win|command|search/, "meta")
-            .replace(/control/, "ctrl")
-            .split("+")
-            .map((k, i) => [k, (i < 4) ^ e[k + "Key"]]);
-        const covered = Object.entries(Object.fromEntries(conds));
-        console.log(covered);
-        const matched = covered.every(([keyName, pass]) => pass);
-        if (!matched) return;
-        e.stopPropagation();
-        e.preventDefault();
-        return fn();
-    };
+    function hotkeyHandler(hotkey, fn) {
+        return (e) => {
+            e[e.key + "Key"] = true;
+            const falseKeys = "meta+alt+shift+ctrl";
+            const conds = (falseKeys + "+" + hotkey)
+                .replace(/win|command|search/, "meta")
+                .replace(/control/, "ctrl")
+                .split("+")
+                .map((k, i) => [k, (i < 4) ^ e[k + "Key"]]);
+            const covered = Object.entries(Object.fromEntries(conds));
+            console.log(covered);
+            const matched = covered.every(([keyName, pass]) => pass);
+            if (!matched) return;
+            e.stopPropagation();
+            e.preventDefault();
+            return fn();
+        };
+    }
 }
 
 async function useTranslator(initLang = navigator.language) {

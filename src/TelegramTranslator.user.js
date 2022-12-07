@@ -28,7 +28,8 @@
  * Feel free to chat with [@snomiao](t.me/snomiao)
  *
  */
-const langsDedupe = uniqueBy((lang) => lang.split("-")[0]);
+
+const langsDedupe = (e) => uniqueBy((lang) => lang.split("-")[0], e);
 const learningLangs = langsDedupe(navigator.languages).slice(0, 2);
 
 (async function () {
@@ -470,8 +471,4 @@ async function localforageCached(fn) {
         await cacheInstance?.setItem(JSON.stringify(args), result); //refresh cache
         return result;
     }
-}
-async function uniqueBy(fn, a) {
-    if (!a) (a) => uniqueBy(fn, a);
-    return Object.values(Object.fromEntries(array.map((e) => [fn(e), e])));
 }
