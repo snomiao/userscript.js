@@ -26,7 +26,7 @@
   };
   clipboard.writeSync = () => {
     throw new Error("`.writeSync()` is not supported in browsers!");
-  };
+  }; 
   var browser_default = clipboard;
 
   // ts/namegen.user.ts
