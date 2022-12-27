@@ -5,7 +5,7 @@
 // @description     Press Alt+C to copy title and url as markdown style link `> ${SELECTION} [${TITLE}]( ${URL} )`
 // @description:zh  按 Alt+C 复制 Markdown 格式的链接 `> ${SELECTION} [${TITLE}]( ${URL} )`
 // @namespace       https://userscript.snomiao.com/
-// @version         0.8.1
+// @version         0.8.2
 // @author          snomiao@gmail.com
 // @match           *://*/*
 // @grant           none
@@ -49,7 +49,6 @@ function textCopy(content = "") {
   return ok || false;
 }
 
-
 function hotkeys(mapping) {
   Object.entries(mapping).map(([hotkey, handler]) =>
       window.addEventListener("keydown", hotkeyHandler(hotkey, handler))
@@ -64,7 +63,6 @@ function hotkeys(mapping) {
               .split("+")
               .map((k, i) => [k, (i < 4) ^ e[k + "Key"]]);
           const covered = Object.entries(Object.fromEntries(conds));
-          console.log(covered);
           const matched = covered.every(([keyName, pass]) => pass);
           if (!matched) return;
           e.stopPropagation();
