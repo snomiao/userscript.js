@@ -17,7 +17,8 @@
     "release": "standard-version",
     "gf-import": "tsx builder/greasyfork.ts",
     "postrelease": "git push --follow-tag --all",
-    "test": ""
+    "dev": "vite",
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
@@ -32,11 +33,14 @@
   "devDependencies": {
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
+    "@testing-library/react": "^13.4.0",
     "@tkausl/userscript-meta": "1.0.2",
+    "@types/node": "^18.11.18",
     "bookmarklet": "^3.0.0",
     "chalk": "5.0.1",
     "clipboardy": "^3.0.0",
     "compare-versions": "5.0.1",
+    "es-main": "^1.2.0",
     "esbuild": "^0.15.10",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
@@ -45,6 +49,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.1",
     "globby": "^13.1.2",
+    "hotkey-mapper": "^1.2.1",
     "html-escaper": "^3.0.3",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
@@ -58,6 +63,11 @@
     "steno": "2.1.0",
     "terser": "^5.15.0",
     "tsx": "^3.9.0",
-    "userscript-meta": "^1.0.1"
+    "userscript-meta": "^1.0.1",
+    "vite": "^4.0.4",
+    "vitest": "^0.27.3"
+  },
+  "dependencies": {
+    "@fisch0920/html-to-md": "^0.8.1"
   }
 }

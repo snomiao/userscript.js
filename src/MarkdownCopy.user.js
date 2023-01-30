@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name            Copy Markdown Quote Alt+C
-// @name:zh         Alt+C 复制Markdown格式标题和地址快速分享
+// @name            MarkdownCopy
+// @name:zh         MarkdownCopy 复制Markdown格式标题和地址快速分享
 // @name:en         Alt+C Copy Title and Link as Markdown Style
 // @description     Press Alt+C to copy title and url as markdown style link `> ${SELECTION} [${TITLE}]( ${URL} )`
 // @description:zh  按 Alt+C 复制 Markdown 格式的链接 `> ${SELECTION} [${TITLE}]( ${URL} )`
@@ -68,7 +68,7 @@ clipboard.writeSync = () => {
 };
 var browser_default = clipboard;
 
-// CopyMarkdownQuote
+// MarkdownCopy
 {
   main();
 }

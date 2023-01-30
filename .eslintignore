@@ -1,0 +1,4 @@
+node_modules
+bookmarks
+.pnpm-debug.log
+src/*.js
