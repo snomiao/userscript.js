@@ -18,7 +18,8 @@
     "gf-import": "tsx builder/greasyfork.ts",
     "postrelease": "git push --follow-tag --all",
     "dev": "vite",
-    "test": "vitest"
+    "test": "vitest --run",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
