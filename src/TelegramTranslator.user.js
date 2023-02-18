@@ -1,17 +1,18 @@
 // ==UserScript==
-// @name               [SNOLAB] [Mulango] Telegram Translator
-// @name:zh            [SNOLAB] [Mulango] 电报译者
-// @namespace          snomiao@gmail.com
-// @author             snomiao@gmail.com
-// @version            1.7.0
-// @description        [SNOLAB] [Mulango] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received in your learning language 2. Speak what you just send in your learning language. 3. Send what you saying in your learning language (for example saying something start with CQ CQ ...).
-// @match              https://*.telegram.org/z/
-// @grant              none
-// @run-at             document-start
-// @license            GPL-3.0+
-// @supportURL         https://github.com/snomiao/userscript.js/issues
-// @contributionURL    https://snomiao.com/donate
+// @name             [SNOLAB] [Mulango] Telegram Translator
+// @name:zh          [SNOLAB] [Mulango] 电报译者
+// @namespace        https://userscript.snomiao.com/
+// @author           snomiao@gmail.com
+// @version          1.7.0
+// @description      [SNOLAB] [Mulango] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message you received in your learning language 2. Speak what you just send in your learning language. 3. Send what you saying in your learning language (for example saying something start with CQ CQ ...).
+// @match            https://*.telegram.org/z/
+// @grant            none
+// @run-at           document-start
+// @license          GPL-3.0+
+// @supportURL       https://github.com/snomiao/userscript.js/issues
+// @contributionURL  https://snomiao.com/donate
 // ==/UserScript==
+//
 // TODO 写份使用说明
 
 /**

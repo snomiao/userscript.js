@@ -1,21 +1,21 @@
 // ==UserScript==
-// @name               [SNOLAB] [Mulango] Search
-// @name:zh            [SNOLAB] [Mulango] 多语言搜索
-// @namespace          snomiao@gmail.com
-// @author             snomiao@gmail.com
-// @version            1.0.2
-// @description        [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
-// @description:zh     [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
-// @match              https://*.google.com/search?*
-// @match              https://*.bing.com/search?*
-// @match              https://*/search*
-// @grant              none
-// @run-at             document-start
-// @license            GPL-3.0+
-// @supportURL         https://github.com/snomiao/userscript.js/issues
-// @contributionURL    https://snomiao.com/donate
-// @grant              GM_getValue
-// @grant              GM_setValue
+// @name             [SNOLAB] [Mulango] Search
+// @name:zh          [SNOLAB] [Mulango] 多语言搜索
+// @namespace        https://userscript.snomiao.com/
+// @author           snomiao@gmail.com
+// @version          1.0.2
+// @description      [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
+// @description:zh   [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
+// @match            https://*.google.com/search?*
+// @match            https://*.bing.com/search?*
+// @match            https://*/search*
+// @grant            none
+// @run-at           document-start
+// @license          GPL-3.0+
+// @supportURL       https://github.com/snomiao/userscript.js/issues
+// @contributionURL  https://snomiao.com/donate
+// @grant            GM_setValue
+// @grant            GM_getValue
 // ==/UserScript==
 
 (async function () {
@@ -78,13 +78,13 @@ async function mulangoSearchLinksFetch() {
     const langs = [
         ...new Set(navigator.languages.map((e) => e.replace(/-.*/, ""))),
     ].slice(0, 2);
-    
+
     const translate = await useTranslator();
     return await Promise.all(
         langs.map(async (lang) => {
             const u2 = new URL(url.href);
             const transcript = (await translate(query, { to: lang })).text;
-            if(transcript === query) return location.href // try use cache
+            if (transcript === query) return location.href; // try use cache
             u2.searchParams.set("q", transcript);
             u2.searchParams.set("lr", "lang_" + lang); // for google search
             return u2.href;

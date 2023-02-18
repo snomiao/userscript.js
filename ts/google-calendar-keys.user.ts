@@ -1,12 +1,14 @@
 // ==UserScript==
-// @name         [SNOLAB] Google Calendar keyboard enhance
-// @name:zh      [SNOLAB] Google 日历键盘操作增强
-// @namespace    https://userscript.snomiao.com/
-// @version      0.1.0
-// @description   ^】Google日历键盘增强，雪星自用，功能：双击复制日程视图里的文本内容, Alt+hjkl 移动日程
-// @author       snomiao@gmail.com
-// @match        *://calendar.google.com/*
-// @grant        none
+// @name             [SNOLAB] Google Calendar keyboard enhance
+// @name:zh          [SNOLAB] Google 日历键盘操作
+// @namespace        https://userscript.snomiao.com/
+// @version          0.1.0
+// @description      Google日历键盘键盘操作，功能：Alt+hjkl 移动日程
+// @author           snomiao@gmail.com
+// @match            *://calendar.google.com/*
+// @grant            none
+// @contributionURL  https://snomiao.com/donate
+// @supportURL       https://github.com/snomiao/userscript.js/issues
 // ==/UserScript==
 //
 //  1. event move enhance

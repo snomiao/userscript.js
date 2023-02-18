@@ -1,0 +1,15 @@
+version: "3"
+services:
+  caddy:
+    image: caddy
+    
+  code:
+    image: ghcr.io/snomiao/code-js
+    environment:
+      PORT: 31324
+    volumes:
+      - ./home:/root/
+      - ./:/userscript.js/
+    ports:
+      - 31324:31324
+    restart: unless-stopped

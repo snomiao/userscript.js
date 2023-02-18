@@ -10,7 +10,7 @@
 
 // 横向滚动
 (function () {
-    'use strict';
+    "use strict";
     var 监听滚动 = (e) => {
         [...e.children].map(监听滚动);
         if (e.flag_已监听滚动) return;
@@ -51,17 +51,17 @@
             // 横竖都滚到底了
             [...e.children].map(监听滚动);
         };
-        e.addEventListener('mousewheel', handleScroll, {
+        e.addEventListener("mousewheel", handleScroll, {
             capture: false,
             passive: false,
         }); // Chrome/Edge
-        e.addEventListener('DOMMouseScroll', handleScroll, {
+        e.addEventListener("DOMMouseScroll", handleScroll, {
             capture: false,
             passive: false,
         }); // FF
     };
     var 入口 = () => 监听滚动(document.body);
-    document.addEventListener('DOMContentLoaded', 入口);
-    window.addEventListener('load', 入口);
+    document.addEventListener("DOMContentLoaded", 入口);
+    window.addEventListener("load", 入口);
     入口();
 })();

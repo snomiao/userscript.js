@@ -1,3 +1,5 @@
 node_modules
 bookmarks
 .pnpm-debug.log
+home
+.pnpm-store

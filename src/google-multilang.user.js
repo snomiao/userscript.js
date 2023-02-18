@@ -1,21 +1,21 @@
 // ==UserScript==
-// @name               google multilang search view en/zh
-// @name:zh            谷歌多语言搜索 en/zh
-// @namespace          snomiao@gmail.com
-// @author             snomiao@gmail.com
-// @version            1.0.1
-// @description        [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
-// @description:zh     [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
-// @match              https://*.google.com/search?*
-// @match              https://*.bing.com/search?*
-// @match              https://*/search*
-// @grant              none
-// @run-at             document-start
-// @license            GPL-3.0+
-// @supportURL         https://github.com/snomiao/userscript.js/issues
-// @contributionURL    https://snomiao.com/donate
-// @grant   GM_getValue
-// @grant   GM_setValue
+// @name             google multilang search view en/zh
+// @name:zh          谷歌多语言搜索 en/zh
+// @namespace        https://userscript.snomiao.com/
+// @author           snomiao@gmail.com
+// @version          1.0.1
+// @description      [snolab] Mulango - Walkers for bilingual learners. View a google search result in two languages side by side for comparison and language learning. now supports Bing & Google,
+// @description:zh   [snolab] Mulango - 双语学习者的学步车，以并列多语言视角浏览谷歌搜索结果 现支持 Bing & Google,
+// @match            https://*.google.com/search?*
+// @match            https://*.bing.com/search?*
+// @match            https://*/search*
+// @grant            none
+// @run-at           document-start
+// @license          GPL-3.0+
+// @supportURL       https://github.com/snomiao/userscript.js/issues
+// @contributionURL  https://snomiao.com/donate
+// @grant            GM_getValue
+// @grant            GM_setValue
 // ==/UserScript==
 
 (async function () {

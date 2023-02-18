@@ -1,16 +1,16 @@
 // ==UserScript==
-// @deprecated         Use my new script [SNOLAB] [Mulango] Telegram Translator
-// @name               [SNOLAB] I Heard Telegram Speaking
-// @namespace          snomiao@gmail.com
-// @author             snomiao@gmail.com
-// @version            0.3.1
-// @description        [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message your received 2. Speak what you just send. 3. Send what you saying
-// @match              https://*.telegram.org/z/
-// @grant              none
-// @run-at             document-start
-// @license            GPL-3.0+
-// @supportURL         https://github.com/snomiao/userscript.js/issues
-// @contributionURL    https://snomiao.com/donate
+// @deprecated       Use my new script [SNOLAB] [Mulango] Telegram Translator
+// @name             [SNOLAB] I Heard Telegram Speaking
+// @namespace        https://userscript.snomiao.com/
+// @author           snomiao@gmail.com
+// @version          0.3.1
+// @description      [SNOLAB] Speak latest telegram message With TTS technology just in your browser. 1. Speak latest message your received 2. Speak what you just send. 3. Send what you saying
+// @match            https://*.telegram.org/z/
+// @grant            none
+// @run-at           document-start
+// @license          GPL-3.0+
+// @supportURL       https://github.com/snomiao/userscript.js/issues
+// @contributionURL  https://snomiao.com/donate
 // ==/UserScript==
 /**
  * 1. Speak latest message your received
@@ -151,6 +151,7 @@ async function tgSend(s) {
             code: "Enter",
         })
     );
+    j;
 }
 
 function tgMessageEmptyQ() {

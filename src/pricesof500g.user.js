@@ -1,23 +1,25 @@
 // ==UserScript==
-// @name         淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
-// @namespace    snomiao@gmail.com
-// @version      1.2.0
-// @description  注：淘宝的价格和商品标题上写的重量通常对不上，点进商品页面，选择分类即可了解商品小分类的价格、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算。( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
-// @author       snomiao@gmail.com
-// @match        http*://cart.jd.com/cart*
-// @match        http*://order.jd.com/center/alwaysbuy.action*
-// @match        http*://*.jd.com/*.html
-// @match        http*://*.jd.com/*.html?*
-// @match        http*://search.jd.com/*
-// @match        http*://*.tmall.com/*.htm*
-// @match        http*://*.taobao.com/search*
-// @match        http*://item.taobao.com/item.htm*
-// @match        http*://cart.taobao.com/cart.htm*
-// @match        http*://www.1688.com/*
-// @match        http*://s.1688.com/selloffer/offer_search.htm*
-// @match        http*://search.suning.com/*
-// @match        http*://*.amazon.*/*
-// @grant        none
+// @name             淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.
+// @namespace        https://userscript.snomiao.com/
+// @version          1.2.0
+// @description      注：淘宝的价格和商品标题上写的重量通常对不上，点进商品页面，选择分类即可了解商品小分类的价格、京东暂无此问题, 标题出现2个以上重量单位的按最后一个算。( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )
+// @author           snomiao@gmail.com
+// @match            http*://cart.jd.com/cart*
+// @match            http*://order.jd.com/center/alwaysbuy.action*
+// @match            http*://*.jd.com/*.html
+// @match            http*://*.jd.com/*.html?*
+// @match            http*://search.jd.com/*
+// @match            http*://*.tmall.com/*.htm*
+// @match            http*://*.taobao.com/search*
+// @match            http*://item.taobao.com/item.htm*
+// @match            http*://cart.taobao.com/cart.htm*
+// @match            http*://www.1688.com/*
+// @match            http*://s.1688.com/selloffer/offer_search.htm*
+// @match            http*://search.suning.com/*
+// @match            http*://*.amazon.*/*
+// @grant            none
+// @contributionURL  https://snomiao.com/donate
+// @supportURL       https://github.com/snomiao/userscript.js/issues
 // ==/UserScript==
 
 //
@@ -66,12 +68,12 @@ const 质量正则 = RegExp(
     [
         /(?:(\d+)\s?\*)?/,
         /(\d+\.\d+|\d+)/,
-        RegExp(`(${Object.keys(单位比例表).join('|')})`),
+        RegExp(`(${Object.keys(单位比例表).join("|")})`),
         /(?:\s?[x×*](\d+))?/,
     ]
         .map((e) => e.source)
-        .join(''),
-    'i'
+        .join(""),
+    "i"
 );
 // 数学与文本处理方法
 const 分组计数 = (列, 按 = (e) => JSON.stringify(e)) =>
@@ -79,22 +81,22 @@ const 分组计数 = (列, 按 = (e) => JSON.stringify(e)) =>
 const 众数 = (列) =>
     Object.entries(分组计数(列)).sort(([, v1], [, v2]) => v2 - v1)[0][0];
 const 中文数字解析 = (大写数字) =>
-    大写数字.split('').reduce(
+    大写数字.split("").reduce(
         (数, 字) =>
             // (e=> e !==-1 && (数 ?? 0) + e)('012345789'.indexOf(字) ) ||
             ((e) => e !== -1 && (数 ?? 0) + e)(
-                '零一二三四五六七八九'.indexOf(字)
+                "零一二三四五六七八九".indexOf(字)
             ) ||
             ((e) => e !== -1 && (数 ?? 0) + e)(
-                '零壹贰叁肆伍陆柒捌玖'.indexOf(字)
+                "零壹贰叁肆伍陆柒捌玖".indexOf(字)
             ) ||
             ((e) => e !== -1 && (数 ?? 0) + e)(
-                '洞幺两三四五六拐怕勾'.indexOf(字)
+                "洞幺两三四五六拐怕勾".indexOf(字)
             ) ||
             ((e) => e !== -1 && (数 ?? 1) * 10 ** e)(
-                '个十百千万一兆一亿'.indexOf(字)
+                "个十百千万一兆一亿".indexOf(字)
             ) ||
-            ((e) => e !== -1 && (数 ?? 1) * 10 ** e)('个拾佰仟'.indexOf(字)) ||
+            ((e) => e !== -1 && (数 ?? 1) * 10 ** e)("个拾佰仟".indexOf(字)) ||
             NaN,
         null
     );
@@ -128,7 +130,7 @@ const 节流防抖 = (间隔, 函数, 提示函数 = () => null) =>
 // 量纲计算
 const 质量千克自标题解析 = (标题) => {
     const 质量表述列 =
-        (中文数字替换(标题) + 标题).match(RegExp(质量正则.source, 'ig')) || [];
+        (中文数字替换(标题) + 标题).match(RegExp(质量正则.source, "ig")) || [];
     const 质量列 = 质量表述列.map((串) => {
         const [, 前乘数串, 质量串, 单位串, 后乘数串] = 串.match(质量正则);
         const [前乘数, 后乘数] = [前乘数串, 后乘数串].map(
@@ -147,14 +149,14 @@ const 页面特定商品列获取 = ({ 选项目, 选标题, 选价格 }) =>
     [...document.querySelectorAll(选项目)]
         .map((元素) => {
             let [标题元素, 价格元素] = [选标题, 选价格].map((选) =>
-                选?.startsWith('DOC>')
-                    ? document.querySelector(选?.slice('DOC>'.length))
+                选?.startsWith("DOC>")
+                    ? document.querySelector(选?.slice("DOC>".length))
                     : 元素?.querySelector(选)
             );
             if (!标题元素 || !价格元素) return null;
             const 标题 = 标题元素.innerText.trim();
             let 价格 =
-                parseFloat(价格元素.innerText.trim().replace(/￥|¥/g, '')) ||
+                parseFloat(价格元素.innerText.trim().replace(/￥|¥/g, "")) ||
                 NaN; //无报价
             let 千克质量 = 质量千克自标题解析(标题);
             const 每千克价格 = 价格 / (千克质量 || 0);
@@ -173,14 +175,14 @@ const 抽取并在末尾插入 = (元素) =>
     元素.parentNode.appendChild(元素.parentNode.removeChild(元素));
 const 新元素 = (HTML, attributes = {}) =>
     Object.assign(
-        Object.assign(document.createElement('div'), { innerHTML: HTML })
+        Object.assign(document.createElement("div"), { innerHTML: HTML })
             .children[0],
         attributes
     );
 // 商品计算
 const 商品列每斤价格排序显示 = (新增商品列) => {
     console.log(`[pricesof500g] 正在处理${新增商品列.length}个商品价格。`);
-    const 现存商品元素列 = [...document.querySelectorAll('span.priceof500g')];
+    const 现存商品元素列 = [...document.querySelectorAll("span.priceof500g")];
     const 现存商品列 = 现存商品元素列.map((价格标签) => 价格标签.商品信息);
     const 每千克价格对比 = (a, b) => a.每千克价格 - b.每千克价格;
     const 有序商品列 = [...现存商品列, ...新增商品列].sort(每千克价格对比);
@@ -189,7 +191,7 @@ const 商品列每斤价格排序显示 = (新增商品列) => {
         .filter((e) => !isNaN(e));
     const 最低每千克价格 = Math.min(...有效价格列);
     const 最高每千克价格 = Math.max(...有效价格列);
-    console.debug('当页商品价格列', 有序商品列, 最低每千克价格, 最高每千克价格);
+    console.debug("当页商品价格列", 有序商品列, 最低每千克价格, 最高每千克价格);
     const 商品信息解释生成 = (商品信息) => {
         const { 标题, 千克质量, 价格, 每千克价格, 标题元素 } = 商品信息;
         let 价率 = 范围映射(
@@ -200,7 +202,7 @@ const 商品列每斤价格排序显示 = (新增商品列) => {
         // 从最低价到最高价由红到绿渐变
         const 颜色 =
             (价率 && `rgba(${价率 * 255},${255 - 价率 * 255},0.1,1)`) ||
-            'black';
+            "black";
         const 描述 = `${标题}\n\n${价格}¥/${千克质量}kg = ${每千克价格按每斤解释(
             每千克价格
         )}\n\n © 2016 - 2021 雪星实验室 \n  ( bug反馈联系： snomiao@gmail.com 或 qq 997596439 )`;
@@ -211,7 +213,7 @@ const 商品列每斤价格排序显示 = (新增商品列) => {
 
         价格标签.商品信息 = 商品信息;
         // 标记商品已处理
-        商品信息.元素?.classList.add('pricesof500g');
+        商品信息.元素?.classList.add("pricesof500g");
         // 标签换新或显示
         标题元素.价格标签 && 标题元素.parentNode.removeChild(标题元素.价格标签);
         if (!价格 || !千克质量) return;
@@ -255,12 +257,12 @@ const 商品选择列 = `
 | amazon.cn  | .s-result-item              | h2                    | .a-price                           | 商品搜索页面
 | suning.com | li.item-wrap                | .title-selling-point  | .price-box                         | 商品搜索页面
 `
-    .replace(/\/\/.*/gm, '')
+    .replace(/\/\/.*/gm, "")
     .split(/\r?\n/g)
     .map((e) =>
         e
             .trim()
-            .split('|')
+            .split("|")
             .slice(1)
             .map((e) => e.trim())
     )
@@ -284,15 +286,15 @@ function 价格标签探索() {
     // var 价格解释含于 = (e) => !e.querySelector('span.priceof500g');
     // var 未解释商品标签列 = 商品标签列.filter(价格解释含于);
     var 未解释商品标签列 = [
-        ...document.querySelectorAll('.J_TSaleProp>li:not(.pricesof500g)'),
+        ...document.querySelectorAll(".J_TSaleProp>li:not(.pricesof500g)"),
     ];
     if (!未解释商品标签列.length) return;
     console.log(
-        '[pricesof500g] 发现' + 未解释商品标签列.length + '个未解释商品标签列'
+        "[pricesof500g] 发现" + 未解释商品标签列.length + "个未解释商品标签列"
     );
     var 剩余未解释商品标签点击 = () => {
         var 未解释商品标签 = 未解释商品标签列?.pop();
-        未解释商品标签?.querySelector('a')?.click();
+        未解释商品标签?.querySelector("a")?.click();
         未解释商品标签 && setTimeout(主动刷新函数, 1);
         未解释商品标签 && setTimeout(剩余未解释商品标签点击, 100);
     };
@@ -323,17 +325,17 @@ function 页面变动处理(mutations) {
 const 页面变动监视器 = new MutationObserver(页面变动处理);
 function 加载() {
     页面变动监视器.observe(监视目标, 监视配置);
-    window.addEventListener('load', 防抖刷新, false);
-    document.addEventListener('keyup', 延时刷新, false);
-    document.addEventListener('mouseup', 延时主动刷新, false);
-    document.addEventListener('visibilitychange', 延时刷新, false);
+    window.addEventListener("load", 防抖刷新, false);
+    document.addEventListener("keyup", 延时刷新, false);
+    document.addEventListener("mouseup", 延时主动刷新, false);
+    document.addEventListener("visibilitychange", 延时刷新, false);
     防抖刷新();
 }
 function unload() {
-    window.removeEventListener('load', 防抖刷新, false);
-    document.removeEventListener('keyup', 延时刷新, false);
-    document.removeEventListener('mouseup', 延时主动刷新, false);
-    document.removeEventListener('visibilitychange', 延时刷新, false);
+    window.removeEventListener("load", 防抖刷新, false);
+    document.removeEventListener("keyup", 延时刷新, false);
+    document.removeEventListener("mouseup", 延时主动刷新, false);
+    document.removeEventListener("visibilitychange", 延时刷新, false);
     页面变动监视器.disconnect();
 }
 加载();
@@ -347,18 +349,18 @@ const UnreachedClick = () => {
     const e = [
         ...document.querySelectorAll('ul[data-property="颜色分类"]>li'),
     ].filter((e) => !e.className.match(/pricesof500g/))[0];
-    if (!e) return 'done';
-    e?.querySelector('a')?.click();
+    if (!e) return "done";
+    e?.querySelector("a")?.click();
     setTimeout(页面商品列商品列每斤价格排序显示, 1);
     setTimeout(UnreachedClick, 1024);
 };
 
 const UnreachedButtonAdd = () => {
-    [...document.querySelectorAll('.tb-metatit')]
+    [...document.querySelectorAll(".tb-metatit")]
         ?.filter((e) => e.textContent.match(/^颜色分类$/))
         ?.map((e) =>
             e.appendChild(
-                新元素('<button>探索</button>', { onclick: UnreachedClick })
+                新元素("<button>探索</button>", { onclick: UnreachedClick })
             )
         ).length || setTimeout(UnreachedButtonAdd, 2048);
 };

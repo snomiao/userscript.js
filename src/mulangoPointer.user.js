@@ -1,21 +1,21 @@
 // ==UserScript==
-// @name               [SNOLAB] [Mulango] Point Speaker
-// @name:zh            [SNOLAB] [Mulango] 点读笔
-// @namespace          snomiao@gmail.com
-// @author             snomiao@gmail.com
-// @version            1.0.3
-// @description        [SNOLAB] Mulango Point Speaker, 按 alt+t 翻译鼠标所在元素到浏览器第二语言
-// @description:zh     [SNOLAB] Mulango 点读笔, 按 alt+t 翻译鼠标所在元素到浏览器第二语言
-// @match              https://*.google.com/search?*
-// @match              https://*.bing.com/search?*
-// @match              https://*/search*
-// @grant              none
-// @run-at             document-start
-// @license            GPL-3.0+
-// @supportURL         https://github.com/snomiao/userscript.js/issues
-// @contributionURL    https://snomiao.com/donate
-// @grant              GM_getValue
-// @grant              GM_setValue
+// @name             [SNOLAB] [Mulango] Point Speaker
+// @name:zh          [SNOLAB] [Mulango] 点读笔
+// @namespace        https://userscript.snomiao.com/
+// @author           snomiao@gmail.com
+// @version          1.0.3
+// @description      [SNOLAB] Mulango Point Speaker, 按 alt+t 翻译鼠标所在元素到浏览器第二语言
+// @description:zh   [SNOLAB] Mulango 点读笔, 按 alt+t 翻译鼠标所在元素到浏览器第二语言
+// @match            https://*.google.com/search?*
+// @match            https://*.bing.com/search?*
+// @match            https://*/search*
+// @grant            none
+// @run-at           document-start
+// @license          GPL-3.0+
+// @supportURL       https://github.com/snomiao/userscript.js/issues
+// @contributionURL  https://snomiao.com/donate
+// @grant            GM_getValue
+// @grant            GM_setValue
 // ==/UserScript==
 
 (async function () {

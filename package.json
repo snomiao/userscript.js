@@ -19,7 +19,8 @@
     "postrelease": "git push --follow-tag --all",
     "dev": "vite",
     "test": "vitest --run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,10 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/snomiao/userscript.js/issues"
+  },
+  "lint-staged": {
+    "*.{ts,js}": "prettier -w",
+    "*.{md,yaml,json}": "prettier -w"
   },
   "homepage": "https://snomiao.github.io/userscript.js/",
   "devDependencies": {
@@ -40,6 +45,7 @@
     "bookmarklet": "^3.0.0",
     "chalk": "5.0.1",
     "clipboardy": "^3.0.0",
+    "commitlint": "^17.4.4",
     "compare-versions": "5.0.1",
     "es-main": "^1.2.0",
     "esbuild": "^0.15.10",
@@ -52,7 +58,7 @@
     "globby": "^13.1.2",
     "hotkey-mapper": "^1.2.1",
     "html-escaper": "^3.0.3",
-    "husky": "^8.0.1",
+    "husky": "^8.0.0",
     "lint-staged": "^13.0.3",
     "minify": "^9.1.0",
     "prettier": "^2.7.1",

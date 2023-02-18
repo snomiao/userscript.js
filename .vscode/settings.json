@@ -1,3 +1,136 @@
 {
-    "git.postCommitCommand": "sync"
+  "git.postCommitCommand": "sync",
+  "replacerules.rules": {
+    "Userscript Append01": {
+      "replace": "// @contributionURL  https://snomiao.com/donate\n// ==/UserScript==",
+      "find": "(?<!// @contributionURL(?:.*\\n)+)// ==/UserScript=="
+    },
+    "Userscript Append02": {
+      "replace": "// @supportURL       https://github.com/snomiao/userscript.js/issues\n// ==/UserScript==",
+      "find": "(?<!// @supportURL(?:.*\\n)+)// ==/UserScript=="
+    },
+    "Userscript Ensure01": {
+      "replace": "// @license          GPL-3.0+                                       ",
+      "find": "(?<=\\n)// @license.*"
+    },
+    "Userscript Ensure02": {
+      "replace": "// @namespace        https://userscript.snomiao.com/                ",
+      "find": "(?<=\\n)// @namespace.*"
+    },
+    "Userscript Ensure03": {
+      "replace": "// @author           snomiao@gmail.com                              ",
+      "find": "(?<=\\n)// @author.*"
+    },
+    "Userscript Ensure04": {
+      "replace": "// @contributionURL  https://snomiao.com/donate                     ",
+      "find": "(?<=\\n)// @contributionURL.*"
+    },
+    "Userscript Ensure05": {
+      "replace": "// @supportURL       https://github.com/snomiao/userscript.js/issues",
+      "find": "(?<=\\n)// @supportURL.*"
+    },
+    "Userscript Ensure06": {
+      "replace": "// @version         0.$1",
+      "find": "(?<=\\n)// @version\\s+(\\d+\\.\\d+)$"
+    },
+    "Userscript Head01": {
+      "replace": "// @name             ",
+      "find": "(?<=\\n)// @name +"
+    },
+    "Userscript Head02": {
+      "replace": "// @name:$1          ",
+      "find": "(?<=\\n)// @name:(..) +"
+    },
+    "Userscript Head04": {
+      "replace": "// @description      ",
+      "find": "(?<=\\n)// @description +"
+    },
+    "Userscript Head05": {
+      "replace": "// @description:$1   ",
+      "find": "(?<=\\n)// @description:(..) +"
+    },
+    "Userscript Head07": {
+      "replace": "// @namespace        ",
+      "find": "(?<=\\n)// @namespace +"
+    },
+    "Userscript Head08": {
+      "replace": "// @version          ",
+      "find": "(?<=\\n)// @version +"
+    },
+    "Userscript Head09": {
+      "replace": "// @author           ",
+      "find": "(?<=\\n)// @author +"
+    },
+    "Userscript Head10": {
+      "replace": "// @run-at           ",
+      "find": "(?<=\\n)// @run-at +"
+    },
+    "Userscript Head11": {
+      "replace": "// @match            ",
+      "find": "(?<=\\n)// @match +"
+    },
+    "Userscript Head12": {
+      "replace": "// @match            ",
+      "find": "(?<=\\n)// @match +"
+    },
+    "Userscript Head13": {
+      "replace": "// @grant            ",
+      "find": "(?<=\\n)// @grant +"
+    },
+    "Userscript Head14": {
+      "replace": "// @license          ",
+      "find": "(?<=\\n)// @license +"
+    },
+    "Userscript Head15": {
+      "replace": "// @noframes         ",
+      "find": "(?<=\\n)// @noframes +"
+    },
+    "Userscript Head16": {
+      "replace": "// @supportURL       ",
+      "find": "(?<=\\n)// @supportURL +"
+    },
+    "Userscript Head17": {
+      "replace": "// @contributionURL  ",
+      "find": "(?<=\\n)// @contributionURL +"
+    },
+    "Userscript Head18": {
+      "replace": "// @icon             ",
+      "find": "(?<=\\n)// @icon +"
+    },
+    "LF Only": { "replace": "\n", "find": "\\r\\n" }
+  },
+  "replacerules.rulesets": {
+    "UserscriptTS": {
+      "rules": [
+        "Userscript Append01",
+        "Userscript Append02",
+        "Userscript Ensure01",
+        "Userscript Ensure02",
+        "Userscript Ensure03",
+        "Userscript Ensure04",
+        "Userscript Ensure05",
+        "Userscript Ensure06",
+        "Userscript Head01",
+        "Userscript Head02",
+        "Userscript Head03",
+        "Userscript Head04",
+        "Userscript Head05",
+        "Userscript Head06",
+        "Userscript Head07",
+        "Userscript Head08",
+        "Userscript Head09",
+        "Userscript Head10",
+        "Userscript Head11",
+        "Userscript Head12",
+        "Userscript Head13",
+        "Userscript Head14",
+        "Userscript Head15",
+        "Userscript Head16",
+        "Userscript Head17",
+        "Userscript Head18",
+        "LF Only"
+      ]
+    }
+  },
+  "files.eol": "\n"
 }
