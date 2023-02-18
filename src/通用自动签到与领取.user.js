@@ -9,9 +9,9 @@
 // ==/UserScript==
 
 (() => {
-    window.addEventListener('load', () =>
-        [...document.querySelectorAll('a,button,div.btn')]
-            .filter((e) => e.textContent.match(/签到|领取/))
-            .forEach((e) => e.click())
-    );
+  window.addEventListener("load", () =>
+    [...document.querySelectorAll("a,button,div.btn")]
+      .filter((e) => e.textContent.match(/签到|领取/))
+      .forEach((e) => e.click())
+  );
 })();

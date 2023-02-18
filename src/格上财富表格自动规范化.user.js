@@ -10,55 +10,53 @@
 // ==/UserScript==
 
 (function () {
-    'use strict';
+  "use strict";
 
-    var waitJQ_for = function (func, interval = 1000) {
-        if (typeof jQuery == 'undefined') {
-            document.documentElement.appendChild(
-                document.createElement('script')
-            ).src = 'https://code.jquery.com/jquery-3.3.1.js';
-            setTimeout(() => waitJQ_for(func, interval), interval);
-        } else {
-            func();
-        }
-    };
+  var waitJQ_for = function (func, interval = 1000) {
+    if (typeof jQuery == "undefined") {
+      document.documentElement.appendChild(
+        document.createElement("script")
+      ).src = "https://code.jquery.com/jquery-3.3.1.js";
+      setTimeout(() => waitJQ_for(func, interval), interval);
+    } else {
+      func();
+    }
+  };
 
-    var replace_element_tag = function ($srcEle, tagName) {
-        var attrs = {};
-        $.each($srcEle[0].attributes, function (idx, attr) {
-            attrs[attr.nodeName] = attr.nodeValue;
-        });
-        var $targetEle = $('<' + tagName + '/>', attrs).append(
-            $srcEle.contents()
+  var replace_element_tag = function ($srcEle, tagName) {
+    var attrs = {};
+    $.each($srcEle[0].attributes, function (idx, attr) {
+      attrs[attr.nodeName] = attr.nodeValue;
+    });
+    var $targetEle = $("<" + tagName + "/>", attrs).append($srcEle.contents());
+    $srcEle.replaceWith(function () {
+      return $targetEle;
+    });
+  };
+
+  var start = function () {
+    waitJQ_for(function () {
+      var $srcEle1 = $("span.fund-main-title");
+      var $srcEle2 = $("div.fund-main.fund-main-list, div.fund-main");
+      var $srcEle3 = $("div.fund-main-wrapper");
+
+      if ($srcEle1.length || $srcEle2.length || $srcEle3.length) {
+        Array.from($srcEle1).map((ele, i) =>
+          replace_element_tag($srcEle1.slice(i, i + 1), "td")
         );
-        $srcEle.replaceWith(function () {
-            return $targetEle;
-        });
-    };
+        Array.from($srcEle2).map((ele, i) =>
+          replace_element_tag($srcEle2.slice(i, i + 1), "tr")
+        );
+        Array.from($srcEle3).map((ele, i) =>
+          replace_element_tag($srcEle3.slice(i, i + 1), "table")
+        );
+        var eleTable = $(".fund-main-wrapper")[0];
+        window.getSelection().selectAllChildren(eleTable);
+        document.title = "表格已规范化，并自动选取/" + Math.random();
+      }
+    });
+  };
 
-    var start = function () {
-        waitJQ_for(function () {
-            var $srcEle1 = $('span.fund-main-title');
-            var $srcEle2 = $('div.fund-main.fund-main-list, div.fund-main');
-            var $srcEle3 = $('div.fund-main-wrapper');
-
-            if ($srcEle1.length || $srcEle2.length || $srcEle3.length) {
-                Array.from($srcEle1).map((ele, i) =>
-                    replace_element_tag($srcEle1.slice(i, i + 1), 'td')
-                );
-                Array.from($srcEle2).map((ele, i) =>
-                    replace_element_tag($srcEle2.slice(i, i + 1), 'tr')
-                );
-                Array.from($srcEle3).map((ele, i) =>
-                    replace_element_tag($srcEle3.slice(i, i + 1), 'table')
-                );
-                var eleTable = $('.fund-main-wrapper')[0];
-                window.getSelection().selectAllChildren(eleTable);
-                document.title = '表格已规范化，并自动选取/' + Math.random();
-            }
-        });
-    };
-
-    start();
-    setInterval(start, 1000);
+  start();
+  setInterval(start, 1000);
 })();

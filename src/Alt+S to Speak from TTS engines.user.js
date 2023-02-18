@@ -15,35 +15,35 @@
 // ==/UserScript==
 
 (function () {
-    'use strict';
-    var clickNode = (e) => {
-        ['mouseover', 'mousedown', 'mouseup', 'click'].map((eventType) => {
-            e.dispatchEvent(
-                new MouseEvent(eventType, { cancelable: true, bubbles: true })
-            );
-        });
-    };
-    var ClickAndSelectAll = (selBTN, selINPUT) => {
-        var btnTTS = document.querySelector(selBTN);
-        var textArea = document.querySelector(selINPUT);
-        clickNode(btnTTS);
-        textArea.focus();
-        textArea.select();
-    };
-    // Bing
-    location.href.match(/^https:\/\/\w*\.bing\.com\/translator/) &&
-        window.addEventListener('keydown', (e) => {
-            if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyS')
-                ClickAndSelectAll('#tta_playiconsrc', '#tta_input_ta');
-            if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == 'KeyS')
-                ClickAndSelectAll('#tta_playicontgt', '#tta_input_ta');
-        });
-    // Google
-    location.href.startsWith('https://translate.google.com') &&
-        window.addEventListener('keydown', (e) => {
-            if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyS')
-                ClickAndSelectAll('.ttsbutton', '#source');
-            if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == 'KeyS')
-                ClickAndSelectAll('.ttsbutton-res', '#source');
-        });
+  "use strict";
+  var clickNode = (e) => {
+    ["mouseover", "mousedown", "mouseup", "click"].map((eventType) => {
+      e.dispatchEvent(
+        new MouseEvent(eventType, { cancelable: true, bubbles: true })
+      );
+    });
+  };
+  var ClickAndSelectAll = (selBTN, selINPUT) => {
+    var btnTTS = document.querySelector(selBTN);
+    var textArea = document.querySelector(selINPUT);
+    clickNode(btnTTS);
+    textArea.focus();
+    textArea.select();
+  };
+  // Bing
+  location.href.match(/^https:\/\/\w*\.bing\.com\/translator/) &&
+    window.addEventListener("keydown", (e) => {
+      if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == "KeyS")
+        ClickAndSelectAll("#tta_playiconsrc", "#tta_input_ta");
+      if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == "KeyS")
+        ClickAndSelectAll("#tta_playicontgt", "#tta_input_ta");
+    });
+  // Google
+  location.href.startsWith("https://translate.google.com") &&
+    window.addEventListener("keydown", (e) => {
+      if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == "KeyS")
+        ClickAndSelectAll(".ttsbutton", "#source");
+      if (e.altKey && e.shiftKey && !e.ctrlKey && e.code == "KeyS")
+        ClickAndSelectAll(".ttsbutton-res", "#source");
+    });
 })();

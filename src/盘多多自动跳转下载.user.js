@@ -11,13 +11,13 @@
 // ==/UserScript==
 
 (function () {
-    'use strict';
+  "use strict";
 
-    var href = location.href.replace(
-        /(https?):\/\/www.panduoduo.net\/r\/(\d+)/,
-        '$1://pdd.19mi.net/go/$2'
-    );
-    if (href != location.href) {
-        location.href = href;
-    }
+  var href = location.href.replace(
+    /(https?):\/\/www.panduoduo.net\/r\/(\d+)/,
+    "$1://pdd.19mi.net/go/$2"
+  );
+  if (href != location.href) {
+    location.href = href;
+  }
 })();

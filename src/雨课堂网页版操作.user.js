@@ -9,18 +9,15 @@
 // ==/UserScript==
 
 (function () {
-    'use strict';
-    var main = () => {
-        var [box, btn] = ['.send__input', '.send__btn'].map((e) =>
-            document.querySelector(e)
-        );
-        if (!box || !btn) return;
-        box.addEventListener(
-            'keydown',
-            (e) => e.code == 'Enter' && btn.click()
-        );
-        console.log('启用: Enter发送');
-        document.removeEventListener('mouseup', main);
-    };
-    document.addEventListener('mouseup', main);
+  "use strict";
+  var main = () => {
+    var [box, btn] = [".send__input", ".send__btn"].map((e) =>
+      document.querySelector(e)
+    );
+    if (!box || !btn) return;
+    box.addEventListener("keydown", (e) => e.code == "Enter" && btn.click());
+    console.log("启用: Enter发送");
+    document.removeEventListener("mouseup", main);
+  };
+  document.addEventListener("mouseup", main);
 })();

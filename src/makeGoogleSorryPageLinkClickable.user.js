@@ -10,6 +10,6 @@
 // ==/UserScript==
 
 document.body.innerHTML = document.body.innerHTML.replace(
-    /URL: (.*?)<br>/,
-    (_, $1) => 'URL: <a href="' + $1 + '">' + $1 + '</a>'
+  /URL: (.*?)<br>/,
+  (_, $1) => 'URL: <a href="' + $1 + '">' + $1 + "</a>"
 );

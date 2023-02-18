@@ -9,23 +9,23 @@
 // ==/UserScript==
 
 (function () {
-    'use strict';
+  "use strict";
 
-    let head, style;
-    head = document.getElementsByTagName('head')[0];
-    if (!head) {
-        return;
+  let head, style;
+  head = document.getElementsByTagName("head")[0];
+  if (!head) {
+    return;
+  }
+  style = document.createElement("style");
+  style.type = "text/css";
+  style.innerHTML = "";
+  head.appendChild(style);
+
+  const toggle = () =>
+    (style.innerHTML = style.innerHTML ? "" : `img{filter: invert(100%);}`);
+  window.addEventListener("keydown", (e) => {
+    if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == "KeyC") {
+      toggle();
     }
-    style = document.createElement('style');
-    style.type = 'text/css';
-    style.innerHTML = '';
-    head.appendChild(style);
-
-    const toggle = () =>
-        (style.innerHTML = style.innerHTML ? '' : `img{filter: invert(100%);}`);
-    window.addEventListener('keydown', (e) => {
-        if (e.altKey && !e.shiftKey && !e.ctrlKey && e.code == 'KeyC') {
-            toggle();
-        }
-    });
+  });
 })();

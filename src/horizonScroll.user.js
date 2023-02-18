@@ -9,47 +9,47 @@
 // ==/UserScript==
 
 (function () {
-    'use strict';
-    var 监听滚动 = (e) => {
-        [...e.children].map(监听滚动);
-        if (e.flag_已监听滚动) return;
-        e.flag_已监听滚动 = 1;
+  "use strict";
+  var 监听滚动 = (e) => {
+    [...e.children].map(监听滚动);
+    if (e.flag_已监听滚动) return;
+    e.flag_已监听滚动 = 1;
 
-        var handleScroll = (事件) => {
-            if (事件.altKey || 事件.ctrlKey || 事件.shiftKey) return;
-            var scrollRate = ((事件.detail || -事件.wheelDelta) / 120) * 0.5;
-            var scrolled_x =
-                e.scrollLeft !=
-                ((e.scrollLeft += scrollRate * e.clientWidth), e.scrollLeft);
-            if (scrolled_x) {
-                e.scrollIntoViewIfNeeded();
-                事件.preventDefault();
-                事件.stopPropagation();
-                return false;
-            }
-            var scrolled_y =
-                e.scrollTop !=
-                ((e.scrollTop += scrollRate * e.clientHeight), e.scrollTop);
-            if (scrolled_y) {
-                e.scrollIntoViewIfNeeded();
-                事件.preventDefault();
-                事件.stopPropagation();
-                return false;
-            }
-            // 横竖都滚到底了
-            [...e.children].map(监听滚动);
-        };
-        e.addEventListener('mousewheel', handleScroll, {
-            capture: false,
-            passive: false,
-        }); // Chrome/Edge
-        e.addEventListener('DOMMouseScroll', handleScroll, {
-            capture: false,
-            passive: false,
-        }); // FF
+    var handleScroll = (事件) => {
+      if (事件.altKey || 事件.ctrlKey || 事件.shiftKey) return;
+      var scrollRate = ((事件.detail || -事件.wheelDelta) / 120) * 0.5;
+      var scrolled_x =
+        e.scrollLeft !=
+        ((e.scrollLeft += scrollRate * e.clientWidth), e.scrollLeft);
+      if (scrolled_x) {
+        e.scrollIntoViewIfNeeded();
+        事件.preventDefault();
+        事件.stopPropagation();
+        return false;
+      }
+      var scrolled_y =
+        e.scrollTop !=
+        ((e.scrollTop += scrollRate * e.clientHeight), e.scrollTop);
+      if (scrolled_y) {
+        e.scrollIntoViewIfNeeded();
+        事件.preventDefault();
+        事件.stopPropagation();
+        return false;
+      }
+      // 横竖都滚到底了
+      [...e.children].map(监听滚动);
     };
-    var 入口 = () => 监听滚动(document.body);
-    document.addEventListener('load', 入口);
-    window.addEventListener('load', 入口);
-    入口();
+    e.addEventListener("mousewheel", handleScroll, {
+      capture: false,
+      passive: false,
+    }); // Chrome/Edge
+    e.addEventListener("DOMMouseScroll", handleScroll, {
+      capture: false,
+      passive: false,
+    }); // FF
+  };
+  var 入口 = () => 监听滚动(document.body);
+  document.addEventListener("load", 入口);
+  window.addEventListener("load", 入口);
+  入口();
 })();

@@ -11,14 +11,14 @@
 // ==/UserScript==
 
 (async () => {
-    const searchpageQ =
-        0 === location.href.indexOf('https://www.thingiverse.com/search?');
-    const thingpageQ =
-        0 === location.href.indexOf('https://www.thingiverse.com/thing:');
-    const eleFind = (pattern) =>
-        [...document.querySelectorAll('*')]
-            .reverse()
-            .find((e) => e.textContent?.match(pattern));
-    if (thingpageQ) eleFind(/Download All Files/)?.click();
-    // 'Downloading...'
+  const searchpageQ =
+    0 === location.href.indexOf("https://www.thingiverse.com/search?");
+  const thingpageQ =
+    0 === location.href.indexOf("https://www.thingiverse.com/thing:");
+  const eleFind = (pattern) =>
+    [...document.querySelectorAll("*")]
+      .reverse()
+      .find((e) => e.textContent?.match(pattern));
+  if (thingpageQ) eleFind(/Download All Files/)?.click();
+  // 'Downloading...'
 })();

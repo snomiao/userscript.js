@@ -16,16 +16,16 @@
 // (20200422)Update: avoid chaoxing online courses (needs 1x speed to complete the task)
 
 (() => {
-    var rate = 2;
-    var init = () =>
-        [...document.querySelectorAll('video')].map((e) => {
-            if (!e.flag_speed_inited) {
-                e.playbackRate = rate;
-                console.debug(e, 'SPEED_X', rate);
-                e.flag_speed_inited = 1;
-            }
-        });
-    setInterval(init, 10000);
-    window.addEventListener('load', init, false);
-    init();
+  var rate = 2;
+  var init = () =>
+    [...document.querySelectorAll("video")].map((e) => {
+      if (!e.flag_speed_inited) {
+        e.playbackRate = rate;
+        console.debug(e, "SPEED_X", rate);
+        e.flag_speed_inited = 1;
+      }
+    });
+  setInterval(init, 10000);
+  window.addEventListener("load", init, false);
+  init();
 })();

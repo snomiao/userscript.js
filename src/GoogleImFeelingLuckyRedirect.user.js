@@ -12,9 +12,9 @@
 // ref: [Workaround for Google I'm Feeling Lucky Redirect]( https://greasyfork.org/en/scripts/390770-workaround-for-google-i-m-feeling-lucky-redirect )
 
 const url = Object.fromEntries(
-    location.search
-        .slice(1)
-        .split('&')
-        .map((e) => e.split('='))
+  location.search
+    .slice(1)
+    .split("&")
+    .map((e) => e.split("="))
 ).q;
 if (url) location = url;

@@ -15,6 +15,8 @@ const out = await Promise.all(
 );
 const outString = out.join('\n');
 console.log(outString);
-await clipboard.write(outString)
-console.log("userscript links copied, please open import page to paste https://greasyfork.org/en/import")
+await clipboard.write(outString);
+console.log(
+    'userscript links copied, please open import page to paste https://greasyfork.org/en/import'
+);
 await promisify(exec)('cmd /c start chrome https://greasyfork.org/en/import');

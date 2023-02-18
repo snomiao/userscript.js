@@ -15,76 +15,74 @@
 // 作者已近毕业不再使用超星课堂，想维护的同学 fork 或者 pr 或者 邮箱提交代码 到 snomiao@gmail.com 都可以。
 //
 (() => {
-    var 解锁 = async () => {
-        var query = new URLSearchParams(window.location.search);
-        var courseId = query.get('courseId');
-        var clazzid = query.get('clazzid');
-        [...document.querySelectorAll('h4>a, h5>a')].map((a) => {
-            var h4 = a.parentElement;
-            var chapterId = h4.id.match(/(?<=cur)\d+/)[0];
-            /* 表示已解锁 */
-            var rp = h4.querySelector('.roundpointStudent.lock');
-            rp && (rp.innerHTML = '/');
+  var 解锁 = async () => {
+    var query = new URLSearchParams(window.location.search);
+    var courseId = query.get("courseId");
+    var clazzid = query.get("clazzid");
+    [...document.querySelectorAll("h4>a, h5>a")].map((a) => {
+      var h4 = a.parentElement;
+      var chapterId = h4.id.match(/(?<=cur)\d+/)[0];
+      /* 表示已解锁 */
+      var rp = h4.querySelector(".roundpointStudent.lock");
+      rp && (rp.innerHTML = "/");
 
-            /* 激活链接 */
-            a.href =
-                `javascript: getTeacherAjax('` +
-                courseId +
-                `','` +
-                clazzid +
-                `','` +
-                chapterId +
-                `');`;
-        });
+      /* 激活链接 */
+      a.href =
+        `javascript: getTeacherAjax('` +
+        courseId +
+        `','` +
+        clazzid +
+        `','` +
+        chapterId +
+        `');`;
+    });
+  };
+  var 新元素 = (innerHTML, attributes = {}) => {
+    var e = document.createElement("div");
+    e.innerHTML = innerHTML;
+    return Object.assign(e.children[0], attributes);
+  };
+  var 增加统计功能 = async () => {
+    if (
+      [...document.querySelectorAll(".navshow ul li")].filter(
+        (e) => e.innerText.trim() == "统计"
+      ).length
+    )
+      return;
+    //
+    var 取统计地址 = () => {
+      var h = document.head.innerHTML + document.body.innerHTML;
+      var userId =
+        localStorage.userId ||
+        (localStorage.userId = h.match(/(?<=userId: ')\d+/)[0]);
+      return (
+        "/moocAnalysis/chapterStatisticByUser?courseId=" +
+        h.match(/(?<=courseId=)\d+/)[0] +
+        "&classId=" +
+        h.match(/(?<=classId=)\d+/)[0] +
+        "&userId=" +
+        userId +
+        "&ut=s&vc=1&cpi=" +
+        h.match(/(?<=cpi=)\d+/)[0] +
+        "&enc=" +
+        h.match(/(?<=enc=)\w+/)[0]
+      );
     };
-    var 新元素 = (innerHTML, attributes = {}) => {
-        var e = document.createElement('div');
-        e.innerHTML = innerHTML;
-        return Object.assign(e.children[0], attributes);
-    };
-    var 增加统计功能 = async () => {
-        if (
-            [...document.querySelectorAll('.navshow ul li')].filter(
-                (e) => e.innerText.trim() == '统计'
-            ).length
+
+    var e = document.querySelector(".navshow ul");
+    e &&
+      e.appendChild(
+        新元素(
+          '<li><a target="_blank" href="' + 取统计地址() + '">统计</a></li>'
         )
-            return;
-        //
-        var 取统计地址 = () => {
-            var h = document.head.innerHTML + document.body.innerHTML;
-            var userId =
-                localStorage.userId ||
-                (localStorage.userId = h.match(/(?<=userId: ')\d+/)[0]);
-            return (
-                '/moocAnalysis/chapterStatisticByUser?courseId=' +
-                h.match(/(?<=courseId=)\d+/)[0] +
-                '&classId=' +
-                h.match(/(?<=classId=)\d+/)[0] +
-                '&userId=' +
-                userId +
-                '&ut=s&vc=1&cpi=' +
-                h.match(/(?<=cpi=)\d+/)[0] +
-                '&enc=' +
-                h.match(/(?<=enc=)\w+/)[0]
-            );
-        };
-
-        var e = document.querySelector('.navshow ul');
-        e &&
-            e.appendChild(
-                新元素(
-                    '<li><a target="_blank" href="' +
-                        取统计地址() +
-                        '">统计</a></li>'
-                )
-            );
-    };
-    var main = () => {
-        解锁().catch(console.error);
-        增加统计功能().catch(console.error);
-    };
-    main();
-    window.addEventListener('load', main);
-    // document.addEventListener("load", main);
-    // setInterval(main, 10000)
+      );
+  };
+  var main = () => {
+    解锁().catch(console.error);
+    增加统计功能().catch(console.error);
+  };
+  main();
+  window.addEventListener("load", main);
+  // document.addEventListener("load", main);
+  // setInterval(main, 10000)
 })();
