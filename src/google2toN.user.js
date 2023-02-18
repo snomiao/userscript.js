@@ -14,7 +14,7 @@
 // @grant            none
 // @contributionURL  https://snomiao.com/donate
 // @supportURL       https://github.com/snomiao/userscript.js/issues
-// @deprecated       go to my new user-script [SNOLAB] Alt + 123...
+// @deprecated       go to my new user-script [SNOLAB] Alt + 123... Searching Results Links List Batch Open
 // ==/UserScript==
 
 // History:
