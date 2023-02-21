@@ -1,37 +1,37 @@
 {
   "git.postCommitCommand": "sync",
   "replacerules.rules": {
-    "Userscript Append01": {
-      "replace": "// @contributionURL  https://snomiao.com/donate\n// ==/UserScript==",
-      "find": "(?<!// @contributionURL(?:.*\\n)+)// ==/UserScript=="
-    },
-    "Userscript Append02": {
-      "replace": "// @supportURL       https://github.com/snomiao/userscript.js/issues\n// ==/UserScript==",
-      "find": "(?<!// @supportURL(?:.*\\n)+)// ==/UserScript=="
-    },
     "Userscript Ensure01": {
-      "replace": "// @license          GPL-3.0+                                       ",
-      "find": "(?<=\\n)// @license.*"
+      "replace": "\n// @license          GPL-3.0+                                       ",
+      "find": "\\n// @license(         )?.*|(?<!\n// @license(         )?.*(?:\\n.*)*)(?=\n// ==/UserScript==)"
     },
     "Userscript Ensure02": {
-      "replace": "// @namespace        https://userscript.snomiao.com/                ",
-      "find": "(?<=\\n)// @namespace.*"
+      "replace": "\n// @namespace        https://userscript.snomiao.com/                ",
+      "find": "\\n// @namespace(       )?.*|(?<!\n// @namespace(       )?.*(?:\\n.*)*)(?=\n// ==/UserScript==)"
     },
     "Userscript Ensure03": {
-      "replace": "// @author           snomiao@gmail.com                              ",
-      "find": "(?<=\\n)// @author.*"
+      "replace": "\n// @author           snomiao@gmail.com                              ",
+      "find": "\\n// @author(          )?.*|(?<!\n// @author(          )?.*(?:\\n.*)*)(?=\n// ==/UserScript==)"
     },
     "Userscript Ensure04": {
-      "replace": "// @contributionURL  https://snomiao.com/donate                     ",
-      "find": "(?<=\\n)// @contributionURL.*"
+      "replace": "\n// @contributionURL  https://snomiao.com/donate                     ",
+      "find": "\\n// @contributionURL( )?.*|(?<!\n// @contributionURL( )?.*(?:\\n.*)*)(?=\n// ==/UserScript==)"
     },
     "Userscript Ensure05": {
-      "replace": "// @supportURL       https://github.com/snomiao/userscript.js/issues",
-      "find": "(?<=\\n)// @supportURL.*"
+      "replace": "\n// @supportURL       https://github.com/snomiao/userscript.js/issues",
+      "find": "\\n// @supportURL(      )?.*|(?<!\n// @supportURL(      )?.*(?:\\n.*)*)(?=\n// ==/UserScript==)"
     },
-    "Userscript Ensure06": {
-      "replace": "// @version         0.$1",
-      "find": "(?<=\\n)// @version\\s+(\\d+\\.\\d+)$"
+    "Userscript Ensure07": {
+      "replace": "\n// @copyright        2017 - 2023, @snomiao <snomiao.com>",
+      "find": "\\n// @copyright(       )?.*|(?<!\n// @copyright(       )?.*(?:\\n.*)*)(?=\n// ==/UserScript==)"
+    },
+    "Userscript VersionFix": {
+      "replace": "\n// @version         0.$2",
+      "find": "\\n// @version(         )?\\s+?(\\d+\\.\\d+)(?=\\n)"
+    },
+    "Userscript VersionEnsure": {
+      "replace": "\n// @version         0.0.1",
+      "find": "(?<!\n// @version(         )?.*(?:\\n.*)*)(?=\n// ==/UserScript==)"
     },
     "Userscript Head01": {
       "replace": "// @name             ",
@@ -102,14 +102,14 @@
   "replacerules.rulesets": {
     "UserscriptTS": {
       "rules": [
-        "Userscript Append01",
-        "Userscript Append02",
         "Userscript Ensure01",
         "Userscript Ensure02",
         "Userscript Ensure03",
         "Userscript Ensure04",
         "Userscript Ensure05",
-        "Userscript Ensure06",
+        "Userscript Ensure07",
+        "Userscript VersionFix",
+        "Userscript VersionEnsure",
         "Userscript Head01",
         "Userscript Head02",
         "Userscript Head03",
