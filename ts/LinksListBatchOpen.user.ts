@@ -27,14 +27,12 @@ import hotkeyMapper from "hotkey-mapper";
 import { filter, map, pipe, sortBy } from "rambda";
 import { $$ } from "./$$";
 
-type Link = {
-  title: string;
-  link: string;
-};
+type Link = { title: string; link: string };
 globalThis.llboUnload?.();
 globalThis.llboUnload = main();
+
 function main() {
-  console.log("[谷歌一键打开前N项搜索结果] LOADED");
+  console.log("[Links List Batch Open] LOADED");
   // 链接列获取();
   const 已打开过的链接 = {};
   return hotkeyMapper(
@@ -48,18 +46,17 @@ function main() {
       "alt+7": () => openLinkByCount(2 ** 7),
       "alt+8": () => openLinkByCount(2 ** 8),
       "alt+9": () => openLinkByCount(2 ** 9),
-      "shift+alt+1": () => tryCopyLinkByCount(2 ** 1),
-      "shift+alt+2": () => tryCopyLinkByCount(2 ** 2),
-      "shift+alt+3": () => tryCopyLinkByCount(2 ** 3),
-      "shift+alt+4": () => tryCopyLinkByCount(2 ** 4),
-      "shift+alt+5": () => tryCopyLinkByCount(2 ** 5),
-      "shift+alt+6": () => tryCopyLinkByCount(2 ** 6),
-      "shift+alt+7": () => tryCopyLinkByCount(2 ** 7),
-      "shift+alt+8": () => tryCopyLinkByCount(2 ** 8),
-      "shift+alt+9": () => tryCopyLinkByCount(2 ** 9),
+      "alt+shift+1": () => tryCopyLinkByCount(2 ** 1),
+      "alt+shift+2": () => tryCopyLinkByCount(2 ** 2),
+      "alt+shift+3": () => tryCopyLinkByCount(2 ** 3),
+      "alt+shift+4": () => tryCopyLinkByCount(2 ** 4),
+      "alt+shift+5": () => tryCopyLinkByCount(2 ** 5),
+      "alt+shift+6": () => tryCopyLinkByCount(2 ** 6),
+      "alt+shift+7": () => tryCopyLinkByCount(2 ** 7),
+      "alt+shift+8": () => tryCopyLinkByCount(2 ** 8),
+      "alt+shi  ft+9": () => tryCopyLinkByCount(2 ** 9),
     },
-    undefined,
-    true
+    { capture: true, on: "keydown" }
   );
   function linkOpen(link: string) {
     if (!已打开过的链接[link]) {
@@ -167,12 +164,17 @@ function 标链提取(element: HTMLElement) {
 function 页主标链列提取() {
   return pipe(
     () => listElementList(),
-    // 不互相包含
+    // 不包含更強的子節点
     (list) =>
       list.flatMap((father, i, a) =>
-        !a.some((son, j) => i != j && father?.element.contains(son.element))
-          ? [father]
-          : []
+        a.some(
+          (son, j) =>
+            i != j &&
+            father.element.contains(son.element) &&
+            son.strength > father.strength
+        )
+          ? []
+          : [father]
       ),
     // 按最强者 10% 筛选
     (list) =>
