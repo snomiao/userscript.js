@@ -25,32 +25,41 @@ function mapObject(fn, obj) {
   const willReturn = {};
   while (index < len) {
     const key = objKeys[index];
-    willReturn[key] = fn(
-      obj[key],
-      key,
-      obj
-    );
+    willReturn[key] = fn(obj[key], key, obj);
     index++;
   }
   return willReturn;
 }
 var mapObjIndexed = mapObject;
-function hotkeyMapper(mapping, on = "keydown", options) {
+function hotkeyMapper(mapping, options) {
   const handler = (event) => {
-    const mainKey = `${event.code.replace(/^Key/, "").toLowerCase()}Key`;
-    event[mainKey] = true;
+    const key = event.key.toLowerCase();
+    const code = event.code.toLowerCase();
+    const simp = code.replace(/^(?:Key|Digit|Numpad)/, "");
+    const map = new Proxy(event, {
+      get: (target, p) =>
+        ({
+          [`${key}Key`]: true,
+          [`${code}Key`]: true,
+          [`${simp}Key`]: true,
+        }[p] ?? target[p]),
+    });
     const mods = "meta+alt+shift+ctrl";
     mapObjIndexed((fn, hotkey) => {
-      const conds = `${mods}+${hotkey.toLowerCase()}`.replace(/win|command|search/, "meta").replace(/control/, "ctrl").split("+").map((k, i) => [k, Boolean(i >= 4) === Boolean(event[`${k}Key`])]);
+      const conds = `${mods}+${hotkey.toLowerCase()}`
+        .replace(/win|command|search/, "meta")
+        .replace(/control/, "ctrl")
+        .split("+")
+        .map((k, i) => [k, !!(i < 4) === map[`${k}Key`]]);
       if (!Object.entries(Object.fromEntries(conds)).every(([, ok]) => ok))
         return;
       event.stopPropagation(), event.preventDefault();
       return fn(event);
     }, mapping);
   };
-  window.addEventListener(on, handler, options);
+  window.addEventListener(options.on ?? "keydown", handler, options);
   return function unload() {
-    window.removeEventListener(on, handler, options);
+    window.removeEventListener(options.on ?? "keydown", handler, options);
   };
 }
 
@@ -84,13 +93,16 @@ function main() {
       await browser_default.write(content);
       alert(`copied: 
 ${content}`);
-    }
+    },
   });
 }
 function longestTitleGet() {
   const LongestTitle = [
     document.title,
-    document.querySelector("h1")?.innerText || ""
-  ].map((str) => str.replace(/\r?\n.*/g, "")).sort((a, b) => a.length - b.length).pop();
+    document.querySelector("h1")?.innerText || "",
+  ]
+    .map((str) => str.replace(/\r?\n.*/g, ""))
+    .sort((a, b) => a.length - b.length)
+    .pop();
   return LongestTitle;
 }
