@@ -2,7 +2,7 @@
 // @name             [SNOLAB] Alt + 123... Searching Results Links List Batch Open
 // @name:zh          [雪星实验室] Alt + 123... 一键批量打开谷歌必应搜索的前2的n次方项搜索结果
 // @namespace        https://userscript.snomiao.com/
-// @version          1.0.5
+// @version          1.1.0
 // @description      To quickly understand a field, press Alt+1 ...2,3,4...Alt+5 on the search page of Google or Bing to open the search results of the first 2 nth power items and copy the opened ones link. Currently supports: Google, Bing, Zhihu.
 // @description:zh   快速了解一个领域用，在谷歌或必应的搜索页面 按 Alt+1 ...2,3,4... Alt+5  将会打开前2的n次方项的搜索结果，并复制打开的链接。目前支持：谷歌、必应、知乎。
 // @author           snomiao@gmail.com
@@ -17,12 +17,6 @@
 // @supportURL       https://github.com/snomiao/userscript.js/issues
 // ==/UserScript==
 
-/*
-TODO 修复列表识别算法于Google学术搜索的错误
-错误例子
-[中国能源统计年鉴 - Google 学术搜索]( https://scholar.google.com/scholar?q=%E4%B8%AD%E5%9B%BD%E8%83%BD%E6%BA%90%E7%BB%9F%E8%AE%A1%E5%B9%B4%E9%89%B4&hl=zh-CN&as_sdt=0&as_vis=1&oi=scholart )
-*/
-import clipboardy from "clipboardy";
 import hotkeyMapper from "hotkey-mapper";
 import { filter, map, pipe, sortBy } from "rambda";
 import { $$ } from "./$$";
@@ -85,7 +79,7 @@ function tryCopyLinkByCount(count = 1) {
 async function copyLinks(links: Link[]) {
   const md = links.map(md格式链接生成).join("\n\n");
   alert("copied links: " + md);
-  await clipboardy.write(md);
+  await navigator.clipboard.writeText(md);
 }
 
 function longestCommonSequenceMatrix(m: number[][], a, b, x, y) {
@@ -119,7 +113,7 @@ function featureElementAsk(ele: HTMLElement) {
 }
 function elementListStrengh(ele: HTMLElement) {
   return (
-    (ele.textContent || "").length *
+    Math.log(1 + (ele.textContent || "").length) *
     (ele.children.length - 1) *
     ([...ele.children] as HTMLElement[])
       .filter(featureElementAsk)
