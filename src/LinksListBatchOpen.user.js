@@ -19,20 +19,6 @@
 
 /* eslint-disable */
 
-// clipboardy/browser
-var clipboard = {};
-clipboard.write = async (text) => {
-  await navigator.clipboard.writeText(text);
-};
-clipboard.read = async () => navigator.clipboard.readText();
-clipboard.readSync = () => {
-  throw new Error("`.readSync()` is not supported in browsers!");
-};
-clipboard.writeSync = () => {
-  throw new Error("`.writeSync()` is not supported in browsers!");
-};
-var browser_default = clipboard;
-
 // hotkey-mapper
 var { keys } = Object;
 function mapObject(fn, obj) {
@@ -793,7 +779,7 @@ function tryCopyLinkByCount(count = 1) {
 async function copyLinks(links) {
   const md = links.map(md格式链接生成).join("\n\n");
   alert("copied links: " + md);
-  await browser_default.write(md);
+  await navigator.clipboard.writeText(md);
 }
 function longestCommonSequenceMatrix(m, a, b, x, y) {
   const lcs = longestCommonSequenceMatrix;
@@ -825,7 +811,7 @@ function featureElementAsk(ele) {
 }
 function elementListStrengh(ele) {
   return (
-    (ele.textContent || "").length *
+    Math.log(1 + (ele.textContent || "").length) *
     (ele.children.length - 1) *
     [...ele.children]
       .filter(featureElementAsk)
