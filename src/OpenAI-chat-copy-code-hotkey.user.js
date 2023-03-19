@@ -22,7 +22,7 @@
       event.preventDefault();
 
       // Find the HTML element with the text "Copy code"
-      const elements = document.getElementsByTagName("*");
+      const elements = [...document.getElementsByTagName("*")].reverse();
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
         if (element.textContent === "Copy code") {
