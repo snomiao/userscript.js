@@ -38,11 +38,13 @@ function hotkeyMapper(mapping, options) {
     const simp = code.replace(/^(?:Key|Digit|Numpad)/, "");
     const map = new Proxy(event, {
       get: (target, p) =>
-        ({
-          [`${key}Key`]: true,
-          [`${code}Key`]: true,
-          [`${simp}Key`]: true,
-        }[p] ?? target[p]),
+        Boolean(
+          {
+            [`${key}Key`]: true,
+            [`${code}Key`]: true,
+            [`${simp}Key`]: true,
+          }[p] ?? target[p]
+        ),
     });
     const mods = "meta+alt+shift+ctrl";
     mapObjIndexed((fn, hotkey) => {
@@ -50,7 +52,7 @@ function hotkeyMapper(mapping, options) {
         .replace(/win|command|search/, "meta")
         .replace(/control/, "ctrl")
         .split("+")
-        .map((k, i) => [k, !!(i < 4) === map[`${k}Key`]]);
+        .map((k, i) => [k, i >= 4 === map[`${k}Key`]]);
       if (!Object.entries(Object.fromEntries(conds)).every(([, ok]) => ok))
         return;
       event.stopPropagation(), event.preventDefault();

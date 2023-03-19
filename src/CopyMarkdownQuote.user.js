@@ -25,7 +25,11 @@ function mapObject(fn, obj) {
   const willReturn = {};
   while (index < len) {
     const key = objKeys[index];
-    willReturn[key] = fn(obj[key], key, obj);
+    willReturn[key] = fn(
+      obj[key],
+      key,
+      obj
+    );
     index++;
   }
   return willReturn;
@@ -37,20 +41,17 @@ function hotkeyMapper(mapping, options) {
     const code = event.code.toLowerCase();
     const simp = code.replace(/^(?:Key|Digit|Numpad)/, "");
     const map = new Proxy(event, {
-      get: (target, p) =>
-        ({
+      get: (target, p) => Boolean(
+        {
           [`${key}Key`]: true,
           [`${code}Key`]: true,
-          [`${simp}Key`]: true,
-        }[p] ?? target[p]),
+          [`${simp}Key`]: true
+        }[p] ?? target[p]
+      )
     });
     const mods = "meta+alt+shift+ctrl";
     mapObjIndexed((fn, hotkey) => {
-      const conds = `${mods}+${hotkey.toLowerCase()}`
-        .replace(/win|command|search/, "meta")
-        .replace(/control/, "ctrl")
-        .split("+")
-        .map((k, i) => [k, !!(i < 4) === map[`${k}Key`]]);
+      const conds = `${mods}+${hotkey.toLowerCase()}`.replace(/win|command|search/, "meta").replace(/control/, "ctrl").split("+").map((k, i) => [k, i >= 4 === map[`${k}Key`]]);
       if (!Object.entries(Object.fromEntries(conds)).every(([, ok]) => ok))
         return;
       event.stopPropagation(), event.preventDefault();
@@ -93,16 +94,13 @@ function main() {
       await browser_default.write(content);
       alert(`copied: 
 ${content}`);
-    },
+    }
   });
 }
 function longestTitleGet() {
   const LongestTitle = [
     document.title,
-    document.querySelector("h1")?.innerText || "",
-  ]
-    .map((str) => str.replace(/\r?\n.*/g, ""))
-    .sort((a, b) => a.length - b.length)
-    .pop();
+    document.querySelector("h1")?.innerText || ""
+  ].map((str) => str.replace(/\r?\n.*/g, "")).sort((a, b) => a.length - b.length).pop();
   return LongestTitle;
 }
