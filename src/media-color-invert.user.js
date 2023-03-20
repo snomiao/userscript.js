@@ -57,4 +57,3 @@ async function toggle() {
   scan();
   await globalThis.GM?.setValue("media-color-invert", state.invert);
 }
-f;
