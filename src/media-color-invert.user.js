@@ -17,8 +17,31 @@ const state = {
   invert: (await globalThis.GM?.getValue("media-color-invert")) ?? true,
 };
 
+function debounce(func, delay) {
+  let timeout;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), delay);
+  };
+}
+
+function scan() {
+  [...document.querySelectorAll("video,img")].map(
+    (e) => (e.style.filter = state.invert ? "invert(1) hue-rotate(0)" : "")
+  );
+}
+
+const debouncedScan = debounce(scan, 8); // Adjust the delay (300ms) as needed
 const observer = new MutationObserver(function (mutations) {
-  scan();
+  debouncedScan();
+});
+document.addEventListener("visibilitychange", async function () {
+  if (document.hidden) {
+  } else {
+    state.invert = await globalThis.GM?.getValue("media-color-invert");
+    debouncedScan();
+  }
 });
 window.addEventListener(
   "keydown",
@@ -36,9 +59,4 @@ async function toggle() {
   state.invert = !state.invert;
   scan();
   await globalThis.GM?.setValue("media-color-invert", state.invert);
-}
-function scan() {
-  [...document.querySelectorAll("video,img")].map(
-    (e) => (e.style.filter = state.invert ? "invert(1) hue-rotate(0)" : "")
-  );
 }
