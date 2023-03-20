@@ -36,12 +36,9 @@ const debouncedScan = debounce(scan, 8); // Adjust the delay (300ms) as needed
 const observer = new MutationObserver(function (mutations) {
   debouncedScan();
 });
-document.addEventListener("visibilitychange", async function () {
-  if (document.hidden) {
-  } else {
-    state.invert = await globalThis.GM?.getValue("media-color-invert");
-    debouncedScan();
-  }
+window.addEventListener("focus", async function () {
+  state.invert = await globalThis.GM?.getValue("media-color-invert");
+  debouncedScan();
 });
 window.addEventListener(
   "keydown",
@@ -60,3 +57,4 @@ async function toggle() {
   scan();
   await globalThis.GM?.setValue("media-color-invert", state.invert);
 }
+f;
