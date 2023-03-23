@@ -5,7 +5,7 @@
 // @description     Press Alt+C to copy title and url as markdown style link `> ${SELECTION} [${TITLE}]( ${URL} )`
 // @description:zh  按 Alt+C 复制 Markdown 格式的链接 `> ${SELECTION} [${TITLE}]( ${URL} )`
 // @namespace       https://userscript.snomiao.com/
-// @version         0.8.3
+// @version         0.8.4
 // @author          snomiao@gmail.com
 // @match           *://*/*
 // @grant           none

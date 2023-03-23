@@ -21,7 +21,7 @@ specifiers:
   eslint-plugin-node: ^11.1.0
   eslint-plugin-promise: ^6.0.1
   globby: ^13.1.2
-  hotkey-mapper: ^1.2.5
+  hotkey-mapper: ^1.2.6
   html-escaper: ^3.0.3
   husky: ^8.0.0
   lint-staged: ^13.0.3
@@ -62,7 +62,7 @@ devDependencies:
   eslint-plugin-node: 11.1.0_eslint@8.24.0
   eslint-plugin-promise: 6.0.1_eslint@8.24.0
   globby: 13.1.2
-  hotkey-mapper: 1.2.5
+  hotkey-mapper: 1.2.6
   html-escaper: 3.0.3
   husky: 8.0.1
   lint-staged: 13.0.3
@@ -3743,10 +3743,10 @@ packages:
       lru-cache: 6.0.0
     dev: true
 
-  /hotkey-mapper/1.2.5:
+  /hotkey-mapper/1.2.6:
     resolution:
       {
-        integrity: sha512-rNseaqJ24VnuCHzcDxXYL78+nnlTrIa4wRlPkF8j7mk43fF+oXEaKS72eGjyQAiWwcYXz2vCEhCxxC2ulx9Syw==,
+        integrity: sha512-QDR6oNpL7fAG0gzBFslxomJyYsAhzjaV1egfTtKDHl7+/e+uKoIXULb1amPZyYIZR/tHEsLe75tEWxwp/uVMoQ==,
       }
     dev: true
 
