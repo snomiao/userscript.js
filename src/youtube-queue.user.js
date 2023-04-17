@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             YoutubeAllResultsPushToQueuePlay
 // @namespace        https://userscript.snomiao.com/
-// @version          0.0.6
+// @version          0.0.7
 // @description      Youtube Search Results Pages Push To Queue To Play Button
 // @author           snomiao@gmail.com
 // @copyright        2017 - 2023, @snomiao <snomiao.com>
@@ -14,10 +14,10 @@
 // @license          GPL-3.0+
 // ==/UserScript==
 
-const qsa = (sel) => [...document.querySelectorAll(sel)];
+const $$ = (sel) => [...document.querySelectorAll(sel)];
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const waitFor = async (qf, timeout = 1000, interval = 500) => {
-  var ts = +new Date();
+  const ts = +new Date();
   while (+new Date() - ts <= timeout) {
     let re = await qf();
     if (undefined !== re && null !== re) return re;
@@ -51,7 +51,7 @@ const menuClick = async (e) => {
 const AllResultsPushToQueuePlay = async function () {
   // clean list
   // ytp-miniplayer-close-button
-  const vs = qsa("ytd-video-renderer");
+  const vs = $$("ytd-video-renderer");
   for await (const e of vs) {
     await menuClick(e);
   }
@@ -69,9 +69,7 @@ function btnAdd() {
     `<button><div>依次播放捜索結果<br>Queue All Results</div></button>`,
     { onclick }
   );
-  const filterBtn = qsa("ytd-toggle-button-renderer").filter((e) =>
-    e.textContent.match("过滤")
-  )[0];
+  const filterBtn = $$("ytd-toggle-button-renderer")[0];
   if (!filterBtn) return setTimeout(btnAdd, 1000);
   filterBtn.AllResultsPushToQueuePlay?.remove();
   filterBtn.AllResultsPushToQueuePlay = e;
