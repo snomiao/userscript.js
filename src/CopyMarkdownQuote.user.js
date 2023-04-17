@@ -93,8 +93,7 @@ function main() {
       const href = location.href;
       const content = `${quoted}	[${longestTitleGet()}]( ${href} )`.trim();
       await browser_default.write(content);
-      alert(`copied: 
-${content}`);
+      alert(`copied: ${content}`);
     },
   });
 }

@@ -1,49 +1,51 @@
 // ==UserScript==
 // @name             YoutubeAllResultsPushToQueuePlay
-// @namespace        snomiao@gmail.com
+// @namespace        https://userscript.snomiao.com/
 // @version          0.0.6
 // @description      Youtube Search Results Pages Push To Queue To Play Button
-// @author           snomiao
-// @copyright        2021, snomiao (snomiao.com)
+// @author           snomiao@gmail.com
+// @copyright        2017 - 2023, @snomiao <snomiao.com>
 // @match            *://www.youtube.com/results*
 // @match            *://youtube.com/results*
 // @supportURL       https://github.com/snomiao/userscript.js/issues
 // @contributionURL  https://snomiao.com/donate
 // @grant            none
 // @noframes
+// @license          GPL-3.0+
 // ==/UserScript==
 
 const qsa = (sel) => [...document.querySelectorAll(sel)];
-const 睡 = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-const 非空值等待 = async (qf, timeout = 1000, interval = 500) => {
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const waitFor = async (qf, timeout = 1000, interval = 500) => {
   var ts = +new Date();
   while (+new Date() - ts <= timeout) {
     let re = await qf();
     if (undefined !== re && null !== re) return re;
-    await 睡(interval);
+    await sleep(interval);
   }
   return null;
 };
-const 元素等待 = async (e, sel) => await 非空值等待(() => e.querySelector(sel));
+const waitForElement = async (e, sel) =>
+  await waitFor(() => e.querySelector(sel));
 const menuClick = async (e) => {
   e.style.background = "#FF0";
   //   expand and click
-  (await 元素等待(e, ".dropdown-trigger button")).click();
+  (await waitForElement(e, ".dropdown-trigger button")).click();
   //   await 睡(500);
   (
-    await 元素等待(
+    await waitForElement(
       document,
       "tp-yt-iron-dropdown[focused] ytd-menu-service-item-renderer"
     )
   ).click();
   // fold... and wait it close
-  (await 元素等待(e, ".dropdown-trigger button")).click();
-  await 元素等待(
+  (await waitForElement(e, ".dropdown-trigger button")).click();
+  await waitForElement(
     document,
     `tp-yt-iron-dropdown[aria-hidden] ytd-menu-service-item-renderer`
   );
   e.style.background = "";
-  await 睡(100);
+  await sleep(100);
 };
 
 const AllResultsPushToQueuePlay = async function () {
@@ -54,7 +56,7 @@ const AllResultsPushToQueuePlay = async function () {
     await menuClick(e);
   }
 };
-const 新元素 = (innerHTML, attributes = {}) => {
+const elementCreate = (innerHTML, attributes = {}) => {
   return Object.assign(
     Object.assign(document.createElement("div"), { innerHTML }).children[0],
     attributes
@@ -63,8 +65,8 @@ const 新元素 = (innerHTML, attributes = {}) => {
 
 function btnAdd() {
   const onclick = () => AllResultsPushToQueuePlay();
-  const e = 新元素(
-    `<button><div>全部视频向播放列表添加<br>AllResultsPushToQueuePlay</div></button>`,
+  const e = elementCreate(
+    `<button><div>依次播放捜索結果<br>Queue All Results</div></button>`,
     { onclick }
   );
   const filterBtn = qsa("ytd-toggle-button-renderer").filter((e) =>
@@ -75,6 +77,7 @@ function btnAdd() {
   filterBtn.AllResultsPushToQueuePlay = e;
   filterBtn.parentElement.append(e);
 }
-// document.addEventListener('load', btnAdd, false);
-// window.addEventListener('load', btnAdd, false);
+
+document.addEventListener("load", btnAdd, false);
+window.addEventListener("load", btnAdd, false);
 btnAdd();
