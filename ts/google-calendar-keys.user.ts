@@ -30,43 +30,34 @@ globalThis.gkcs_verbose = true;
 const { draggingGet: dg, draggingSet: ds } = draggingUse();
 
 function touchHandler(event) {
-  var touches = event.changedTouches,
-    first = touches[0],
-    type = "";
-  switch (event.type) {
-    case "touchstart":
-      type = "mousedown";
-      break;
-    case "touchmove":
-      type = "mousemove";
-      break;
-    case "touchend":
-      type = "mouseup";
-      break;
-    default:
-      return;
-  }
+  const touches = event.changedTouches;
+  if (touches.length > 1) return;
+  const first = touches[0];
+  const type = {
+    touchstart: "mousedown",
+    touchmove: "mousemove",
+    touchend: "mouseup",
+  }[event.type];
+  if (!type) return;
 
-  var simulatedEvent = document.createEvent("MouseEvent");
-  simulatedEvent.initMouseEvent(
-    type,
-    true,
-    true,
-    window,
-    1,
-    first.screenX,
-    first.screenY,
-    first.clientX,
-    first.clientY,
-    false,
-    false,
-    false,
-    false,
-    0 /*left*/,
-    null
-  );
+  var simulatedEvent = new MouseEvent(type, {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    detail: 1,
+    screenX: first.screenX,
+    screenY: first.screenY,
+    clientX: first.clientX,
+    clientY: first.clientY,
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    metaKey: false,
+    button: 0,
+    relatedTarget: null,
+  });
   first.target.dispatchEvent(simulatedEvent);
-  // event.preventDefault();
+  if (type === "mousemove") event.preventDefault();
 }
 
 function initTouchEventerConverter() {
