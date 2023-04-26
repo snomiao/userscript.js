@@ -19,7 +19,6 @@
 
 import clipboardy from "clipboardy";
 import hotkeyMapper from "hotkey-mapper";
-import { hotkeyUp } from "hotkey-mapper";
 import { tryCatch } from "rambda";
 import { $$ } from "./$$";
 import po2dt from "./po2dt";
@@ -30,7 +29,57 @@ globalThis.gkcs_unload = main();
 globalThis.gkcs_verbose = true;
 const { draggingGet: dg, draggingSet: ds } = draggingUse();
 
+function touchHandler(event) {
+  var touches = event.changedTouches,
+    first = touches[0],
+    type = "";
+  switch (event.type) {
+    case "touchstart":
+      type = "mousedown";
+      break;
+    case "touchmove":
+      type = "mousemove";
+      break;
+    case "touchend":
+      type = "mouseup";
+      break;
+    default:
+      return;
+  }
+
+  var simulatedEvent = document.createEvent("MouseEvent");
+  simulatedEvent.initMouseEvent(
+    type,
+    true,
+    true,
+    window,
+    1,
+    first.screenX,
+    first.screenY,
+    first.clientX,
+    first.clientY,
+    false,
+    false,
+    false,
+    false,
+    0 /*left*/,
+    null
+  );
+  first.target.dispatchEvent(simulatedEvent);
+  // event.preventDefault();
+}
+
+function initTouchEventerConverter() {
+  const e = document.body;
+  e.style.touchAction = "none";
+  e.addEventListener("touchstart", touchHandler, true);
+  e.addEventListener("touchmove", touchHandler, true);
+  e.addEventListener("touchend", touchHandler, true);
+  e.addEventListener("touchcancel", touchHandler, true);
+}
+
 function main() {
+  initTouchEventerConverter();
   console.clear();
   const unloaders = [] as (undefined | (() => void))[];
   unloaders.push(
@@ -50,13 +99,11 @@ function main() {
         "alt+shift+h": () => eventExpand([-1, 0]),
         "alt+shift+l": () => eventExpand([+1, 0]),
       },
-      "keydown",
-      true
+      { capture: true }
     )
   );
   return () => [...unloaders].reverse().forEach((e) => e?.());
 }
-
 async function turboTapWith(
   holdKey: string,
   fn: () => Promise<(() => void) | undefined>

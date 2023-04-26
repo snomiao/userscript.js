@@ -79,9 +79,9 @@ function hotkeyMapper(mapping, options) {
       return fn(event);
     }, mapping);
   };
-  window.addEventListener(options.on ?? "keydown", handler, options);
+  window.addEventListener(options?.on ?? "keydown", handler, options);
   return function unload() {
-    window.removeEventListener(options.on ?? "keydown", handler, options);
+    window.removeEventListener(options?.on ?? "keydown", handler, options);
   };
 }
 
@@ -621,7 +621,53 @@ gkcs_unload?.();
 globalThis.gkcs_unload = main();
 globalThis.gkcs_verbose = true;
 var { draggingGet: dg, draggingSet: ds } = draggingUse();
+function touchHandler(event) {
+  var touches = event.changedTouches,
+    first = touches[0],
+    type2 = "";
+  switch (event.type) {
+    case "touchstart":
+      type2 = "mousedown";
+      break;
+    case "touchmove":
+      type2 = "mousemove";
+      break;
+    case "touchend":
+      type2 = "mouseup";
+      break;
+    default:
+      return;
+  }
+  var simulatedEvent = document.createEvent("MouseEvent");
+  simulatedEvent.initMouseEvent(
+    type2,
+    true,
+    true,
+    window,
+    1,
+    first.screenX,
+    first.screenY,
+    first.clientX,
+    first.clientY,
+    false,
+    false,
+    false,
+    false,
+    0,
+    null
+  );
+  first.target.dispatchEvent(simulatedEvent);
+}
+function initTouchEventerConverter() {
+  const e = document.body;
+  e.style.touchAction = "none";
+  e.addEventListener("touchstart", touchHandler, true);
+  e.addEventListener("touchmove", touchHandler, true);
+  e.addEventListener("touchend", touchHandler, true);
+  e.addEventListener("touchcancel", touchHandler, true);
+}
 function main() {
+  initTouchEventerConverter();
   console.clear();
   const unloaders = [];
   unloaders.push(
@@ -641,8 +687,7 @@ function main() {
         "alt+shift+h": () => eventExpand([-1, 0]),
         "alt+shift+l": () => eventExpand([1, 0]),
       },
-      "keydown",
-      true
+      { capture: true }
     )
   );
   return () => [...unloaders].reverse().forEach((e) => e?.());
