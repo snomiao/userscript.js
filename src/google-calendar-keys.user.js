@@ -621,46 +621,49 @@ gkcs_unload?.();
 globalThis.gkcs_unload = main();
 globalThis.gkcs_verbose = true;
 var { draggingGet: dg, draggingSet: ds } = draggingUse();
+var lastpos = null;
 function touchHandler(event) {
-  var touches = event.changedTouches,
-    first = touches[0],
-    type2 = "";
-  switch (event.type) {
-    case "touchstart":
-      type2 = "mousedown";
-      break;
-    case "touchmove":
-      type2 = "mousemove";
-      break;
-    case "touchend":
-      type2 = "mouseup";
-      break;
-    default:
-      return;
-  }
-  var simulatedEvent = document.createEvent("MouseEvent");
-  simulatedEvent.initMouseEvent(
-    type2,
-    true,
-    true,
-    window,
-    1,
-    first.screenX,
-    first.screenY,
-    first.clientX,
-    first.clientY,
-    false,
-    false,
-    false,
-    false,
-    0,
-    null
-  );
+  const touches = event.changedTouches;
+  if (touches.length > 1) return;
+  const first = touches[0];
+  const type2 = {
+    touchstart: "mousedown",
+    touchmove: "mousemove",
+    touchend: "mouseup",
+  }[event.type];
+  if (!type2) return;
+  var simulatedEvent = new MouseEvent(type2, {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    detail: 1,
+    screenX: first.screenX,
+    screenY: first.screenY,
+    clientX: first.clientX,
+    clientY: first.clientY,
+    ctrlKey: false,
+    altKey: false,
+    shiftKey: false,
+    metaKey: false,
+    button: 0,
+    relatedTarget: null,
+  });
   first.target.dispatchEvent(simulatedEvent);
+  if (type2 === "mousedown") lastpos = [first.screenX, first.screenY];
+  if (type2 === "mousemove") event.preventDefault();
+  if (
+    type2 === "mouseup" &&
+    JSON.stringify(lastpos) === JSON.stringify([first.screenX, first.screenY])
+  )
+    event.preventDefault();
 }
 function initTouchEventerConverter() {
   const e = document.body;
-  e.style.touchAction = "none";
+  e.appendChild(
+    Object.assign(document.createElement("div"), {
+      innerHTML: '<style>[role="presentation"]{touch-action:none}</style>',
+    }).children[0]
+  );
   e.addEventListener("touchstart", touchHandler, true);
   e.addEventListener("touchmove", touchHandler, true);
   e.addEventListener("touchend", touchHandler, true);

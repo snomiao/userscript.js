@@ -28,8 +28,8 @@ gkcs_unload?.();
 globalThis.gkcs_unload = main();
 globalThis.gkcs_verbose = true;
 const { draggingGet: dg, draggingSet: ds } = draggingUse();
-
-function touchHandler(event) {
+let lastpos: null | [number, number] = null;
+function touchHandler(event: TouchEvent) {
   const touches = event.changedTouches;
   if (touches.length > 1) return;
   const first = touches[0];
@@ -57,12 +57,22 @@ function touchHandler(event) {
     relatedTarget: null,
   });
   first.target.dispatchEvent(simulatedEvent);
+  if (type === "mousedown") lastpos = [first.screenX, first.screenY]; // event.preventDefault();
   if (type === "mousemove") event.preventDefault();
+  if (
+    type === "mouseup" &&
+    JSON.stringify(lastpos) === JSON.stringify([first.screenX, first.screenY])
+  )
+    event.preventDefault();
 }
 
 function initTouchEventerConverter() {
   const e = document.body;
-  e.style.touchAction = "none";
+  e.appendChild(
+    Object.assign(document.createElement("div"), {
+      innerHTML: '<style>[role="presentation"]{touch-action:none}</style>',
+    }).children[0]
+  );
   e.addEventListener("touchstart", touchHandler, true);
   e.addEventListener("touchmove", touchHandler, true);
   e.addEventListener("touchend", touchHandler, true);
