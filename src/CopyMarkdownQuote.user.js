@@ -89,9 +89,13 @@ function main() {
   globalThis.cmqa.unload = hotkeyMapper({
     "alt+c": async () => {
       const selected = window?.getSelection()?.toString().trim() || "";
-      const quoted = selected && selected.replace(/.*/, (s) => `> ${s}`);
+      const quoted = selected && selected.replace(/.*/g, (s) => `> ${s}`);
       const href = location.href;
-      const content = `${quoted}	[${longestTitleGet()}]( ${href} )`.trim();
+      const content = `- [${longestTitleGet()?.replace(
+        /([|])/,
+        (e) => "\\" + e
+      )}]( ${href} )
+${quoted}`.trim();
       await browser_default.write(content);
       alert(`copied: 
 ${content}`);

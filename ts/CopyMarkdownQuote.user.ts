@@ -23,9 +23,12 @@ function main() {
   globalThis.cmqa.unload = hotkeyMapper({
     "alt+c": async () => {
       const selected = window?.getSelection()?.toString().trim() || "";
-      const quoted = selected && selected.replace(/.*/, (s) => `> ${s}`);
+      const quoted = selected && selected.replace(/.*/g, (s) => `> ${s}`);
       const href = location.href;
-      const content = `${quoted}\t[${longestTitleGet()}]( ${href} )`.trim();
+      const content = `- [${longestTitleGet()?.replace(
+        /([|])/,
+        (e) => "\\" + e
+      )}]( ${href} )\n${quoted}`.trim();
       await clipboardy.write(content);
       alert(`copied: \n${content}`);
     },
