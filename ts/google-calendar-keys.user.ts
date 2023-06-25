@@ -29,6 +29,7 @@ globalThis.gkcs_unload = main();
 globalThis.gkcs_verbose = true;
 const { draggingGet: dg, draggingSet: ds } = draggingUse();
 let lastpos: null | [number, number] = null;
+
 function touchHandler(event: TouchEvent) {
   const touches = event.changedTouches;
   if (touches.length > 1) return;
