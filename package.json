@@ -71,7 +71,7 @@
     "terser": "^5.15.0",
     "tsx": "^3.9.0",
     "userscript-meta": "^1.0.1",
-    "vite": "^4.0.4",
+    "vite": "^4.0.5",
     "vitest": "^0.27.3"
   },
   "dependencies": {
