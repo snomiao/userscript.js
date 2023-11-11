@@ -2,7 +2,6 @@ import Link from "next/link";
 import { globby } from "globby";
 
 export default async function Home() {
-  const filenames = ["pixso-touch.user.js"];
   const ls = await globby("../src/*.js");
   const lx = ls.map(e=>e.replace('../src/',''))
   return (
