@@ -1,0 +1,15 @@
+version: "3"
+networks:
+  snocode_default:
+    external: true
+services:
+  userscriptjs:
+    image: node
+    command: bash -c "cd ${PWD} && npm i -g pnpm && pnpm i && pnpm dev"
+    volumes:
+      - ./:${PWD}
+    environment:
+      - PORT=80
+    restart: unless-stopped
+    networks:
+      - snocode_default
