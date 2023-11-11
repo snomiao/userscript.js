@@ -15,7 +15,6 @@
 //      - date time input change
 //      - event drag
 //  2. journal view text copy for the day-summary
-//
 
 /* eslint-disable */
 

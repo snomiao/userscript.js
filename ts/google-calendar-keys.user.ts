@@ -32,7 +32,6 @@ const { draggingGet: dg, draggingSet: ds } = draggingUse();
 function touchEventConverterEffect() {
   let lastpos: null | readonly [number, number] = null;
   function touchHandler(event: TouchEvent) {
-    k;
     const touches = event.changedTouches;
     if (touches.length > 1) return;
     const first = touches[0];
