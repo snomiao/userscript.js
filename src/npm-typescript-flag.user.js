@@ -43,7 +43,7 @@ async function markPackage(h3) {
   const content = await response.text();
   const hasDt =
     content.match(
-      '(?<="true">)<img.*?This package has TypeScript declarations provided by.*?/>'
+      '(?<="flex">)<img.*?This package has TypeScript declarations provided by.*?/>'
     )?.[0] ?? "";
   const hasTs =
     content.match(
