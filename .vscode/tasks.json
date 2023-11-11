@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "dev:compose",
+			"path": "dever",
+			"problemMatcher": [],
+			"label": "npm: dev:compose - dever",
+			"detail": "docker compose up",
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
+		}
+	],
+}
