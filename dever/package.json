@@ -17,6 +17,8 @@
     "daisyui": "^3.1.6",
     "eslint": "8.41.0",
     "eslint-config-next": "13.4.4",
+    "glob": "^10.3.10",
+    "globby": "^13.2.2",
     "next": "13.4.4",
     "nextjs-cors": "^2.1.2",
     "postcss": "8.4.24",

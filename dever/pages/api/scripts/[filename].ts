@@ -4,15 +4,25 @@ import yaml from "yaml";
 import { readFile } from "fs/promises";
 import path from "path";
 import { NextApiRequest, NextApiResponse } from "next";
+import { globby } from "globby";
 
 // https://localhost:3003/scripts/pixso-touch.user.js
 // pixso-touch.user.js
 
 const parseScript = async (filename: string, installUrl = "") => {
   console.log(yaml.stringify({ filename }));
-  const src = path.resolve("../ts/" + filename.replace(".js", ".tsx"));
+  const files = await globby([
+    "../ts/" + filename.replace(".js", "") + ".{ts,tsx,js,jsx}",
+    "../src/" + filename,
+  ]);
+  const src = files.find((e) => e);
+  if (!src) {
+    throw new Error("no file found");
+  }
+  console.log(yaml.stringify({ src, files }));
 
   const content = await readFile(src, "utf8");
+  console.log(yaml.stringify({ content }));
   const header = content.match(
     /\/\/ ==UserScript==[\s\S]*?\/\/ ==\/UserScript==/
   )?.[0];
@@ -25,7 +35,6 @@ const parseScript = async (filename: string, installUrl = "") => {
     );
   }
   if (!header) throw new Error("no header found");
-  console.log();
   console.log(yaml.stringify({ src, header }));
   const results = await esbuild.build({
     sourceRoot: "../",

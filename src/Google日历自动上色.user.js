@@ -85,6 +85,13 @@ const 浅色事件 = {
   "On the road|commute|school|work|class|course|路上|通勤|上学|上班|上课|课程":
     "",
 };
+const 任务事件 = {
+  // 从浅红到天蓝
+  TODO: "",
+  PENDING: "",
+  DOING: "",
+  DONE: "",
+};
 const lch表值色带转换 = (预设颜色表, s, e) =>
   Object.fromEntries(
     Object.entries(预设颜色表).map(([k, v], i, a) => [
@@ -94,6 +101,7 @@ const lch表值色带转换 = (预设颜色表, s, e) =>
   );
 Object.assign(深色事件, lch表值色带转换(深色事件, 70, 80));
 Object.assign(浅色事件, lch表值色带转换(浅色事件, 100, 20));
+Object.assign(任务事件, lch表值色带转换(任务事件, 20, 20));
 
 const 更新颜色 = () => {
   const 事件元素列 = [...document.querySelectorAll("div[data-eventid]")];
@@ -102,6 +110,7 @@ const 更新颜色 = () => {
     文本: e.textContent.replace(/Organizer/g, ""),
     颜色: window.getComputedStyle(e).getPropertyValue("background-color"),
   }));
+  // [[深色事件, 'black'], [浅色事件, 'white']].
   颜色分析.forEach(({ 元素, 文本 }) =>
     Object.keys(浅色事件)
       .filter((正则) => 文本.match(new RegExp(正则, "i")))
