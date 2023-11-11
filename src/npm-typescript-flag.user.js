@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             [SNOLAB] NPM Typescript Flag
 // @namespace        https://userscript.snomiao.com/
-// @version          0.1.1
+// @version          0.1.5
 // @description      Show "Dt" and "Ts" Icon on npm package search result.
 // @author           snomiao@gmail.com
 // @match            *://www.npmjs.com/search*
