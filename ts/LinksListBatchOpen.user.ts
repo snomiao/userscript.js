@@ -18,9 +18,7 @@
 // ==/UserScript==
 
 import hotkeyMapper from "hotkey-mapper";
-import { filter, map, pipe, sortBy } from "rambda";
 import { $$ } from "./$$";
-
 type Link = { title: string; link: string };
 globalThis.llboUnload?.();
 globalThis.llboUnload = main();
@@ -28,7 +26,7 @@ globalThis.llboUnload = main();
 function main() {
   console.log("[Links List Batch Open] LOADED");
   // 链接列获取();
-  const 已打开过的链接 = {};
+  const linkAlreadyOpened = new Set();
   return hotkeyMapper(
     {
       "alt+1": () => openLinkByCount(2 ** 1),
@@ -53,10 +51,10 @@ function main() {
     { capture: true, on: "keydown" }
   );
   function linkOpen(link: string) {
-    if (!已打开过的链接[link]) {
+    if (!linkAlreadyOpened.has(link)) {
       window.open(link);
     }
-    已打开过的链接[link] = 1;
+    linkAlreadyOpened.add(link);
   }
   function openLinkByCount(count = 1) {
     console.log("openLinkByCount", count);
@@ -77,7 +75,7 @@ function tryCopyLinkByCount(count = 1) {
 }
 
 async function copyLinks(links: Link[]) {
-  const md = links.map(md格式链接生成).join("\n\n");
+  const md = links.map(markdownLinksGenerate).join("\n\n");
   alert("copied links: " + md);
   await navigator.clipboard.writeText(md);
 }
@@ -123,23 +121,23 @@ function elementListStrengh(ele: HTMLElement) {
   );
 }
 function listElementList() {
-  return pipe(
-    () => $$("div,dl,ul,ol,tbody,table,td"),
-    filter((e) => e.children.length > 1),
-    map((element) => ({
-      element,
-      strength: elementListStrengh(element),
-      featureList: pipe(
-        () => [...element.children] as HTMLElement[],
-        filter(featureElementAsk),
-        //filter((e) => !["style", "script", "span"].includes(e.tagName))
-        map(elementFeatureList)
-      )(),
-    })),
-    sortBy((a) => -a.strength)
-  )();
+  const elements = $$("div,dl,ul,ol,tbody,table,td");
+  const sorted = elements
+    .filter((e) => e.children.length > 1)
+    .map((element) => {
+      const children = [...element.children] as HTMLElement[];
+      return {
+        element,
+        strength: elementListStrengh(element),
+        featureList: children
+          .filter(featureElementAsk)
+          //filter((e) => !["style", "script", "span"].includes(e.tagName))
+          .map(elementFeatureList),
+      };
+    });
+  return sortBy((a) => -a.strength, sorted);
 }
-function 标链元素提取(e) {
+function titleLinkElementExtract(e) {
   return (
     e?.querySelector("dd,dt,h1,h2,h3,h4,h5,h6")?.querySelector("a") ||
     [...e?.querySelectorAll("a")]?.filter((e) =>
@@ -148,46 +146,67 @@ function 标链元素提取(e) {
     e?.querySelector("a")
   );
 }
-function 标链提取(element: HTMLElement) {
+function titleLinkExtract(element: HTMLElement) {
   return {
     element,
     title: element?.textContent?.replace(/\s+/g, " ").trim(),
     link: (element as HTMLAnchorElement)?.href,
   };
 }
-function 页主标链列提取() {
-  return pipe(
-    () => listElementList(),
+function pageMainTitleLinkListExtract() {
+  const list = listElementList();
+  const filteredList = list
     // 不包含更強的子節点
-    (list) =>
-      list.flatMap((father, i, a) =>
-        a.some(
-          (son, j) =>
-            i != j &&
-            father.element.contains(son.element) &&
-            son.strength > father.strength
-        )
-          ? []
-          : [father]
-      ),
+    .flatMap((father, i, a) =>
+      a.some(
+        (son, j) =>
+          i != j &&
+          father.element.contains(son.element) &&
+          son.strength > father.strength
+      )
+        ? []
+        : [father]
+    )
     // 按最强者 10% 筛选
-    (list) =>
-      list.flatMap((e, i, a) => (e.strength > a[0].strength * 0.1 ? [e] : [])),
-    // 按屏幕垂直位置排序
-    sortBy((a) => a.element.offsetTop),
-    // filter(({ element, strength, featureList }) => !console.log(element, strength, featureList)), // 元素提取debug
-    map(({ element }) => element), // 元素提取
-    (e) => e.flatMap((e) => [...e?.children]?.map?.(标链元素提取) || []),
-    filter((e) => e),
-    map(标链提取),
-    filter(({ title, link }) => title),
-    filter(({ title, link }) => link?.match?.(/^http/))
-  )();
+    .flatMap((e, _i, a) => (e.strength > a[0].strength * 0.1 ? [e] : []));
+  // 按屏幕垂直位置排序 / sorted by vertical position at first, and then horizonal position
+  const sortedList = sortBy(
+    (a) => a.element.offsetTop * window.outerWidth + a.element.offsetLeft,
+    filteredList
+  );
+  const result = sortedList
+    // 元素提取
+    .map(({ element }) => element)
+    .flatMap((e) => [...e?.children]?.map?.(titleLinkElementExtract) || [])
+    .flatMap((e) => (e ? [e] : []))
+    .map(titleLinkExtract)
+    .flatMap((e) => (e.title ? [e] : []))
+    .flatMap((e) => (e.link?.match?.(/^http/) ? [e] : []));
+  // .filter(({ element, strength, featureList }) => !console.log(element, strength, featureList)), // 元素提取debug
+  return result;
 }
 
 function getLinks(数量 = Infinity) {
-  return 页主标链列提取().slice(0, 数量);
+  return pageMainTitleLinkListExtract().slice(0, 数量);
 }
-function md格式链接生成({ title, link }: Link) {
+function markdownLinksGenerate({ title, link }: Link) {
   return `- [${title}](${link})`;
+}
+
+type Ord = number | string | boolean | Date;
+/**
+ * It returns copy of `list` sorted by `sortFn` function, where `sortFn` function returns a value to compare, i.e. it doesn't need to return only `-1`, `0` or `1`.
+ */
+function sortBy<T>(sortFn: (a: T) => Ord, list: T[]): T[];
+// function sortBy<T>(sortFn: (a: T) => Ord): (list: T[]) => T[];
+// function sortBy(sortFn: (a: any) => Ord): <T>(list: T[]) => T[];
+function sortBy(sortFn, list) {
+  if (arguments.length === 1) return (_list) => sortBy(sortFn, _list);
+  const clone = [...list];
+  return clone.sort((a, b) => {
+    const aSortResult = sortFn(a);
+    const bSortResult = sortFn(b);
+    if (aSortResult === bSortResult) return 0;
+    return aSortResult < bSortResult ? -1 : 1;
+  });
 }
