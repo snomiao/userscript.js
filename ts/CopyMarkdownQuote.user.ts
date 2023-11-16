@@ -12,7 +12,7 @@
 // ==/UserScript==
 
 import hotkeyMapper from "hotkey-mapper";
-import clipboardy from "clipboardy";
+// import clipboardy from "clipboardy";
 
 {
   main();
@@ -29,7 +29,7 @@ function main() {
         /([|])/,
         (e) => "\\" + e
       )}]( ${href} )\n${quoted}`.trim();
-      await clipboardy.write(content);
+      await navigator.clipboard.writeText(content);
       alert(`copied: \n${content}`);
     },
   });
