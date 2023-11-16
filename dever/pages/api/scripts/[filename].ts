@@ -54,7 +54,8 @@ async function parseScript(filename: string, installUrl = "") {
     bundle: true,
     banner: { js: header },
     format: "iife",
-    platform: "node",
+    platform: "browser",
+    sourcemap: true,
     write: false,
   });
   const script = results.outputFiles[0].text;

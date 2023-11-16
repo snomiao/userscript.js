@@ -12,7 +12,7 @@
 // ==/UserScript==
 
 import hotkeyMapper from "hotkey-mapper";
-// import clipboardy from "clipboardy";
+import clipboardy from "clipboardy";
 
 {
   main();
@@ -21,7 +21,9 @@ function main() {
   globalThis.cmqa ||= {};
   globalThis.cmqa.unload?.();
   globalThis.cmqa.unload = hotkeyMapper({
-    "alt+c": async () => {
+    "alt+c": async (e) => {
+      e.preventDefault?.()
+      e.stopPropagation?.()
       const selected = window?.getSelection()?.toString().trim() || "";
       const quoted = selected && selected.replace(/.*/g, (s) => `> ${s}`);
       const href = location.href;
@@ -29,7 +31,7 @@ function main() {
         /([|])/,
         (e) => "\\" + e
       )}]( ${href} )\n${quoted}`.trim();
-      await navigator.clipboard.writeText(content);
+      await clipboardy.write(content);
       alert(`copied: \n${content}`);
     },
   });
