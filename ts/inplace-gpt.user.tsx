@@ -15,7 +15,8 @@
 //      - event drag
 //  2. journal view text copy for the day-summary
 //
-
+// Note: still WIP
+// 
 import React from "react";
 import { createPortal } from "react-dom";
 import { createRoot } from "react-dom/client";
