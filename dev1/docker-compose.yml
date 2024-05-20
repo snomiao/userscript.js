@@ -10,11 +10,13 @@ services:
     working_dir: ${PWD}
     # command: bash -c "npm i -g bun && bun i && bun dev"
     # command: bash -c "bun i && bun --bun dev"
-    command: bash -c "bun i && bun --bun dev --port 80"
-    # command: bun --bun dev
+    # command: bash -c "bun i && bun --bun dev"
+    command: bun --bun dev
     volumes:
       # - ./:${PWD}
       - ./..:${PWD}/..
+    environment:
+      - PORT=80
     restart: unless-stopped
     networks:
       - snocode_default

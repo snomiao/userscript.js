@@ -3,3 +3,6 @@ bookmarks
 .pnpm-debug.log
 home
 .pnpm-store
+
+pnpm-lock.yaml
+bun.lockb

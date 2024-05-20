@@ -12,7 +12,7 @@
 // ==/UserScript==
 "use strict";
 (() => {
-  // ../node_modules/.pnpm/hotkey-mapper@2.1.2/node_modules/hotkey-mapper/dist/index.mjs
+  // ../node_modules/hotkey-mapper/dist/index.mjs
   var { keys } = Object;
   function mapObject(fn, obj) {
     if (arguments.length === 1) {
@@ -91,17 +91,19 @@
     globalThis.cmqa ||= {};
     globalThis.cmqa.unload?.();
     globalThis.cmqa.unload = hotkeyMapper({
-      "alt+c": async () => {
+      "alt+c": async (e) => {
+        e.preventDefault?.();
+        e.stopPropagation?.();
         const selected = window?.getSelection()?.toString().trim() || "";
         const quoted = selected && selected.replace(/.*/g, (s) => `> ${s}`);
         const href = location.href;
         const content = `- [${longestTitleGet()?.replace(
           /([|])/,
-          (e) => "\\" + e
+          (e2) => "\\" + e2
         )}]( ${href} )
 ${quoted}`.trim();
         await browser_default.write(content);
-        alert(`copied:
+        alert(`copied: 
 ${content}`);
       }
     });

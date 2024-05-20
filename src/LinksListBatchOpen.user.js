@@ -18,7 +18,7 @@
 // ==/UserScript==
 "use strict";
 (() => {
-  // ../node_modules/.pnpm/hotkey-mapper@1.2.6/node_modules/hotkey-mapper/dist/index.mjs
+  // ../node_modules/hotkey-mapper/dist/index.mjs
   var { keys } = Object;
   function mapObject(fn, obj) {
     if (arguments.length === 1) {
@@ -42,30 +42,36 @@
   var mapObjIndexed = mapObject;
   function hotkeyMapper(mapping, options) {
     const handler = (event) => {
-      const key = event.key.toLowerCase();
-      const code = event.code.toLowerCase();
-      const simp = code.replace(/^(?:Key|Digit|Numpad)/, "");
+      if (!event.key)
+        throw new Error("Invalid KeyboardEvent");
+      if (!event.code)
+        throw new Error("Invalid KeyboardEvent");
+      const key = event.key?.toLowerCase();
+      const code = event.code?.toLowerCase();
+      const simp = event.code?.replace(/^(?:Key|Digit|Numpad)/, "").toLowerCase();
       const map = new Proxy(event, {
-        get: (target, p) => Boolean(
+        get: (target2, p) => Boolean(
           {
             [`${key}Key`]: true,
             [`${code}Key`]: true,
             [`${simp}Key`]: true
-          }[p] ?? target[p]
+          }[p] ?? target2[p]
         )
       });
       const mods = "meta+alt+shift+ctrl";
       mapObjIndexed((fn, hotkey) => {
-        const conds = `${mods}+${hotkey.toLowerCase()}`.replace(/win|command|search/, "meta").replace(/control/, "ctrl").split("+").map((k, i) => [k, i >= 4 === map[`${k}Key`]]);
+        const conds = `${mods}+${hotkey.toLowerCase()}`.replace(/win|command|search/, "meta").replace(/control/, "ctrl").split("+").map((key2) => key2.toLowerCase().trim()).map((k, i) => [k, i >= 4 === map[`${k}Key`]]);
         if (!Object.entries(Object.fromEntries(conds)).every(([, ok]) => ok))
           return;
-        event.stopPropagation(), event.preventDefault();
+        event.stopPropagation?.();
+        event.preventDefault?.();
         return fn(event);
       }, mapping);
     };
-    window.addEventListener(options?.on ?? "keydown", handler, options);
+    const target = options?.target ?? globalThis;
+    target.addEventListener(options?.on ?? "keydown", handler, options);
     return function unload() {
-      window.removeEventListener(options?.on ?? "keydown", handler, options);
+      target.removeEventListener(options?.on ?? "keydown", handler, options);
     };
   }
 

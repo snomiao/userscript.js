@@ -31,7 +31,7 @@ async function main() {
         globalThis.mozillaSpeechRecognition;
     if (!globalThis.SpeechRecognition)
         return alert(
-            "unable to access speechSynthesis service, please update your browser"
+            "unable to access SpeechRecognition service, please update your browser"
         );
     listeningLooper().then();
     speakingLooper().then();

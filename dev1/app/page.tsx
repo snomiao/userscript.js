@@ -21,7 +21,7 @@ export default async function Home() {
   return (
     <div className="h-screen overflow-auto p-24 flex items-center flex-col">
       <main className="flex flex-col justify-between gap-2">
-        {scripts.map(({ src: src, filename, header }) => {
+        {scripts.map(({ src: f, filename, header }) => {
           const displayName = header[`name:${lang}`] ?? header.name;
           const displayDesc =
             header[`description:${lang}`] ?? header.description;
@@ -29,10 +29,10 @@ export default async function Home() {
             filename
           )}?src=install&t=${+new Date()}`;
           return (
-            <details key={src}>
+            <details>
               <summary>
                 <Link
-                  key={src}
+                  key={f}
                   href={href}
                   prefetch={false}
                   target="_blank"

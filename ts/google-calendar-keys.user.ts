@@ -22,9 +22,9 @@ import hotkeyMapper from "hotkey-mapper";
 import { equals, tryCatch } from "rambda";
 import { $$ } from "./$$";
 import po2dt from "./po2dt";
+import { screen } from "@testing-library/dom";
 
-const gkcs_unload = globalThis.gkcs_unload;
-gkcs_unload?.();
+globalThis.gkcs_unload?.();
 globalThis.gkcs_unload = main();
 globalThis.gkcs_verbose = true;
 const { draggingGet: dg, draggingSet: ds } = draggingUse();
@@ -66,11 +66,11 @@ function touchEventConverterEffect() {
     if (type === "mouseup" && equals(lastpos, pos)) event.preventDefault();
   }
   const e = document.body;
-  const styleChild = e.appendChild(
-    Object.assign(document.createElement("div"), {
-      innerHTML: '<style>[role="presentation"]{touch-action:none}</style>',
-    }).children[0]
+  const styleEle = document.createElement("style");
+  styleEle.appendChild(
+    document.createTextNode('[role="presentation"]{touch-action:none}')
   );
+  const styleChild = e.appendChild(styleEle);
   e.addEventListener("touchstart", touchHandler, true);
   e.addEventListener("touchmove", touchHandler, true);
   e.addEventListener("touchend", touchHandler, true);
@@ -280,15 +280,82 @@ const sel = {
     '[aria-label="タイトルを追加"]',
     '[aria-label="タイトル"]',
   ].join(","),
-  StartDate: '[aria-label="開始日"]',
-  StartTime: '[aria-label="開始時間"]',
-  EndTime: '[aria-label="終了時間"]',
-  EndDate: '[aria-label="終了日"]',
+  StartDate: '[aria-label="開始日"],[aria-label="Start date"],',
+  StartTime: '[aria-label="開始時間"],[aria-label="Start time"],',
+  EndTime: '[aria-label="終了時間"],[aria-label="End time"],',
+  EndDate: '[aria-label="終了日"],[aria-label="End date"],',
   AllDay: '[aria-label="終日"]',
   TimeZone: '[aria-label="タイムゾーン"]',
   Guests: '[aria-label="ゲスト"]',
 };
+
+function startDateTimeChange(msDiff = 0) {
+  return dateTimeControlUpdate(
+    [
+      screen.getByLabelText("Start date", { selector: "input" }),
+      screen.getByLabelText("Start time", { selector: "input" }),
+    ],
+    msDiff
+  );
+}
+function endDateTimeChange(msDiff = 0) {
+  return dateTimeControlUpdate(
+    [
+      screen.getByLabelText("End date", { selector: "input" }),
+      screen.getByLabelText("End time", { selector: "input" }),
+    ],
+    msDiff
+  );
+}
+
+function dateTimeToIsoString([sd, st]: readonly [string, string]) {
+  return new Date([sd, st].join(" "));
+}
+function isoString2dateTimeValue(iso) {
+  return new Date(+new Date(iso) - new Date().getTimezoneOffset() * 60e3)
+    .toUTCString()
+    .slice(5, -4)
+    .split(/ (?=\d\d:)/);
+}
+async function dateTimeControlUpdate(
+  [elDate, elMinute]: [HTMLInputElement, HTMLInputElement],
+  msDiff = 0
+) {
+  await Promise.all(
+    [[elDate, elMinute].map((e) => e.value) as [string, string]]
+      .map(dateTimeToIsoString)
+      .map((e) => new Date(+new Date(e) + msDiff).toISOString())
+      .map(isoString2dateTimeValue)
+      .flatMap(([d, t]) => {
+        console.log({ d, t });
+        return [
+          elementSetValue(elDate, d),
+          elementSetValue(elMinute, t.slice(0, 5)),
+        ];
+      })
+  );
+  screen.getByLabelText("Title").focus();
+}
+async function elementSetValue(el, value) {
+  if (el.value === value) return;
+  el.value = value;
+  el.dispatchEvent(new InputEvent("input", { bubbles: true }));
+  el.dispatchEvent(new Event("change", { bubbles: true }));
+  el.dispatchEvent(
+    new KeyboardEvent("keydown", {
+      bubbles: true,
+      keyCode: 13 /* enter */,
+    })
+  );
+  el.focus();
+  await sleep(0);
+  el.blur();
+}
+
 async function inputDateTimeChange(sdt = 0, edt = 0) {
+  return await Promise.all([startDateTimeChange(sdt), endDateTimeChange(edt)]);
+}
+async function inputDateTimeChange_deprecated(sdt = 0, edt = 0) {
   // All day: both dates, no time
   // Date time: start date + start time + end date
   const startDateInputPeek = $visiable(sel.StartDate) as HTMLInputElement;

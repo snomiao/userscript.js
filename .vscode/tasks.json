@@ -7,7 +7,7 @@
 			"path": "dever",
 			"problemMatcher": [],
 			"label": "npm: dev:compose - dever",
-			"detail": "docker compose up",
+			"detail": "docker compose up --build --pull",
 			"runOptions": {
 				"runOn": "folderOpen"
 			}
