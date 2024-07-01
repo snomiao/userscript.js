@@ -6,3 +6,4 @@ home
 
 pnpm-lock.yaml
 bun.lockb
+*.stackdump
