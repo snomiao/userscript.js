@@ -20,7 +20,7 @@
     "eslint-config-next": "13.4.4",
     "glob": "^10.3.10",
     "globby": "^13.2.2",
-    "next": "14.0.2",
+    "next": "14.2.10",
     "nextjs-cors": "^2.1.2",
     "p-map": "^7.0.1",
     "postcss": "8.4.24",
