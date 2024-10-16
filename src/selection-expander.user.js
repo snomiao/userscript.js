@@ -9,6 +9,7 @@
 // @match           *://*/*
 // @grant           none
 // ==/UserScript==
+// note: migrated to https://gist.github.com/snomiao/7e4d17e1b618167654c4d1ae0dc23cd3f
 
 globalThis?.selectionExpander?.unload?.();
 
