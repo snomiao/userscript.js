@@ -58,7 +58,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.1",
     "globby": "^13.1.2",
-    "hotkey-mapper": "^2.1.2",
+    "hotkey-mapper": "^2.1.5",
     "html-escaper": "^3.0.3",
     "husky": "^8.0.0",
     "lint-staged": "^13.0.3",
@@ -84,9 +84,11 @@
     "@testing-library/dom": "^9.3.3",
     "@testing-library/user-event": "^14.5.1",
     "@types/lodash-es": "^4.17.11",
+    "capslockx.js": "^0.1.0",
     "lodash-es": "^4.17.21",
     "next": "latest",
     "react-hot-toast": "^2.4.1",
-    "use-hotkey-mapper": "^1.0.4"
+    "use-hotkey-mapper": "^1.0.4",
+    "zx": "^8.1.2"
   }
 }

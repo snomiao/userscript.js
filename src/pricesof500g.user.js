@@ -22,7 +22,6 @@
 // @supportURL       https://github.com/snomiao/userscript.js/issues
 // ==/UserScript==
 
-//
 // (20210221)更新：性能优化、数据单位识别优化、更新天猫超市、amazon、suning、加入中文数字识别
 // (20200404)更新：增加天猫超市支持、优化刷新逻辑
 //
