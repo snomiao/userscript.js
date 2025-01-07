@@ -1,0 +1,15 @@
+version: "3"
+networks:
+  snocode_default:
+    external: true
+services:
+  userscript:
+    restart: always
+    image: oven/bun
+    command: bash -c "bun i && bun --bun dev --port 80"
+    volumes:
+      - .:/home/bun/app
+      - ../ts:/home/bun/app/ts
+      - ../node_modules:/home/bun/app/node_modules
+    networks:
+      - snocode_default
