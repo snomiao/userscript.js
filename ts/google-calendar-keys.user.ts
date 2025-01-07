@@ -16,73 +16,18 @@
 //      - event drag
 //  2. journal view text copy for the day-summary
 //
-
+import { screen } from "@testing-library/dom";
 import clipboardy from "clipboardy";
 import hotkeyMapper from "hotkey-mapper";
-import { equals, tryCatch } from "rambda";
+import { tryCatch } from "rambda";
 import { $$ } from "./$$";
 import po2dt from "./po2dt";
-import { screen } from "@testing-library/dom";
+import { touchEventConverterEffect } from './touchEventConverterEffect';
 
 globalThis.gkcs_unload?.();
 globalThis.gkcs_unload = main();
 globalThis.gkcs_verbose = true;
 const { draggingGet: dg, draggingSet: ds } = draggingUse();
-
-function touchEventConverterEffect() {
-  let lastpos: null | readonly [number, number] = null;
-  function touchHandler(event: TouchEvent) {
-    const touches = event.changedTouches;
-    if (touches.length > 1) return;
-    const first = touches[0];
-    const type = {
-      touchstart: "mousedown",
-      touchmove: "mousemove",
-      touchend: "mouseup",
-    }[event.type];
-    if (!type) return;
-
-    var simulatedEvent = new MouseEvent(type, {
-      bubbles: true,
-      cancelable: true,
-      view: window,
-      detail: 1,
-      screenX: first.screenX,
-      screenY: first.screenY,
-      clientX: first.clientX,
-      clientY: first.clientY,
-      ctrlKey: false,
-      altKey: false,
-      shiftKey: false,
-      metaKey: false,
-      button: 0,
-      relatedTarget: null,
-    });
-    first.target.dispatchEvent(simulatedEvent);
-
-    const pos = [first.screenX, first.screenY] as const;
-    if (type === "mousedown") lastpos = pos; // event.preventDefault();
-    if (type === "mousemove") event.preventDefault();
-    if (type === "mouseup" && equals(lastpos, pos)) event.preventDefault();
-  }
-  const e = document.body;
-  const styleEle = document.createElement("style");
-  styleEle.appendChild(
-    document.createTextNode('[role="presentation"]{touch-action:none}')
-  );
-  const styleChild = e.appendChild(styleEle);
-  e.addEventListener("touchstart", touchHandler, true);
-  e.addEventListener("touchmove", touchHandler, true);
-  e.addEventListener("touchend", touchHandler, true);
-  e.addEventListener("touchcancel", touchHandler, true);
-  return () => {
-    e.removeEventListener("touchstart", touchHandler, true);
-    e.removeEventListener("touchmove", touchHandler, true);
-    e.removeEventListener("touchend", touchHandler, true);
-    e.removeEventListener("touchcancel", touchHandler, true);
-    styleChild.remove();
-  };
-}
 
 function main() {
   console.clear();
