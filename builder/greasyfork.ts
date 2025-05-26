@@ -1,7 +1,5 @@
-import { exec } from 'child_process';
 // import clipboard from 'clipboardy';
 import { globby } from 'globby';
-import { promisify } from 'util';
 
 const scripts = await globby('**/*.user.js');
 

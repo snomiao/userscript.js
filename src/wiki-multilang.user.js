@@ -3,7 +3,7 @@
 // @name:zh          Wikipedia 多语言浏览
 // @namespace        https://userscript.snomiao.com/
 // @author           snomiao@gmail.com
-// @version          0.0.4
+// @version          0.0.5
 // @description      View a Wikipedia entry with two (or more?) languages side by side for comparison and language learning.
 // @description:zh   以并列多语言视角浏览维基百科
 // @match            https://*.wikipedia.org/wiki/*
