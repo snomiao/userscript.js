@@ -3,7 +3,7 @@
 // @name:zh          Wikipedia 多语言浏览
 // @namespace        https://userscript.snomiao.com/
 // @author           snomiao@gmail.com
-// @version          0.0.5
+// @version          0.0.6
 // @description      View a Wikipedia entry with two (or more?) languages side by side for comparison and language learning.
 // @description:zh   以并列多语言视角浏览维基百科
 // @match            https://*.wikipedia.org/wiki/*
@@ -14,7 +14,10 @@
 // @supportURL       https://github.com/snomiao/userscript.js/issues
 // @contributionURL  https://snomiao.com/donate
 // ==/UserScript==
-//
+// 
+// MAINTAINING NOTE: this file have been moved to https://github.com/snomiao/multilang-wiki/tree/main
+// please contribute there if you want to improve this script.
+// 
 // ref:
 // [javascript - Resize Cross Domain Iframe Height - Stack Overflow]( https://stackoverflow.com/questions/22086722/resize-cross-domain-iframe-height )
 //
