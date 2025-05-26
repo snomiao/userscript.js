@@ -19,6 +19,10 @@
 // [javascript - Resize Cross Domain Iframe Height - Stack Overflow]( https://stackoverflow.com/questions/22086722/resize-cross-domain-iframe-height )
 //
 
+// const Langs = ['en', 'ja', 'zh', 'de', 'fr', 'es', 'ru', 'it', 'ko', 'pt', 'ar', 'vi', 'pl', 'uk', 'nl', 'sv', 'id', 'fi', 'no', 'tr', 'cs', 'da', 'he', 'hu', 'ro', 'th']
+const langs = ['en', 'ja', 'zh'] // modify this to your preferred languages, will be used to load the 2nd language iframe
+// 
+
 if (location.hash.match("#langIfr")) {
     // iframe code send height
     const sendHeight = () =>
@@ -29,6 +33,7 @@ if (location.hash.match("#langIfr")) {
     window.addEventListener("resize", sendHeight, false);
     window.addEventListener("load", sendHeight, false);
     sendHeight();
+    document.head.appendChild(createHtmlElement('<base target="_parent" />'))
 } else {
     // parent code recv iframe's height
     const msgHandler = (e) => {
@@ -67,7 +72,13 @@ if (location.hash.match("#langIfr")) {
             document.body.appendChild(langIfr);
             return true;
         };
-        langIframeLoad("en") || langIframeLoad("zh") || langIframeLoad("ja");
+
+        // the load 2st language for current page
+        langs.find(lang => langIframeLoad(lang))
     };
     window.addEventListener("load", exlangFrameLoad, false);
+}
+
+function createHtmlElement(innerHTML= '<span>hello</span>'){
+  return Object.assign(document.createElement('div'), {innerHTML}).children[0]
 }
