@@ -11,6 +11,11 @@
 // @grant           none
 // ==/UserScript==
 
+// NOTE 2025-09-03: 
+// THIS SCRIPT IS MIGRATED TO 
+// https://github.com/snomiao/copy-markdown-title-alt-c.user.js/blob/main/copy-markdown-title-alt-c.user.js
+
+
 import hotkeyMapper from "hotkey-mapper";
 import clipboardy from "clipboardy";
 

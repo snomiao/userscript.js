@@ -10,6 +10,11 @@
 // @match           *://*/*
 // @grant           none
 // ==/UserScript==
+
+// NOTE 2025-09-03: 
+// THIS SCRIPT IS MIGRATED TO 
+// https://github.com/snomiao/copy-markdown-title-alt-c.user.js/blob/main/copy-markdown-title-alt-c.user.js
+
 "use strict";
 (() => {
   // ../node_modules/hotkey-mapper/dist/index.mjs
