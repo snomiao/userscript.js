@@ -11,6 +11,8 @@
 // @supportURL       https://github.com/snomiao/userscript.js/issues
 // ==/UserScript==
 //
+// 2025-09-05 migrating to  https://github.com/snomiao/google-calendar-keyboard-enhance.user.js
+// 
 //  1. event move enhance
 //      - date time input change
 //      - event drag

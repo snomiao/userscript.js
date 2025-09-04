@@ -10,6 +10,11 @@
 // @contributionURL  https://snomiao.com/donate
 // @supportURL       https://github.com/snomiao/userscript.js/issues
 // ==/UserScript==
+
+//
+// 2025-09-05 migrating to  https://github.com/snomiao/google-calendar-keyboard-enhance.user.js
+// 
+
 "use strict";
 (() => {
   var __create = Object.create;
@@ -303,7 +308,7 @@
       });
       exports.test = exports.serialize = exports.default = void 0;
       var _collections = require_collections();
-      var global2 = function() {
+      var global2 = function () {
         if (typeof globalThis !== "undefined") {
           return globalThis;
         } else if (typeof global2 !== "undefined") {
@@ -725,26 +730,26 @@
         }
         if (val[IS_KEYED_SENTINEL]) {
           return name + SPACE + "{" + // from Immutable collection of entries or from ECMAScript object
-          (val._iter || val._object ? (0, _collections.printIteratorEntries)(
-            val.entries(),
+            (val._iter || val._object ? (0, _collections.printIteratorEntries)(
+              val.entries(),
+              config2,
+              indentation,
+              depth,
+              refs,
+              printer
+            ) : LAZY) + "}";
+        }
+        return name + SPACE + "[" + (val._iter || // from Immutable collection of values
+          val._array || // from ECMAScript array
+          val._collection || // from ECMAScript collection in immutable v4
+          val._iterable ? (0, _collections.printIteratorValues)(
+            val.values(),
             config2,
             indentation,
             depth,
             refs,
             printer
-          ) : LAZY) + "}";
-        }
-        return name + SPACE + "[" + (val._iter || // from Immutable collection of values
-        val._array || // from ECMAScript array
-        val._collection || // from ECMAScript collection in immutable v4
-        val._iterable ? (0, _collections.printIteratorValues)(
-          val.values(),
-          config2,
-          indentation,
-          depth,
-          refs,
-          printer
-        ) : LAZY) + "]";
+          ) : LAZY) + "]";
       };
       var printImmutableValues = (val, config2, indentation, depth, refs, printer, type2) => ++depth > config2.maxDepth ? printAsLeaf(getImmutableName(type2)) : getImmutableName(type2) + SPACE + "[" + (0, _collections.printIteratorValues)(
         val.values(),
@@ -821,7 +826,7 @@
     "../node_modules/.pnpm/react-is@17.0.2/node_modules/react-is/cjs/react-is.development.js"(exports) {
       "use strict";
       if (true) {
-        (function() {
+        (function () {
           "use strict";
           var REACT_ELEMENT_TYPE = 60103;
           var REACT_PORTAL_TYPE = 60106;
@@ -1035,7 +1040,7 @@
           return null;
         var cacheBabelInterop = /* @__PURE__ */ new WeakMap();
         var cacheNodeInterop = /* @__PURE__ */ new WeakMap();
-        return (_getRequireWildcardCache = function(nodeInterop2) {
+        return (_getRequireWildcardCache = function (nodeInterop2) {
           return nodeInterop2 ? cacheNodeInterop : cacheBabelInterop;
         })(nodeInterop);
       }
@@ -1160,7 +1165,7 @@
       });
       exports.test = exports.serialize = exports.default = void 0;
       var _markup = require_markup();
-      var global2 = function() {
+      var global2 = function () {
         if (typeof globalThis !== "undefined") {
           return globalThis;
         } else if (typeof global2 !== "undefined") {
@@ -1638,9 +1643,9 @@
       }
       function _typeof3(obj) {
         "@babel/helpers - typeof";
-        return _typeof3 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj2) {
+        return _typeof3 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj2) {
           return typeof obj2;
-        } : function(obj2) {
+        } : function (obj2) {
           return obj2 && "function" == typeof Symbol && obj2.constructor === Symbol && obj2 !== Symbol.prototype ? "symbol" : typeof obj2;
         }, _typeof3(obj);
       }
@@ -1714,35 +1719,39 @@
             var i = 0;
             var F = function F2() {
             };
-            return { s: F, n: function n() {
-              if (i >= o.length)
-                return { done: true };
-              return { done: false, value: o[i++] };
-            }, e: function e(_e2) {
-              throw _e2;
-            }, f: F };
+            return {
+              s: F, n: function n() {
+                if (i >= o.length)
+                  return { done: true };
+                return { done: false, value: o[i++] };
+              }, e: function e(_e2) {
+                throw _e2;
+              }, f: F
+            };
           }
           throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
         }
         var normalCompletion = true, didErr = false, err;
-        return { s: function s() {
-          it = it.call(o);
-        }, n: function n() {
-          var step = it.next();
-          normalCompletion = step.done;
-          return step;
-        }, e: function e(_e3) {
-          didErr = true;
-          err = _e3;
-        }, f: function f() {
-          try {
-            if (!normalCompletion && it.return != null)
-              it.return();
-          } finally {
-            if (didErr)
-              throw err;
+        return {
+          s: function s() {
+            it = it.call(o);
+          }, n: function n() {
+            var step = it.next();
+            normalCompletion = step.done;
+            return step;
+          }, e: function e(_e3) {
+            didErr = true;
+            err = _e3;
+          }, f: function f() {
+            try {
+              if (!normalCompletion && it.return != null)
+                it.return();
+            } finally {
+              if (didErr)
+                throw err;
+            }
           }
-        } };
+        };
       }
       function _unsupportedIterableToArray(o, minLen) {
         if (!o)
@@ -1883,7 +1892,7 @@
           var thisArg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null;
           var _iterator = _createForOfIteratorHelper(properties), _step;
           try {
-            for (_iterator.s(); !(_step = _iterator.n()).done; ) {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var _step$value = _slicedToArray(_step.value, 2), key = _step$value[0], values = _step$value[1];
               fn.call(thisArg, values, key, properties);
             }
@@ -1894,7 +1903,7 @@
           }
         },
         get: function get(key) {
-          var item = properties.find(function(tuple) {
+          var item = properties.find(function (tuple) {
             return tuple[0] === key ? true : false;
           });
           return item && item[1];
@@ -1903,13 +1912,13 @@
           return !!ariaPropsMap.get(key);
         },
         keys: function keys2() {
-          return properties.map(function(_ref) {
+          return properties.map(function (_ref) {
             var _ref2 = _slicedToArray(_ref, 1), key = _ref2[0];
             return key;
           });
         },
         values: function values() {
-          return properties.map(function(_ref3) {
+          return properties.map(function (_ref3) {
             var _ref4 = _slicedToArray(_ref3, 2), values2 = _ref4[1];
             return values2;
           });
@@ -1979,35 +1988,39 @@
             var i = 0;
             var F = function F2() {
             };
-            return { s: F, n: function n() {
-              if (i >= o.length)
-                return { done: true };
-              return { done: false, value: o[i++] };
-            }, e: function e(_e2) {
-              throw _e2;
-            }, f: F };
+            return {
+              s: F, n: function n() {
+                if (i >= o.length)
+                  return { done: true };
+                return { done: false, value: o[i++] };
+              }, e: function e(_e2) {
+                throw _e2;
+              }, f: F
+            };
           }
           throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
         }
         var normalCompletion = true, didErr = false, err;
-        return { s: function s() {
-          it = it.call(o);
-        }, n: function n() {
-          var step = it.next();
-          normalCompletion = step.done;
-          return step;
-        }, e: function e(_e3) {
-          didErr = true;
-          err = _e3;
-        }, f: function f() {
-          try {
-            if (!normalCompletion && it.return != null)
-              it.return();
-          } finally {
-            if (didErr)
-              throw err;
+        return {
+          s: function s() {
+            it = it.call(o);
+          }, n: function n() {
+            var step = it.next();
+            normalCompletion = step.done;
+            return step;
+          }, e: function e(_e3) {
+            didErr = true;
+            err = _e3;
+          }, f: function f() {
+            try {
+              if (!normalCompletion && it.return != null)
+                it.return();
+            } finally {
+              if (didErr)
+                throw err;
+            }
           }
-        } };
+        };
       }
       function _unsupportedIterableToArray(o, minLen) {
         if (!o)
@@ -2297,7 +2310,7 @@
           var thisArg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null;
           var _iterator = _createForOfIteratorHelper(dom), _step;
           try {
-            for (_iterator.s(); !(_step = _iterator.n()).done; ) {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var _step$value = _slicedToArray(_step.value, 2), key = _step$value[0], values = _step$value[1];
               fn.call(thisArg, values, key, dom);
             }
@@ -2308,7 +2321,7 @@
           }
         },
         get: function get(key) {
-          var item = dom.find(function(tuple) {
+          var item = dom.find(function (tuple) {
             return tuple[0] === key ? true : false;
           });
           return item && item[1];
@@ -2317,13 +2330,13 @@
           return !!domMap.get(key);
         },
         keys: function keys2() {
-          return dom.map(function(_ref) {
+          return dom.map(function (_ref) {
             var _ref2 = _slicedToArray(_ref, 1), key = _ref2[0];
             return key;
           });
         },
         values: function values() {
-          return dom.map(function(_ref3) {
+          return dom.map(function (_ref3) {
             var _ref4 = _slicedToArray(_ref3, 2), values2 = _ref4[1];
             return values2;
           });
@@ -7915,35 +7928,39 @@
             var i = 0;
             var F = function F2() {
             };
-            return { s: F, n: function n() {
-              if (i >= o.length)
-                return { done: true };
-              return { done: false, value: o[i++] };
-            }, e: function e(_e2) {
-              throw _e2;
-            }, f: F };
+            return {
+              s: F, n: function n() {
+                if (i >= o.length)
+                  return { done: true };
+                return { done: false, value: o[i++] };
+              }, e: function e(_e2) {
+                throw _e2;
+              }, f: F
+            };
           }
           throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
         }
         var normalCompletion = true, didErr = false, err;
-        return { s: function s() {
-          it = it.call(o);
-        }, n: function n() {
-          var step = it.next();
-          normalCompletion = step.done;
-          return step;
-        }, e: function e(_e3) {
-          didErr = true;
-          err = _e3;
-        }, f: function f() {
-          try {
-            if (!normalCompletion && it.return != null)
-              it.return();
-          } finally {
-            if (didErr)
-              throw err;
+        return {
+          s: function s() {
+            it = it.call(o);
+          }, n: function n() {
+            var step = it.next();
+            normalCompletion = step.done;
+            return step;
+          }, e: function e(_e3) {
+            didErr = true;
+            err = _e3;
+          }, f: function f() {
+            try {
+              if (!normalCompletion && it.return != null)
+                it.return();
+            } finally {
+              if (didErr)
+                throw err;
+            }
           }
-        } };
+        };
       }
       function _slicedToArray(arr, i) {
         return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
@@ -8005,17 +8022,17 @@
           return arr;
       }
       var roles2 = [].concat(_ariaAbstractRoles.default, _ariaLiteralRoles.default, _ariaDpubRoles.default, _ariaGraphicsRoles.default);
-      roles2.forEach(function(_ref) {
+      roles2.forEach(function (_ref) {
         var _ref2 = _slicedToArray(_ref, 2), roleDefinition = _ref2[1];
         var _iterator = _createForOfIteratorHelper(roleDefinition.superClass), _step;
         try {
-          for (_iterator.s(); !(_step = _iterator.n()).done; ) {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
             var superClassIter = _step.value;
             var _iterator2 = _createForOfIteratorHelper(superClassIter), _step2;
             try {
               var _loop = function _loop2() {
                 var superClassName = _step2.value;
-                var superClassRoleTuple = roles2.find(function(_ref3) {
+                var superClassRoleTuple = roles2.find(function (_ref3) {
                   var _ref4 = _slicedToArray(_ref3, 1), name = _ref4[0];
                   return name === superClassName;
                 });
@@ -8032,7 +8049,7 @@
                   }
                 }
               };
-              for (_iterator2.s(); !(_step2 = _iterator2.n()).done; ) {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
                 _loop();
               }
             } catch (err) {
@@ -8055,7 +8072,7 @@
           var thisArg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null;
           var _iterator3 = _createForOfIteratorHelper(roles2), _step3;
           try {
-            for (_iterator3.s(); !(_step3 = _iterator3.n()).done; ) {
+            for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
               var _step3$value = _slicedToArray(_step3.value, 2), key = _step3$value[0], values = _step3$value[1];
               fn.call(thisArg, values, key, roles2);
             }
@@ -8066,7 +8083,7 @@
           }
         },
         get: function get(key) {
-          var item = roles2.find(function(tuple) {
+          var item = roles2.find(function (tuple) {
             return tuple[0] === key ? true : false;
           });
           return item && item[1];
@@ -8075,13 +8092,13 @@
           return !!rolesMap.get(key);
         },
         keys: function keys2() {
-          return roles2.map(function(_ref5) {
+          return roles2.map(function (_ref5) {
             var _ref6 = _slicedToArray(_ref5, 1), key = _ref6[0];
             return key;
           });
         },
         values: function values() {
-          return roles2.map(function(_ref7) {
+          return roles2.map(function (_ref7) {
             var _ref8 = _slicedToArray(_ref7, 2), values2 = _ref8[1];
             return values2;
           });
@@ -8119,7 +8136,7 @@
         isArgs = require_isArguments();
         isEnumerable = Object.prototype.propertyIsEnumerable;
         hasDontEnumBug = !isEnumerable.call({ toString: null }, "toString");
-        hasProtoEnumBug = isEnumerable.call(function() {
+        hasProtoEnumBug = isEnumerable.call(function () {
         }, "prototype");
         dontEnums = [
           "toString",
@@ -8130,7 +8147,7 @@
           "propertyIsEnumerable",
           "constructor"
         ];
-        equalsConstructorPrototype = function(o) {
+        equalsConstructorPrototype = function (o) {
           var ctor = o.constructor;
           return ctor && ctor.prototype === o;
         };
@@ -8159,7 +8176,7 @@
           $webkitStorageInfo: true,
           $window: true
         };
-        hasAutomationEqualityBug = function() {
+        hasAutomationEqualityBug = function () {
           if (typeof window === "undefined") {
             return false;
           }
@@ -8178,7 +8195,7 @@
           }
           return false;
         }();
-        equalsConstructorPrototypeIfNotBuggy = function(o) {
+        equalsConstructorPrototypeIfNotBuggy = function (o) {
           if (typeof window === "undefined" || !hasAutomationEqualityBug) {
             return equalsConstructorPrototype(o);
           }
@@ -8253,7 +8270,7 @@
       var originalKeys = Object.keys;
       keysShim.shim = function shimObjectKeys() {
         if (Object.keys) {
-          var keysWorksWithArguments = function() {
+          var keysWorksWithArguments = function () {
             var args = Object.keys(arguments);
             return args && args.length === arguments.length;
           }(1, 2);
@@ -8375,7 +8392,7 @@
         }
         return arr;
       };
-      var joiny = function(arr, joiner) {
+      var joiny = function (arr, joiner) {
         var str = "";
         for (var i = 0; i < arr.length; i += 1) {
           str += arr[i];
@@ -8392,7 +8409,7 @@
         }
         var args = slicy(arguments, 1);
         var bound;
-        var binder = function() {
+        var binder = function () {
           if (this instanceof bound) {
             var result = target.apply(
               this,
@@ -8450,7 +8467,7 @@
         }
         var args = slice.call(arguments, 1);
         var bound;
-        var binder = function() {
+        var binder = function () {
           if (this instanceof bound) {
             var result = target.apply(
               this,
@@ -8511,7 +8528,7 @@
       var $SyntaxError = SyntaxError;
       var $Function = Function;
       var $TypeError = TypeError;
-      var getEvalledConstructor = function(expressionSyntax) {
+      var getEvalledConstructor = function (expressionSyntax) {
         try {
           return $Function('"use strict"; return (' + expressionSyntax + ").constructor;")();
         } catch (e) {
@@ -8525,10 +8542,10 @@
           $gOPD = null;
         }
       }
-      var throwTypeError = function() {
+      var throwTypeError = function () {
         throw new $TypeError();
       };
-      var ThrowTypeError = $gOPD ? function() {
+      var ThrowTypeError = $gOPD ? function () {
         try {
           arguments.callee;
           return throwTypeError;
@@ -8541,7 +8558,7 @@
         }
       }() : throwTypeError;
       var hasSymbols = require_has_symbols()();
-      var getProto = Object.getPrototypeOf || function(x) {
+      var getProto = Object.getPrototypeOf || function (x) {
         return x.__proto__;
       };
       var needsEval = {};
@@ -8706,7 +8723,7 @@
           throw new $SyntaxError("invalid intrinsic syntax, expected opening `%`");
         }
         var result = [];
-        $replace(string, rePropName, function(match, number, quote, subString) {
+        $replace(string, rePropName, function (match, number, quote, subString) {
           result[result.length] = quote ? $replace(subString, reEscapeChar, "$1") : number || match;
         });
         return result;
@@ -8838,12 +8855,12 @@
       var toStr2 = Object.prototype.toString;
       var concat = Array.prototype.concat;
       var origDefineProperty = Object.defineProperty;
-      var isFunction2 = function(fn) {
+      var isFunction2 = function (fn) {
         return typeof fn === "function" && toStr2.call(fn) === "[object Function]";
       };
       var hasPropertyDescriptors = require_has_property_descriptors()();
       var supportsDescriptors = origDefineProperty && hasPropertyDescriptors;
-      var defineProperty = function(object, name, value, predicate) {
+      var defineProperty = function (object, name, value, predicate) {
         if (name in object && (!isFunction2(predicate) || !predicate())) {
           return;
         }
@@ -8858,7 +8875,7 @@
           object[name] = value;
         }
       };
-      var defineProperties = function(object, map) {
+      var defineProperties = function (object, map) {
         var predicates = arguments.length > 2 ? arguments[2] : {};
         var props = keys2(map);
         if (hasSymbols) {
@@ -8984,7 +9001,7 @@
     "../node_modules/.pnpm/object.assign@4.1.4/node_modules/object.assign/polyfill.js"(exports, module2) {
       "use strict";
       var implementation = require_implementation4();
-      var lacksProperEnumerationOrder = function() {
+      var lacksProperEnumerationOrder = function () {
         if (!Object.assign) {
           return false;
         }
@@ -9001,7 +9018,7 @@
         }
         return str !== actual;
       };
-      var assignHasPendingExceptions = function() {
+      var assignHasPendingExceptions = function () {
         if (!Object.assign || !Object.preventExtensions) {
           return false;
         }
@@ -9039,9 +9056,11 @@
         define2(
           Object,
           { assign: polyfill },
-          { assign: function() {
-            return Object.assign !== polyfill;
-          } }
+          {
+            assign: function () {
+              return Object.assign !== polyfill;
+            }
+          }
         );
         return polyfill;
       };
@@ -9090,7 +9109,7 @@
         if (!functionsHaveNames() || !gOPD) {
           return false;
         }
-        var desc = gOPD(function() {
+        var desc = gOPD(function () {
         }, "name");
         return !!desc && !!desc.configurable;
       };
@@ -9158,12 +9177,12 @@
             var calls = "";
             var o = {};
             Object.defineProperty(o, "hasIndices", {
-              get: function() {
+              get: function () {
                 calls += "d";
               }
             });
             Object.defineProperty(o, "sticky", {
-              get: function() {
+              get: function () {
                 calls += "y";
               }
             });
@@ -9256,7 +9275,7 @@
         }
         return value !== null && typeof value === "object" && typeof value.length === "number" && value.length >= 0 && $toString(value) !== "[object Array]" && $toString(value.callee) === "[object Function]";
       };
-      var supportsStandardArguments = function() {
+      var supportsStandardArguments = function () {
         return isStandardArguments(arguments);
       }();
       isStandardArguments.isLegacyArguments = isLegacyArguments;
@@ -9268,7 +9287,7 @@
   var require_isarray = __commonJS({
     "../node_modules/.pnpm/isarray@2.0.5/node_modules/isarray/index.js"(exports, module2) {
       var toString = {}.toString;
-      module2.exports = Array.isArray || function(arr) {
+      module2.exports = Array.isArray || function (arr) {
         return toString.call(arr) == "[object Array]";
       };
     }
@@ -9475,7 +9494,7 @@
           if (typeof process === "undefined" || !process.versions || !process.versions.node) {
             $mapIterator = callBound("Map.prototype.iterator", true);
             $setIterator = callBound("Set.prototype.iterator", true);
-            getStopIterationIterator = function(iterator) {
+            getStopIterationIterator = function (iterator) {
               var done = false;
               return {
                 next: function next() {
@@ -9507,7 +9526,7 @@
               }
               if ($mapForEach) {
                 var entries = [];
-                $mapForEach(iterable, function(v, k) {
+                $mapForEach(iterable, function (v, k) {
                   $arrayPush(entries, [k, v]);
                 });
                 return getArrayIterator(entries);
@@ -9522,7 +9541,7 @@
               }
               if ($setForEach) {
                 var values = [];
-                $setForEach(iterable, function(v) {
+                $setForEach(iterable, function (v) {
                   $arrayPush(values, v);
                 });
                 return getArrayIterator(values);
@@ -9602,7 +9621,7 @@
       var hasShammedSymbols = typeof Symbol === "function" && typeof Symbol.iterator === "object";
       var toStringTag = typeof Symbol === "function" && Symbol.toStringTag && (typeof Symbol.toStringTag === hasShammedSymbols ? "object" : "symbol") ? Symbol.toStringTag : null;
       var isEnumerable = Object.prototype.propertyIsEnumerable;
-      var gPO = (typeof Reflect === "function" ? Reflect.getPrototypeOf : Object.getPrototypeOf) || ([].__proto__ === Array.prototype ? function(O) {
+      var gPO = (typeof Reflect === "function" ? Reflect.getPrototypeOf : Object.getPrototypeOf) || ([].__proto__ === Array.prototype ? function (O) {
         return O.__proto__;
       } : null);
       function addNumericSeparator(num, str) {
@@ -9745,14 +9764,14 @@
         }
         if (isMap(obj)) {
           var mapParts = [];
-          mapForEach.call(obj, function(value, key) {
+          mapForEach.call(obj, function (value, key) {
             mapParts.push(inspect(key, obj, true) + " => " + inspect(value, obj));
           });
           return collectionOf("Map", mapSize.call(obj), mapParts, indent);
         }
         if (isSet(obj)) {
           var setParts = [];
-          setForEach.call(obj, function(value) {
+          setForEach.call(obj, function (value) {
             setParts.push(inspect(value, obj));
           });
           return collectionOf("Set", setSize.call(obj), setParts, indent);
@@ -9851,7 +9870,7 @@
         }
         return false;
       }
-      var hasOwn = Object.prototype.hasOwnProperty || function(key) {
+      var hasOwn = Object.prototype.hasOwnProperty || function (key) {
         return key in this;
       };
       function has(obj, key) {
@@ -10087,7 +10106,7 @@
       var $mapGet = callBound("Map.prototype.get", true);
       var $mapSet = callBound("Map.prototype.set", true);
       var $mapHas = callBound("Map.prototype.has", true);
-      var listGetNode = function(list, key) {
+      var listGetNode = function (list, key) {
         for (var prev = list, curr; (curr = prev.next) !== null; prev = curr) {
           if (curr.key === key) {
             prev.next = curr.next;
@@ -10097,11 +10116,11 @@
           }
         }
       };
-      var listGet = function(objects, key) {
+      var listGet = function (objects, key) {
         var node = listGetNode(objects, key);
         return node && node.value;
       };
-      var listSet = function(objects, key, value) {
+      var listSet = function (objects, key, value) {
         var node = listGetNode(objects, key);
         if (node) {
           node.value = value;
@@ -10114,7 +10133,7 @@
           };
         }
       };
-      var listHas = function(objects, key) {
+      var listHas = function (objects, key) {
         return !!listGetNode(objects, key);
       };
       module2.exports = function getSideChannel() {
@@ -10122,12 +10141,12 @@
         var $m;
         var $o;
         var channel = {
-          assert: function(key) {
+          assert: function (key) {
             if (!channel.has(key)) {
               throw new $TypeError("Side channel does not contain " + inspect(key));
             }
           },
-          get: function(key) {
+          get: function (key) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if ($wm) {
                 return $weakMapGet($wm, key);
@@ -10142,7 +10161,7 @@
               }
             }
           },
-          has: function(key) {
+          has: function (key) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if ($wm) {
                 return $weakMapHas($wm, key);
@@ -10158,7 +10177,7 @@
             }
             return false;
           },
-          set: function(key, value) {
+          set: function (key, value) {
             if ($WeakMap && key && (typeof key === "object" || typeof key === "function")) {
               if (!$wm) {
                 $wm = new $WeakMap();
@@ -10186,7 +10205,7 @@
   var require_implementation6 = __commonJS({
     "../node_modules/.pnpm/object-is@1.1.5/node_modules/object-is/implementation.js"(exports, module2) {
       "use strict";
-      var numberIsNaN = function(value) {
+      var numberIsNaN = function (value) {
         return value !== value;
       };
       module2.exports = function is(a, b) {
@@ -10263,12 +10282,12 @@
       if (typeof reflectApply === "function" && typeof Object.defineProperty === "function") {
         try {
           badArrayLike = Object.defineProperty({}, "length", {
-            get: function() {
+            get: function () {
               throw isCallableMarker;
             }
           });
           isCallableMarker = {};
-          reflectApply(function() {
+          reflectApply(function () {
             throw 42;
           }, null, badArrayLike);
         } catch (_) {
@@ -10499,7 +10518,7 @@
       var toStrTags = {};
       var getPrototypeOf = Object.getPrototypeOf;
       if (hasToStringTag && gOPD && getPrototypeOf) {
-        forEach(typedArrays, function(typedArray) {
+        forEach(typedArrays, function (typedArray) {
           var arr = new g[typedArray]();
           if (Symbol.toStringTag in arr) {
             var proto = getPrototypeOf(arr);
@@ -10514,7 +10533,7 @@
       }
       var tryTypedArrays = function tryAllTypedArrays(value) {
         var anyTrue = false;
-        forEach(toStrTags, function(getter, typedArray) {
+        forEach(toStrTags, function (getter, typedArray) {
           if (!anyTrue) {
             try {
               anyTrue = getter.call(value) === typedArray;
@@ -10618,7 +10637,7 @@
         has = callBound("Object.prototype.hasOwnProperty");
         $exec = callBound("RegExp.prototype.exec");
         isRegexMarker = {};
-        throwRegexMarker = function() {
+        throwRegexMarker = function () {
           throw isRegexMarker;
         };
         badStringifier = {
@@ -10972,7 +10991,7 @@
       var toStrTags = {};
       var getPrototypeOf = Object.getPrototypeOf;
       if (hasToStringTag && gOPD && getPrototypeOf) {
-        forEach(typedArrays, function(typedArray) {
+        forEach(typedArrays, function (typedArray) {
           if (typeof g[typedArray] === "function") {
             var arr = new g[typedArray]();
             if (Symbol.toStringTag in arr) {
@@ -10989,7 +11008,7 @@
       }
       var tryTypedArrays = function tryAllTypedArrays(value) {
         var foundName = false;
-        forEach(toStrTags, function(getter, typedArray) {
+        forEach(toStrTags, function (getter, typedArray) {
           if (!foundName) {
             try {
               var name = getter.call(value);
@@ -11443,35 +11462,39 @@
             var i2 = 0;
             var F = function F2() {
             };
-            return { s: F, n: function n() {
-              if (i2 >= o.length)
-                return { done: true };
-              return { done: false, value: o[i2++] };
-            }, e: function e(_e2) {
-              throw _e2;
-            }, f: F };
+            return {
+              s: F, n: function n() {
+                if (i2 >= o.length)
+                  return { done: true };
+                return { done: false, value: o[i2++] };
+              }, e: function e(_e2) {
+                throw _e2;
+              }, f: F
+            };
           }
           throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
         }
         var normalCompletion = true, didErr = false, err;
-        return { s: function s() {
-          it = it.call(o);
-        }, n: function n() {
-          var step = it.next();
-          normalCompletion = step.done;
-          return step;
-        }, e: function e(_e3) {
-          didErr = true;
-          err = _e3;
-        }, f: function f() {
-          try {
-            if (!normalCompletion && it.return != null)
-              it.return();
-          } finally {
-            if (didErr)
-              throw err;
+        return {
+          s: function s() {
+            it = it.call(o);
+          }, n: function n() {
+            var step = it.next();
+            normalCompletion = step.done;
+            return step;
+          }, e: function e(_e3) {
+            didErr = true;
+            err = _e3;
+          }, f: function f() {
+            try {
+              if (!normalCompletion && it.return != null)
+                it.return();
+            } finally {
+              if (didErr)
+                throw err;
+            }
           }
-        } };
+        };
       }
       function _unsupportedIterableToArray(o, minLen) {
         if (!o)
@@ -11506,9 +11529,9 @@
             if (relation.module === "HTML") {
               concept = relation.concept;
               if (concept) {
-                (function() {
+                (function () {
                   var conceptStr = JSON.stringify(concept);
-                  var elementRoleRelation = elementRoles2.find(function(relation2) {
+                  var elementRoleRelation = elementRoles2.find(function (relation2) {
                     return JSON.stringify(relation2[0]) === conceptStr;
                   });
                   var roles2 = void 0;
@@ -11549,7 +11572,7 @@
           var thisArg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null;
           var _iterator = _createForOfIteratorHelper(elementRoles2), _step;
           try {
-            for (_iterator.s(); !(_step = _iterator.n()).done; ) {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var _step$value = _slicedToArray(_step.value, 2), _key = _step$value[0], values = _step$value[1];
               fn.call(thisArg, values, _key, elementRoles2);
             }
@@ -11560,7 +11583,7 @@
           }
         },
         get: function get(key2) {
-          var item = elementRoles2.find(function(tuple) {
+          var item = elementRoles2.find(function (tuple) {
             return (0, _deepEqual.default)(key2, tuple[0]);
           });
           return item && item[1];
@@ -11569,13 +11592,13 @@
           return !!elementRoleMap.get(key2);
         },
         keys: function keys3() {
-          return elementRoles2.map(function(_ref) {
+          return elementRoles2.map(function (_ref) {
             var _ref2 = _slicedToArray(_ref, 1), key2 = _ref2[0];
             return key2;
           });
         },
         values: function values() {
-          return elementRoles2.map(function(_ref3) {
+          return elementRoles2.map(function (_ref3) {
             var _ref4 = _slicedToArray(_ref3, 2), values2 = _ref4[1];
             return values2;
           });
@@ -11646,35 +11669,39 @@
             var i2 = 0;
             var F = function F2() {
             };
-            return { s: F, n: function n() {
-              if (i2 >= o.length)
-                return { done: true };
-              return { done: false, value: o[i2++] };
-            }, e: function e(_e2) {
-              throw _e2;
-            }, f: F };
+            return {
+              s: F, n: function n() {
+                if (i2 >= o.length)
+                  return { done: true };
+                return { done: false, value: o[i2++] };
+              }, e: function e(_e2) {
+                throw _e2;
+              }, f: F
+            };
           }
           throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
         }
         var normalCompletion = true, didErr = false, err;
-        return { s: function s() {
-          it = it.call(o);
-        }, n: function n() {
-          var step = it.next();
-          normalCompletion = step.done;
-          return step;
-        }, e: function e(_e3) {
-          didErr = true;
-          err = _e3;
-        }, f: function f() {
-          try {
-            if (!normalCompletion && it.return != null)
-              it.return();
-          } finally {
-            if (didErr)
-              throw err;
+        return {
+          s: function s() {
+            it = it.call(o);
+          }, n: function n() {
+            var step = it.next();
+            normalCompletion = step.done;
+            return step;
+          }, e: function e(_e3) {
+            didErr = true;
+            err = _e3;
+          }, f: function f() {
+            try {
+              if (!normalCompletion && it.return != null)
+                it.return();
+            } finally {
+              if (didErr)
+                throw err;
+            }
           }
-        } };
+        };
       }
       function _unsupportedIterableToArray(o, minLen) {
         if (!o)
@@ -11709,7 +11736,7 @@
             if (relation.module === "HTML") {
               var concept = relation.concept;
               if (concept) {
-                var roleElementRelation = roleElement.find(function(item) {
+                var roleElementRelation = roleElement.find(function (item) {
                   return item[0] === key;
                 });
                 var relationConcepts = void 0;
@@ -11737,7 +11764,7 @@
           var thisArg = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : null;
           var _iterator = _createForOfIteratorHelper(roleElement), _step;
           try {
-            for (_iterator.s(); !(_step = _iterator.n()).done; ) {
+            for (_iterator.s(); !(_step = _iterator.n()).done;) {
               var _step$value = _slicedToArray(_step.value, 2), key = _step$value[0], values = _step$value[1];
               fn.call(thisArg, values, key, roleElement);
             }
@@ -11748,7 +11775,7 @@
           }
         },
         get: function get(key) {
-          var item = roleElement.find(function(tuple) {
+          var item = roleElement.find(function (tuple) {
             return tuple[0] === key ? true : false;
           });
           return item && item[1];
@@ -11757,13 +11784,13 @@
           return !!roleElementMap.get(key);
         },
         keys: function keys3() {
-          return roleElement.map(function(_ref) {
+          return roleElement.map(function (_ref) {
             var _ref2 = _slicedToArray(_ref, 1), key = _ref2[0];
             return key;
           });
         },
         values: function values() {
-          return roleElement.map(function(_ref3) {
+          return roleElement.map(function (_ref3) {
             var _ref4 = _slicedToArray(_ref3, 2), values2 = _ref4[1];
             return values2;
           });
@@ -11806,7 +11833,7 @@
   // ../node_modules/.pnpm/lz-string@1.5.0/node_modules/lz-string/libs/lz-string.js
   var require_lz_string = __commonJS({
     "../node_modules/.pnpm/lz-string@1.5.0/node_modules/lz-string/libs/lz-string.js"(exports, module2) {
-      var LZString = function() {
+      var LZString = function () {
         var f = String.fromCharCode;
         var keyStrBase64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
         var keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
@@ -11821,10 +11848,10 @@
           return baseReverseDic[alphabet][character];
         }
         var LZString2 = {
-          compressToBase64: function(input) {
+          compressToBase64: function (input) {
             if (input == null)
               return "";
-            var res = LZString2._compress(input, 6, function(a) {
+            var res = LZString2._compress(input, 6, function (a) {
               return keyStrBase64.charAt(a);
             });
             switch (res.length % 4) {
@@ -11839,33 +11866,33 @@
                 return res + "=";
             }
           },
-          decompressFromBase64: function(input) {
+          decompressFromBase64: function (input) {
             if (input == null)
               return "";
             if (input == "")
               return null;
-            return LZString2._decompress(input.length, 32, function(index) {
+            return LZString2._decompress(input.length, 32, function (index) {
               return getBaseValue(keyStrBase64, input.charAt(index));
             });
           },
-          compressToUTF16: function(input) {
+          compressToUTF16: function (input) {
             if (input == null)
               return "";
-            return LZString2._compress(input, 15, function(a) {
+            return LZString2._compress(input, 15, function (a) {
               return f(a + 32);
             }) + " ";
           },
-          decompressFromUTF16: function(compressed) {
+          decompressFromUTF16: function (compressed) {
             if (compressed == null)
               return "";
             if (compressed == "")
               return null;
-            return LZString2._decompress(compressed.length, 16384, function(index) {
+            return LZString2._decompress(compressed.length, 16384, function (index) {
               return compressed.charCodeAt(index) - 32;
             });
           },
           //compress into uint8array (UCS-2 big endian format)
-          compressToUint8Array: function(uncompressed) {
+          compressToUint8Array: function (uncompressed) {
             var compressed = LZString2.compress(uncompressed);
             var buf = new Uint8Array(compressed.length * 2);
             for (var i = 0, TotalLen = compressed.length; i < TotalLen; i++) {
@@ -11876,7 +11903,7 @@
             return buf;
           },
           //decompress from uint8array (UCS-2 big endian format)
-          decompressFromUint8Array: function(compressed) {
+          decompressFromUint8Array: function (compressed) {
             if (compressed === null || compressed === void 0) {
               return LZString2.decompress(compressed);
             } else {
@@ -11885,37 +11912,37 @@
                 buf[i] = compressed[i * 2] * 256 + compressed[i * 2 + 1];
               }
               var result = [];
-              buf.forEach(function(c) {
+              buf.forEach(function (c) {
                 result.push(f(c));
               });
               return LZString2.decompress(result.join(""));
             }
           },
           //compress into a string that is already URI encoded
-          compressToEncodedURIComponent: function(input) {
+          compressToEncodedURIComponent: function (input) {
             if (input == null)
               return "";
-            return LZString2._compress(input, 6, function(a) {
+            return LZString2._compress(input, 6, function (a) {
               return keyStrUriSafe.charAt(a);
             });
           },
           //decompress from an output of compressToEncodedURIComponent
-          decompressFromEncodedURIComponent: function(input) {
+          decompressFromEncodedURIComponent: function (input) {
             if (input == null)
               return "";
             if (input == "")
               return null;
             input = input.replace(/ /g, "+");
-            return LZString2._decompress(input.length, 32, function(index) {
+            return LZString2._decompress(input.length, 32, function (index) {
               return getBaseValue(keyStrUriSafe, input.charAt(index));
             });
           },
-          compress: function(uncompressed) {
-            return LZString2._compress(uncompressed, 16, function(a) {
+          compress: function (uncompressed) {
+            return LZString2._compress(uncompressed, 16, function (a) {
               return f(a);
             });
           },
-          _compress: function(uncompressed, bitsPerChar, getCharFromInt) {
+          _compress: function (uncompressed, bitsPerChar, getCharFromInt) {
             if (uncompressed == null)
               return "";
             var i, value, context_dictionary = {}, context_dictionaryToCreate = {}, context_c = "", context_wc = "", context_w = "", context_enlargeIn = 2, context_dictSize = 3, context_numBits = 2, context_data = [], context_data_val = 0, context_data_position = 0, ii;
@@ -12107,16 +12134,16 @@
             }
             return context_data.join("");
           },
-          decompress: function(compressed) {
+          decompress: function (compressed) {
             if (compressed == null)
               return "";
             if (compressed == "")
               return null;
-            return LZString2._decompress(compressed.length, 32768, function(index) {
+            return LZString2._decompress(compressed.length, 32768, function (index) {
               return compressed.charCodeAt(index);
             });
           },
-          _decompress: function(length, resetValue, getNextValue) {
+          _decompress: function (length, resetValue, getNextValue) {
             var dictionary = [], next, enlargeIn = 4, dictSize = 4, numBits = 3, entry = "", result = [], i, w, bits, resb, maxpower, power, c, data = { val: getNextValue(0), position: resetValue, index: 1 };
             for (i = 0; i < 3; i += 1) {
               dictionary[i] = i;
@@ -12257,13 +12284,13 @@
         return LZString2;
       }();
       if (typeof define === "function" && define.amd) {
-        define(function() {
+        define(function () {
           return LZString;
         });
       } else if (typeof module2 !== "undefined" && module2 != null) {
         module2.exports = LZString;
       } else if (typeof angular !== "undefined" && angular != null) {
-        angular.module("LZString", []).factory("LZString", function() {
+        angular.module("LZString", []).factory("LZString", function () {
           return LZString;
         });
       }
@@ -12564,9 +12591,9 @@
   // ../node_modules/.pnpm/dom-accessibility-api@0.5.15/node_modules/dom-accessibility-api/dist/polyfills/SetLike.mjs
   function _typeof(obj) {
     "@babel/helpers - typeof";
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj2) {
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj2) {
       return typeof obj2;
-    } : function(obj2) {
+    } : function (obj2) {
       return obj2 && "function" == typeof Symbol && obj2.constructor === Symbol && obj2 !== Symbol.prototype ? "symbol" : typeof obj2;
     }, _typeof(obj);
   }
@@ -12618,7 +12645,7 @@
     }
     return (hint === "string" ? String : Number)(input);
   }
-  var SetLike = /* @__PURE__ */ function() {
+  var SetLike = /* @__PURE__ */ function () {
     function SetLike2() {
       var items = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : [];
       _classCallCheck(this, SetLike2);
@@ -12642,7 +12669,7 @@
       key: "delete",
       value: function _delete(value) {
         var previousLength = this.items.length;
-        this.items = this.items.filter(function(item) {
+        this.items = this.items.filter(function (item) {
           return item !== value;
         });
         return previousLength !== this.items.length;
@@ -12651,7 +12678,7 @@
       key: "forEach",
       value: function forEach(callbackfn) {
         var _this = this;
-        this.items.forEach(function(item) {
+        this.items.forEach(function (item) {
           callbackfn(item, item, _this);
         });
       }
@@ -12766,7 +12793,7 @@
       "aria-owns",
       "aria-relevant",
       "aria-roledescription"
-    ].some(function(attributeName) {
+    ].some(function (attributeName) {
       var _prohibitedAttributes;
       return element.hasAttribute(attributeName) && !((_prohibitedAttributes = prohibitedAttributes[role]) !== null && _prohibitedAttributes !== void 0 && _prohibitedAttributes.has(attributeName));
     });
@@ -12904,10 +12931,10 @@
     if (isElement(node) && node.hasAttribute(attributeName)) {
       var ids = node.getAttribute(attributeName).split(" ");
       var root = node.getRootNode ? node.getRootNode() : node.ownerDocument;
-      return ids.map(function(id) {
+      return ids.map(function (id) {
         return root.getElementById(id);
       }).filter(
-        function(element) {
+        function (element) {
           return element !== null;
         }
         // TODO: why does this not narrow?
@@ -12952,7 +12979,7 @@
   }
   function querySelectorAllSubtree(element, selectors) {
     var elements = arrayFrom(element.querySelectorAll(selectors));
-    queryIdRefs(element, "aria-owns").forEach(function(root) {
+    queryIdRefs(element, "aria-owns").forEach(function (root) {
       elements.push.apply(elements, arrayFrom(root.querySelectorAll(selectors)));
     });
     return elements;
@@ -12997,7 +13024,7 @@
       return element;
     }
     var labelableElement = null;
-    element.childNodes.forEach(function(childNode) {
+    element.childNodes.forEach(function (childNode) {
       if (labelableElement === null && isElement(childNode)) {
         var descendantLabelableElement = findLabelableElement(childNode);
         if (descendantLabelableElement !== null) {
@@ -13029,7 +13056,7 @@
       return null;
     }
     var document2 = element.ownerDocument;
-    return arrayFrom(document2.querySelectorAll("label")).filter(function(label) {
+    return arrayFrom(document2.querySelectorAll("label")).filter(function (label) {
       return getControlOfLabel(label) === element;
     });
   }
@@ -13053,7 +13080,7 @@
         accumulatedText = "".concat(beforeContent, " ").concat(accumulatedText);
       }
       var childNodes = isHTMLSlotElement(node) ? getSlotContents(node) : arrayFrom(node.childNodes).concat(queryIdRefs(node, "aria-owns"));
-      childNodes.forEach(function(child) {
+      childNodes.forEach(function (child) {
         var result = computeTextAlternative2(child, {
           isEmbeddedInLabel: context.isEmbeddedInLabel,
           isReferenced: false,
@@ -13150,13 +13177,13 @@
       var labels = getLabels(node);
       if (labels !== null && labels.length !== 0) {
         consultedNodes.add(node);
-        return arrayFrom(labels).map(function(element) {
+        return arrayFrom(labels).map(function (element) {
           return computeTextAlternative2(element, {
             isEmbeddedInLabel: true,
             isReferenced: false,
             recursion: true
           });
-        }).filter(function(label) {
+        }).filter(function (label) {
           return label.length > 0;
         }).join(" ");
       }
@@ -13192,7 +13219,7 @@
       }
       var labelElements = queryIdRefs(current, "aria-labelledby");
       if (compute === "name" && !context.isReferenced && labelElements.length > 0) {
-        return labelElements.map(function(element) {
+        return labelElements.map(function (element) {
           return computeTextAlternative2(element, {
             isEmbeddedInLabel: context.isEmbeddedInLabel,
             isReferenced: true,
@@ -13229,7 +13256,7 @@
           if (selectedOptions.length === 0) {
             return isHTMLInputElement(current) ? current.value : "";
           }
-          return arrayFrom(selectedOptions).map(function(selectedOption) {
+          return arrayFrom(selectedOptions).map(function (selectedOption) {
             return computeTextAlternative2(selectedOption, {
               isEmbeddedInLabel: context.isEmbeddedInLabel,
               isReferenced: false,
@@ -13292,9 +13319,9 @@
   // ../node_modules/.pnpm/dom-accessibility-api@0.5.15/node_modules/dom-accessibility-api/dist/accessible-description.mjs
   function _typeof2(obj) {
     "@babel/helpers - typeof";
-    return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj2) {
+    return _typeof2 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj2) {
       return typeof obj2;
-    } : function(obj2) {
+    } : function (obj2) {
       return obj2 && "function" == typeof Symbol && obj2.constructor === Symbol && obj2 !== Symbol.prototype ? "symbol" : typeof obj2;
     }, _typeof2(obj);
   }
@@ -13302,7 +13329,7 @@
     var keys2 = Object.keys(object);
     if (Object.getOwnPropertySymbols) {
       var symbols = Object.getOwnPropertySymbols(object);
-      enumerableOnly && (symbols = symbols.filter(function(sym) {
+      enumerableOnly && (symbols = symbols.filter(function (sym) {
         return Object.getOwnPropertyDescriptor(object, sym).enumerable;
       })), keys2.push.apply(keys2, symbols);
     }
@@ -13311,9 +13338,9 @@
   function _objectSpread(target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = null != arguments[i] ? arguments[i] : {};
-      i % 2 ? ownKeys(Object(source), true).forEach(function(key) {
+      i % 2 ? ownKeys(Object(source), true).forEach(function (key) {
         _defineProperty2(target, key, source[key]);
-      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function(key) {
+      }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) {
         Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
       });
     }
@@ -13346,7 +13373,7 @@
   }
   function computeAccessibleDescription(root) {
     var options = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : {};
-    var description = queryIdRefs(root, "aria-describedby").map(function(element) {
+    var description = queryIdRefs(root, "aria-describedby").map(function (element) {
       return computeTextAlternative(element, _objectSpread(_objectSpread({}, options), {}, {
         compute: "description"
       }));
@@ -13609,7 +13636,7 @@
     });
     return maxLength !== void 0 && dom.outerHTML.length > maxLength ? debugContent.slice(0, maxLength) + "..." : debugContent;
   }
-  var logDOM = function() {
+  var logDOM = function () {
     const userCodeFrame = getUserCodeFrame();
     if (userCodeFrame) {
       console.log(prettyDOM(...arguments) + "\n\n" + userCodeFrame);
@@ -14293,7 +14320,7 @@
     return Array.from(container.querySelectorAll("[" + attribute + "]")).filter((node) => matcher(node.getAttribute(attribute), node, text, matchNormalizer));
   }
   function makeSingleQuery(allQuery, getMultipleError2) {
-    return function(container) {
+    return function (container) {
       for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
@@ -14309,7 +14336,7 @@
     return getConfig().getElementError("A better query is available, try this:\n" + suggestion.toString() + "\n", container);
   }
   function makeGetAllQuery(allQuery, getMissingError2) {
-    return function(container) {
+    return function (container) {
       for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
         args[_key2 - 1] = arguments[_key2];
       }
@@ -14330,7 +14357,7 @@
       });
     };
   }
-  var wrapSingleQueryWithSuggestion = (query, queryAllByName, variant) => function(container) {
+  var wrapSingleQueryWithSuggestion = (query, queryAllByName, variant) => function (container) {
     for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
       args[_key3 - 1] = arguments[_key3];
     }
@@ -14346,7 +14373,7 @@
     }
     return element;
   };
-  var wrapAllByQueryWithSuggestion = (query, queryAllByName, variant) => function(container) {
+  var wrapAllByQueryWithSuggestion = (query, queryAllByName, variant) => function (container) {
     for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
       args[_key4 - 1] = arguments[_key4];
     }
@@ -14394,7 +14421,7 @@
       return textToMatch !== null;
     });
   }
-  var queryAllLabelsByText = function(container, text, _temp) {
+  var queryAllLabelsByText = function (container, text, _temp) {
     let {
       exact = true,
       trim,
@@ -14421,7 +14448,7 @@
       return node;
     });
   };
-  var queryAllByLabelText = function(container, text, _temp2) {
+  var queryAllByLabelText = function (container, text, _temp2) {
     let {
       selector = "*",
       exact = true,
@@ -14472,7 +14499,7 @@
     }));
     return Array.from(new Set(matchingLabelledElements)).filter((element) => element.matches(selector));
   };
-  var getAllByLabelText = function(container, text) {
+  var getAllByLabelText = function (container, text) {
     for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
       rest[_key - 2] = arguments[_key];
     }
@@ -14508,7 +14535,7 @@
   var getAllByLabelTextWithSuggestions = wrapAllByQueryWithSuggestion(getAllByLabelText, getAllByLabelText.name, "getAll");
   var getByLabelTextWithSuggestions = wrapSingleQueryWithSuggestion(getByLabelText, getAllByLabelText.name, "get");
   var queryAllByLabelTextWithSuggestions = wrapAllByQueryWithSuggestion(queryAllByLabelText, queryAllByLabelText.name, "queryAll");
-  var queryAllByPlaceholderText = function() {
+  var queryAllByPlaceholderText = function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
@@ -14519,7 +14546,7 @@
   var getMissingError$6 = (c, text) => "Unable to find an element with the placeholder text of: " + text;
   var queryAllByPlaceholderTextWithSuggestions = wrapAllByQueryWithSuggestion(queryAllByPlaceholderText, queryAllByPlaceholderText.name, "queryAll");
   var [queryByPlaceholderText, getAllByPlaceholderText, getByPlaceholderText, findAllByPlaceholderText, findByPlaceholderText] = buildQueries(queryAllByPlaceholderText, getMultipleError$6, getMissingError$6);
-  var queryAllByText = function(container, text, _temp) {
+  var queryAllByText = function (container, text, _temp) {
     let {
       selector = "*",
       exact = true,
@@ -14542,7 +14569,7 @@
     return [...baseArray, ...Array.from(container.querySelectorAll(selector))].filter((node) => !ignore || !node.matches(ignore)).filter((node) => matcher(getNodeText(node), node, text, matchNormalizer));
   };
   var getMultipleError$5 = (c, text) => "Found multiple elements with the text: " + text;
-  var getMissingError$5 = function(c, text, options) {
+  var getMissingError$5 = function (c, text, options) {
     if (options === void 0) {
       options = {};
     }
@@ -14564,7 +14591,7 @@
   };
   var queryAllByTextWithSuggestions = wrapAllByQueryWithSuggestion(queryAllByText, queryAllByText.name, "queryAll");
   var [queryByText, getAllByText, getByText, findAllByText, findByText] = buildQueries(queryAllByText, getMultipleError$5, getMissingError$5);
-  var queryAllByDisplayValue = function(container, value, _temp) {
+  var queryAllByDisplayValue = function (container, value, _temp) {
     let {
       exact = true,
       collapseWhitespace,
@@ -14592,7 +14619,7 @@
   var queryAllByDisplayValueWithSuggestions = wrapAllByQueryWithSuggestion(queryAllByDisplayValue, queryAllByDisplayValue.name, "queryAll");
   var [queryByDisplayValue, getAllByDisplayValue, getByDisplayValue, findAllByDisplayValue, findByDisplayValue] = buildQueries(queryAllByDisplayValue, getMultipleError$4, getMissingError$4);
   var VALID_TAG_REGEXP = /^(img|input|area|.+-.+)$/i;
-  var queryAllByAltText = function(container, alt, options) {
+  var queryAllByAltText = function (container, alt, options) {
     if (options === void 0) {
       options = {};
     }
@@ -14607,7 +14634,7 @@
     var _node$parentElement;
     return node.tagName.toLowerCase() === "title" && ((_node$parentElement = node.parentElement) == null ? void 0 : _node$parentElement.tagName.toLowerCase()) === "svg";
   };
-  var queryAllByTitle = function(container, text, _temp) {
+  var queryAllByTitle = function (container, text, _temp) {
     let {
       exact = true,
       collapseWhitespace,
@@ -14627,7 +14654,7 @@
   var getMissingError$2 = (c, title) => "Unable to find an element with the title: " + title + ".";
   var queryAllByTitleWithSuggestions = wrapAllByQueryWithSuggestion(queryAllByTitle, queryAllByTitle.name, "queryAll");
   var [queryByTitle, getAllByTitle, getByTitle, findAllByTitle, findByTitle] = buildQueries(queryAllByTitle, getMultipleError$2, getMissingError$2);
-  var queryAllByRole = function(container, role, _temp) {
+  var queryAllByRole = function (container, role, _temp) {
     let {
       hidden = getConfig().defaultHidden,
       name,
@@ -14820,13 +14847,13 @@
     }
     return nameHint;
   };
-  var getMultipleError$1 = function(c, role, _temp2) {
+  var getMultipleError$1 = function (c, role, _temp2) {
     let {
       name
     } = _temp2 === void 0 ? {} : _temp2;
     return 'Found multiple elements with the role "' + role + '"' + getNameHint(name);
   };
-  var getMissingError$1 = function(container, role, _temp3) {
+  var getMissingError$1 = function (container, role, _temp3) {
     let {
       hidden = getConfig().defaultHidden,
       name,
@@ -14873,7 +14900,7 @@
   var queryAllByRoleWithSuggestions = wrapAllByQueryWithSuggestion(queryAllByRole, queryAllByRole.name, "queryAll");
   var [queryByRole, getAllByRole, getByRole, findAllByRole, findByRole] = buildQueries(queryAllByRole, getMultipleError$1, getMissingError$1);
   var getTestIdAttribute = () => getConfig().testIdAttribute;
-  var queryAllByTestId = function() {
+  var queryAllByTestId = function () {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
@@ -15753,7 +15780,7 @@
   }
   Object.keys(eventAliasMap).forEach((aliasKey) => {
     const key = eventAliasMap[aliasKey];
-    fireEvent[aliasKey] = function() {
+    fireEvent[aliasKey] = function () {
       return fireEvent[key](...arguments);
     };
   });
@@ -15767,7 +15794,7 @@
     return "https://testing-playground.com/#markup=" + encode(markup);
   }
   var debug = (element, maxLength, options) => Array.isArray(element) ? element.forEach((el) => logDOM(el, maxLength, options)) : logDOM(element, maxLength, options);
-  var logTestingPlaygroundURL = function(element) {
+  var logTestingPlaygroundURL = function (element) {
     if (element === void 0) {
       element = getDocument().body;
     }
