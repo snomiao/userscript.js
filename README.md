@@ -39,6 +39,10 @@ Github:
 
 ---
 
+## Stargazers
+
+[![Stargazers over time](https://starchart.cc/snomiao/userscript.js.svg?variant=adaptive)](https://starchart.cc/snomiao/userscript.js)
+
 <!-- markdown style -->
 
 <style>
