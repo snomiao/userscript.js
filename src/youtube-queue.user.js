@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             YoutubeAllResultsPushToQueuePlay
 // @namespace        https://userscript.snomiao.com/
-// @version          0.0.7
+// @version          0.0.8
 // @description      Youtube Search Results Pages Push To Queue To Play Button
 // @author           snomiao@gmail.com
 // @copyright        2017 - 2023, @snomiao <snomiao.com>
@@ -13,6 +13,8 @@
 // @noframes
 // @license          GPL-3.0+
 // ==/UserScript==
+// 
+// 2025-09-16 NOTE: just migrated this script into standalone repo https://github.com/snomiao/youtube-queue.user.js
 
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
