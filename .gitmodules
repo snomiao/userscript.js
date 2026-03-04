@@ -1,0 +1,12 @@
+[submodule "r/youtube-queue.user.js"]
+	path = r/youtube-queue.user.js
+	url = git@github.com:snomiao/youtube-queue.user.js
+[submodule "r/multilang-wiki"]
+	path = r/multilang-wiki
+	url = git@github.com:snomiao/multilang-wiki
+[submodule "r/google-calendar-keyboard-enhance.user.ts"]
+	path = r/google-calendar-keyboard-enhance.user.ts
+	url = git@github.com:snomiao/google-calendar-keyboard-enhance.user.ts
+[submodule "r/copy-markdown-title-alt-c.user.js"]
+	path = r/copy-markdown-title-alt-c.user.js
+	url = git@github.com:snomiao/copy-markdown-title-alt-c.user.js
