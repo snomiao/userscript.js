@@ -8,6 +8,7 @@
   },
   "readme": "docs/README.md",
   "scripts": {
+    "fix": "bunx oxlint --fix && bunx oxfmt",
     "serve:docs": "npx docsify-cli serve docs",
     "serve": "npx serve .",
     "build:docs": "tsx builder/buildDocs.ts",
@@ -51,7 +52,7 @@
     "commitlint": "^17.4.4",
     "compare-versions": "5.0.1",
     "es-main": "^1.2.0",
-    "esbuild": "^0.15.10",
+    "esbuild": "^0.25.0",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
@@ -77,7 +78,7 @@
     "terser": "^5.15.0",
     "tsx": "^3.9.0",
     "userscript-meta": "^1.0.1",
-    "vite": "^4.0.4",
+    "vite": "^5.4.20",
     "vitest": "^0.27.3"
   },
   "dependencies": {
@@ -87,7 +88,7 @@
     "@types/lodash-es": "^4.17.11",
     "capslockx.js": "^0.1.0",
     "lodash-es": "^4.17.21",
-    "next": "latest",
+    "next": "^14.2.0",
     "react-hot-toast": "^2.4.1",
     "use-hotkey-mapper": "^1.0.4",
     "zx": "^8.1.2"
