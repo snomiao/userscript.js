@@ -2,7 +2,7 @@
 // @name         QQ空间相册下载神器
 // @name:zh      [雪星实验室] QQ空间相册下载神器
 // @namespace    https://userscript.snomiao.com/
-// @version      0.4.0
+// @version      0.4.1
 // @description  批量下载小姐姐空间高清大图照片佳选插件～自动命名快速汲取dalao灵感～（bug反馈联系 snomiao@gmail.com ）  注：使用 chrome 的用户也可以考虑 QQ空间导出助手 插件
 // @author       snomiao@gmail.com
 // @match        *://user.qzone.qq.com/*
@@ -14,6 +14,7 @@
 // 注：使用 chrome 用户也可以考虑 QQ空间导出助手
 // https://chrome.google.com/webstore/detail/qq%E7%A9%BA%E9%97%B4%E5%AF%BC%E5%87%BA%E5%8A%A9%E6%89%8B/aofadimegphfgllgjblddapiaojbglhf
 //
+// 更新：(20261105) 0.4.1 改写后的高清地址打不开时回退到原地址（早期照片 404）
 // 更新：(20210228) 0.4.0 修复史前照片下载
 // 更新：(20200518) 0.3.0 还是弹吧……（因为 IFRAME 没法监控状态可能会漏照片、用 xhr 和 fetch 会有跨域问题）
 // 更新：(20200501) 0.2.0 改进下载逻辑，不再弹出窗口
@@ -118,13 +119,32 @@
       })
     );
   };
+  // 在相册页用 Image 试探：404 时浏览器显示的是自己的错误页，脚本不会在那里运行，新标签页里无法回退
+  var 图片可用 = (url) =>
+    new Promise((resolve) => {
+      var img = new Image();
+      var timer = setTimeout(() => resolve(false), 30000);
+      img.onload = () => (clearTimeout(timer), resolve(true));
+      img.onerror = () => (clearTimeout(timer), resolve(false));
+      img.src = url;
+    });
+  var 逐张下载 = async (照片列) => {
+    for (var { src, url, filename } of 照片列) {
+      if (url != src && !(await 图片可用(url))) {
+        console.warn("高清地址不可用，回退到原地址", url, src);
+        url = src;
+      }
+      智能下载(url, filename);
+    }
+  };
   var 下载当页 = (globalThis.下载当页 = () => {
     const 试取列 = 照片列を取();
     const 列有效 = 试取列.every(({ src }) => src);
-    if (列有效)
-      return 照片列を取().forEach(({ url, filename }) =>
-        智能下载(url, filename)
-      );
+    if (列有效) {
+      // 不能 return Promise：下载按钮是 javascript: 链接，返回值可能影响页面
+      逐张下载(试取列);
+      return;
+    }
     // 自动滚动重试
     window.parent.scrollBy(0, window.innerHeight);
     window.scrollBy(0, window.innerHeight);
