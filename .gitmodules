@@ -1,12 +1,39 @@
-[submodule "r/youtube-queue.user.js"]
-	path = r/youtube-queue.user.js
-	url = git@github.com:snomiao/youtube-queue.user.js
-[submodule "r/multilang-wiki"]
-	path = r/multilang-wiki
-	url = git@github.com:snomiao/multilang-wiki
-[submodule "r/google-calendar-keyboard-enhance.user.ts"]
-	path = r/google-calendar-keyboard-enhance.user.ts
-	url = git@github.com:snomiao/google-calendar-keyboard-enhance.user.ts
-[submodule "r/copy-markdown-title-alt-c.user.js"]
-	path = r/copy-markdown-title-alt-c.user.js
-	url = git@github.com:snomiao/copy-markdown-title-alt-c.user.js
+[submodule "lib/youtube-queue.user.js"]
+	path = lib/youtube-queue.user.js
+	url = https://github.com/snomiao/youtube-queue.user.js
+[submodule "lib/multilang-wiki"]
+	path = lib/multilang-wiki
+	url = https://github.com/snomiao/multilang-wiki
+[submodule "lib/google-calendar-keyboard-enhance.user.ts"]
+	path = lib/google-calendar-keyboard-enhance.user.ts
+	url = https://github.com/snomiao/google-calendar-keyboard-enhance.user.ts
+[submodule "lib/copy-markdown-title-alt-c.user.js"]
+	path = lib/copy-markdown-title-alt-c.user.js
+	url = https://github.com/snomiao/copy-markdown-title-alt-c.user.js
+[submodule "lib/batch-open-links"]
+	path = lib/batch-open-links
+	url = https://github.com/snomiao/batch-open-links
+[submodule "lib/search-in-your-lang-userjs"]
+	path = lib/search-in-your-lang-userjs
+	url = https://github.com/snomiao/search-in-your-lang-userjs
+[submodule "lib/pardon-could-you-say-it-again"]
+	path = lib/pardon-could-you-say-it-again
+	url = https://github.com/snomiao/pardon-could-you-say-it-again
+[submodule "lib/youtube-unwatched-playlist"]
+	path = lib/youtube-unwatched-playlist
+	url = https://github.com/snomiao/youtube-unwatched-playlist
+[submodule "lib/jpdb-hotkeys.user.js"]
+	path = lib/jpdb-hotkeys.user.js
+	url = https://github.com/snomiao/jpdb-hotkeys.user.js
+[submodule "lib/copilot-continue.user.js"]
+	path = lib/copilot-continue.user.js
+	url = https://github.com/snomiao/copilot-continue.user.js
+[submodule "lib/npm-typescript-flag.user.js"]
+	path = lib/npm-typescript-flag.user.js
+	url = https://github.com/snomiao/npm-typescript-flag.user.js
+[submodule "lib/selection-expander.user.js"]
+	path = lib/selection-expander.user.js
+	url = https://github.com/snomiao/selection-expander.user.js
+[submodule "lib/SNOMIAO-QZFriends.user.js"]
+	path = lib/SNOMIAO-QZFriends.user.js
+	url = https://github.com/snomiao/SNOMIAO-QZFriends.user.js

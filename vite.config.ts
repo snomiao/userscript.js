@@ -4,8 +4,12 @@ import { parse } from "userscript-meta";
 import { defineConfig } from "vite";
 import monkey from "vite-plugin-monkey";
 
-// Find all userscripts under r/
-const allScripts = globSync("r/**/*.user.{js,ts}", { cwd: process.cwd(), nodir: true });
+// Find all userscripts under lib/ (git submodules)
+const allScripts = globSync("lib/**/*.user.{js,ts}", {
+  cwd: process.cwd(),
+  nodir: true,
+  ignore: "**/node_modules/**",
+});
 
 // Match a script by mode (partial name match against file path)
 function findEntry(mode: string) {
@@ -49,7 +53,7 @@ export default defineConfig(({ mode }) => {
   if (mode === "development" && allScripts.length > 1) {
     console.log("\nAvailable scripts (pass via --mode):");
     allScripts.forEach((s) => console.log(" ", s));
-    console.log('\nExample: bun vite --mode multilang-wiki\n');
+    console.log("\nExample: bun vite --mode multilang-wiki\n");
   }
 
   const entry = findEntry(mode);
