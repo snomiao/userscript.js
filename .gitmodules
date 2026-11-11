@@ -34,3 +34,12 @@
 [submodule "lib/SNOMIAO-QZFriends.user.js"]
 	path = lib/SNOMIAO-QZFriends.user.js
 	url = https://github.com/snomiao/SNOMIAO-QZFriends.user.js
+[submodule "lib/amaz-sort.user.js"]
+	path = lib/amaz-sort.user.js
+	url = https://github.com/snomiao/amaz-sort.user.js
+[submodule "lib/alt-scroll-to-zoom.user.js"]
+	path = lib/alt-scroll-to-zoom.user.js
+	url = https://github.com/snomiao/alt-scroll-to-zoom.user.js
+[submodule "lib/furigana.user.js"]
+	path = lib/furigana.user.js
+	url = https://github.com/snomiao/furigana.user.js

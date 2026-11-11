@@ -44,6 +44,7 @@ Develop a `lib/` script with `bun run dev:lib <name>`, e.g. `bun run dev:lib mul
 - [multilang-wiki](lib/multilang-wiki) — Wikipedia articles in multiple languages side by side
 - [search-in-your-lang-userjs](lib/search-in-your-lang-userjs) — press Tab in a search box to translate the keyword into your browser language
 - [jpdb-hotkeys.user.js](lib/jpdb-hotkeys.user.js) — Vim-style HJKL/WASD shortcuts for jpdb.io reviews
+- [furigana.user.js](lib/furigana.user.js) — add furigana reading guides to Japanese text on web pages (archived)
 - [google-bilingual-search-enja (gist)](https://gist.github.com/snomiao/ecee0271ac7599d526aaa210293e3f43) — Mulango en/ja bilingual Google & Bing results
 - [google-bilingual-search (gist)](https://gist.github.com/snomiao/f7281ff2b31eea606bdb944e0ea7d7c5) — bilingual Google search results
 - [[SNOLAB] [Mulango] Search](src/mulangoSearch.user.js)
@@ -73,6 +74,7 @@ Develop a `lib/` script with `bun run dev:lib <name>`, e.g. `bun run dev:lib mul
 - [batch-open-links](lib/batch-open-links) — batch open links from the main list on any page
 - [copy-markdown-title-alt-c.user.js](lib/copy-markdown-title-alt-c.user.js) — Alt+C to copy page title & URL as a Markdown link
 - [selection-expander.user.js](lib/selection-expander.user.js) — Shift+Alt+Left/Right to expand/shrink the selection, like VS Code
+- [alt-scroll-to-zoom.user.js](lib/alt-scroll-to-zoom.user.js) — Alt+wheel to zoom, Alt+drag to pan the whole page
 - [[SNOLAB] Alt + 123... Searching Results Links List Batch Open](src/LinksListBatchOpen.user.js)
 - [[snolab] batch-search](src/batch-search.user.js)
 - [一键批量打开谷歌必应搜索前2的n次方项搜索结果](src/google2toN.user.js)
@@ -106,6 +108,7 @@ Develop a `lib/` script with `bun run dev:lib <name>`, e.g. `bun run dev:lib mul
 
 ### 💰 Finance & shopping
 
+- [amaz-sort.user.js](lib/amaz-sort.user.js) — sort Amazon Japan results by price per kg / per piece
 - [beancount-go](src/beancount-go.user.js)
 - [淘宝、京东、天猫自动按每斤价格排序 TAOBAO/JD/TMALL / Automatic sort by 500g price.](src/pricesof500g.user.js)
 - [京东白条每日额度页面自动领取额度](src/%E4%BA%AC%E4%B8%9C%E7%99%BD%E6%9D%A1%E6%AF%8F%E6%97%A5%E9%A2%9D%E5%BA%A6%E9%A1%B5%E9%9D%A2%E8%87%AA%E5%8A%A8%E9%A2%86%E5%8F%96%E9%A2%9D%E5%BA%A6.user.js)
