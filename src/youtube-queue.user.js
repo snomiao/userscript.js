@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name             YoutubeAllResultsPushToQueuePlay
 // @namespace        https://userscript.snomiao.com/
-// @version          0.0.8
+// @version          0.1.0
 // @description      Youtube Search Results Pages Push To Queue To Play Button
 // @author           snomiao@gmail.com
 // @copyright        2017 - 2023, @snomiao <snomiao.com>
@@ -13,8 +13,6 @@
 // @noframes
 // @license          GPL-3.0+
 // ==/UserScript==
-// 
-// 2025-09-16 NOTE: just migrated this script into standalone repo https://github.com/snomiao/youtube-queue.user.js
 
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -27,25 +25,18 @@ const waitFor = async (qf, timeout = 1000, interval = 500) => {
   }
   return null;
 };
-const waitForElement = async (e, sel) =>
-  await waitFor(() => e.querySelector(sel));
+const waitForElement = async (e, sel) => await waitFor(() => e.querySelector(sel));
 const menuClick = async (e) => {
   e.style.background = "#FF0";
   //   expand and click
   (await waitForElement(e, ".dropdown-trigger button")).click();
   //   await 睡(500);
   (
-    await waitForElement(
-      document,
-      "tp-yt-iron-dropdown[focused] ytd-menu-service-item-renderer"
-    )
+    await waitForElement(document, "tp-yt-iron-dropdown[focused] ytd-menu-service-item-renderer")
   ).click();
   // fold... and wait it close
   (await waitForElement(e, ".dropdown-trigger button")).click();
-  await waitForElement(
-    document,
-    `tp-yt-iron-dropdown[aria-hidden] ytd-menu-service-item-renderer`
-  );
+  await waitForElement(document, `tp-yt-iron-dropdown[aria-hidden] ytd-menu-service-item-renderer`);
   e.style.background = "";
   await sleep(100);
 };
@@ -61,16 +52,15 @@ const AllResultsPushToQueuePlay = async function () {
 const elementCreate = (innerHTML, attributes = {}) => {
   return Object.assign(
     Object.assign(document.createElement("div"), { innerHTML }).children[0],
-    attributes
+    attributes,
   );
 };
 
 function btnAdd() {
   const onclick = () => AllResultsPushToQueuePlay();
-  const e = elementCreate(
-    `<button><div>依次播放捜索結果<br>Queue All Results</div></button>`,
-    { onclick }
-  );
+  const e = elementCreate(`<button><div>依次播放捜索結果<br>Queue All Results</div></button>`, {
+    onclick,
+  });
   const filterBtn = $$("ytd-toggle-button-renderer")[0];
   if (!filterBtn) return setTimeout(btnAdd, 1000);
   filterBtn.AllResultsPushToQueuePlay?.remove();

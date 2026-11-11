@@ -62,7 +62,6 @@ Develop a `lib/` script with `bun run dev:lib <name>`, e.g. `bun run dev:lib mul
 
 ### 📺 YouTube & media
 
-- [youtube-queue.user.js](lib/youtube-queue.user.js) — push all YouTube search results to the play queue
 - [download-youtube-subtitles (gist)](https://gist.github.com/snomiao/13684b427387776971af61bb7f7c419e) — download YouTube subtitles
 - [YoutubeAllResultsPushToQueuePlay](src/youtube-queue.user.js)
 - [所有视频2倍速度播放 / video speed 2x](src/videospeed2x.user.js)
