@@ -19,7 +19,7 @@
     "gf-import": "tsx builder/greasyfork.ts",
     "postrelease": "git push --follow-tag --all",
     "dev": "vite",
-    "dev:r": "vite --mode",
+    "dev:lib": "vite --mode",
     "test": "vitest --run",
     "test:watch": "vitest",
     "prepare": "husky install"
